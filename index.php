@@ -1,7 +1,5 @@
 <?php
 // --- 1. CONEXIÓN A LA BASE DE DATOS DE RENDER ---
-// Render nos da la URL de conexión en una "Variable de Entorno".
-// Esta es la forma segura y profesional de manejar contraseñas.
 $db_url = getenv('DATABASE_URL');
 $conn = null;
 $error_msg = '';
@@ -10,17 +8,17 @@ if ($db_url === false) {
     $error_msg = "Error: No se encontró la variable de entorno DATABASE_URL.";
 } else {
     try {
-        // La URL de Render es tipo 'postgres://user:password@host:port/dbname'
-        // PDO necesita los datos por separado, así que la "parseamos"
         $db_parts = parse_url($db_url);
 
         $host = $db_parts['host'];
-        $port = $db_parts['port'];
+        // --- LÍNEA CORREGIDA ---
+        // Si la URL no especifica el puerto, usamos el 5432 por defecto para PostgreSQL
+        $port = $db_parts['port'] ?? '5432';
+        // --- FIN DE LA CORRECCIÓN ---
         $dbname = ltrim($db_parts['path'], '/');
         $user = $db_parts['user'];
         $password = $db_parts['pass'];
 
-        // Creamos la conexión con PDO (la forma moderna de conectar a BBDD en PHP)
         $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;user=$user;password=$password";
         $conn = new PDO($dsn);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -34,18 +32,13 @@ if ($db_url === false) {
 // --- 2. LÓGICA DEL CONTADOR DE VISITAS ---
 $contador = 0;
 if ($conn) {
-    // Si la conexión fue exitosa, actualizamos y obtenemos el contador
     try {
-        // Incrementamos el contador en 1
         $conn->exec("UPDATE visitantes SET contador = contador + 1 WHERE id = 1");
-
-        // Obtenemos el nuevo valor
         $stmt = $conn->query("SELECT contador FROM visitantes WHERE id = 1");
         $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
         $contador = $resultado ? $resultado['contador'] : 0;
     } catch (PDOException $e) {
-        // Esto pasará si la tabla 'visitantes' aún no existe.
-        $error_msg = "Error en la consulta: " . $e->getMessage() . "<br>Asegúrate de haber creado la tabla 'visitantes' en la base de datos (Paso 4).";
+        $error_msg = "Error en la consulta: " . $e->getMessage() . "<br>Asegúrate de haber creado la tabla 'visitantes' en la base de datos.";
     }
 }
 ?>
@@ -60,7 +53,7 @@ if ($conn) {
         .container { background: white; padding: 2rem 4rem; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         h1 { color: #1877f2; }
         p { font-size: 2.5rem; font-weight: bold; color: #333; margin: 1rem 0; }
-        .error { color: #d93025; font-weight: bold; }
+        .error { color: #d93025; font-weight: bold; max-width: 600px; font-size: 1rem; }
     </style>
 </head>
 <body>
