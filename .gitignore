@@ -1,0 +1,17 @@
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de configuración local
+.env
+.env.local
+
+# Logs
+*.log
+
+# Directorios de dependencias (si usas Composer en el futuro)
+vendor/
+
+# Archivos de respaldo
+*.bak
+*~
