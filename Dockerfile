@@ -1,40 +1,22 @@
 # 1. Imagen base con PHP 8.2 y Apache
 FROM php:8.2-apache
+
 # Anunciamos que el contenedor escuchará en el puerto 80
 EXPOSE 80
 
-# 2. Instalar dependencias del sistema operativo necesarias
-# (añadimos librerías para PostgreSQL, SSL, curl y zip para Composer)
+# 2. Instalar dependencias del sistema operativo necesarias para PostgreSQL
 RUN apt-get update && apt-get install -y \
     libpq-dev \
-    libssl-dev \
-    libcurl4-openssl-dev \
-    libonig-dev \
-    zip \
-    unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# 3. Instalar extensiones de PHP necesarias
-# - PostgreSQL: pdo, pdo_pgsql
-# - SendGrid/PHPMailer: mbstring (curl y openssl vienen por defecto)
-RUN docker-php-ext-install \
-    pdo \
-    pdo_pgsql \
-    mbstring
+# 3. Instalar extensiones de PHP necesarias para PostgreSQL
+RUN docker-php-ext-install pdo pdo_pgsql
 
-# --- NUEVOS PASOS PARA COMPOSER ---
-# 4. Copiar Composer desde su imagen oficial (método moderno y limpio)
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# 5. Establecer el directorio de trabajo
+# 4. Establecer el directorio de trabajo
 WORKDIR /var/www/html
 
-# 6. Copiar solo los archivos de dependencias primero para optimizar la caché de Docker
-COPY composer.json composer.lock* ./
-
-# 7. Instalar las dependencias de PHP (PHPMailer) con optimizaciones para producción
-RUN composer install --no-dev --optimize-autoloader
-# --- FIN DE LOS NUEVOS PASOS ---
-
-# 8. Copiar el resto del código de la aplicación (index.php, etc.)
+# 5. Copiar toda la aplicación
 COPY . .
+
+# 6. Asegurar permisos correctos
+RUN chown -R www-data:www-data /var/www/html
