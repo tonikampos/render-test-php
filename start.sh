@@ -3,16 +3,21 @@ set -e
 
 # Configurar el puerto (usar el de Render o 80 por defecto)
 export PORT=${PORT:-80}
+export APACHE_PORT=$PORT
 
-echo "🚀 Configurando Apache para puerto $PORT en todas las interfaces (0.0.0.0)..."
+echo "🚀 Iniciando Apache en puerto $PORT (0.0.0.0:$PORT)..."
 
-# Configurar Apache ports.conf para escuchar en todas las interfaces
-echo "Listen 0.0.0.0:$PORT" > /etc/apache2/ports.conf
+# Configurar Apache ports.conf
+cat > /etc/apache2/ports.conf <<EOF
+# Configuración dinámica de puerto para Render
+Listen 0.0.0.0:$PORT
+EOF
 
 # Configurar VirtualHost
 cat > /etc/apache2/sites-available/000-default.conf <<EOF
 <VirtualHost *:$PORT>
     ServerName localhost
+    ServerAdmin webmaster@localhost
     DocumentRoot /var/www/html
     
     <Directory /var/www/html>
@@ -26,7 +31,15 @@ cat > /etc/apache2/sites-available/000-default.conf <<EOF
 </VirtualHost>
 EOF
 
-echo "✅ Apache configurado en puerto $PORT"
+echo "✅ Apache configurado"
+echo "📋 Configuración:"
+cat /etc/apache2/ports.conf
+echo ""
+cat /etc/apache2/sites-available/000-default.conf
 
-# Iniciar Apache
+# Verificar sintaxis
+apache2ctl configtest || echo "⚠️ Warning en configuración (se puede ignorar)"
+
+echo "🚀 Iniciando Apache..."
+# Iniciar Apache en foreground
 exec apache2-foreground
