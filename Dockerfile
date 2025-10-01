@@ -12,33 +12,25 @@ RUN apt-get update && apt-get install -y \
 # 3. Instalar extensiones de PHP necesarias
 RUN docker-php-ext-install pdo pdo_pgsql mbstring
 
-# 4. Configurar Apache con puerto por defecto (se reconfigurera en runtime)
-RUN echo "Listen 80" > /etc/apache2/ports.conf
-RUN echo '<VirtualHost *:80>' > /etc/apache2/sites-available/000-default.conf && \
-    echo '    DocumentRoot /var/www/html' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '    ErrorLog ${APACHE_LOG_DIR}/error.log' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '    CustomLog ${APACHE_LOG_DIR}/access.log combined' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '</VirtualHost>' >> /etc/apache2/sites-available/000-default.conf
-
-# 5. Establecer el directorio de trabajo
+# 4. Establecer el directorio de trabajo
 WORKDIR /var/www/html
 
-# 6. Copiar toda la aplicación
+# 5. Copiar toda la aplicación
 COPY . .
 
-# 7. Asegurar permisos correctos
+# 6. Asegurar permisos correctos
 RUN chown -R www-data:www-data /var/www/html
 
-# 8. Copiar Composer e instalar dependencias
+# 7. Copiar Composer e instalar dependencias
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN if [ -f composer.json ]; then composer install --no-dev --optimize-autoloader --no-interaction; fi
 
-# 9. Copiar y configurar script de inicio
+# 8. Copiar y configurar script de inicio
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-# 10. Exponer puerto por defecto
+# 9. Exponer puerto por defecto
 EXPOSE 80
 
-# 11. Comando de inicio
+# 10. Comando de inicio que configura Apache dinámicamente
 CMD ["/start.sh"]
