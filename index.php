@@ -96,9 +96,9 @@ if ($sendgrid_api_key) {
 
         //Remitente y Destinatario
         //IMPORTANTE: El SetFrom DEBE SER el email que verificaste en SendGrid
-        $mail->setFrom('TONI.KAMPOS@gmail.com', 'App GaliTroco'); 
+        $mail->setFrom('kampos@gmail.com', 'App GaliTroco'); 
         //IMPORTANTE: Cambia esto a tu email para recibir la prueba
-        $mail->addAddress('TONI.KAMPOS@gmail.com', 'Usuario de Prueba');
+        $mail->addAddress('kampos@gmail.com', 'Usuario de Prueba');
 
         debug_log("Remitente y destinatario configurados");
 
