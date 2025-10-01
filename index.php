@@ -1,5 +1,10 @@
 <?php
 // Cargar la librería PHPMailer instalada con Composer
+// AÑADE ESTAS LÍNEAS AL PRINCIPIO DE TODO
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // Por seguridad, no mostramos errores en pantalla
+ini_set('log_errors', 1);    // ¡Esta es la línea clave! Obliga a escribir errores en el log
+
 require 'vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
