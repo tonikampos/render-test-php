@@ -4,11 +4,26 @@ FROM php:8.2-apache
 EXPOSE 80
 
 # 2. Instalar dependencias del sistema operativo necesarias
-# (añadimos zip y unzip, que Composer a veces necesita)
-RUN apt-get update && apt-get install -y libpq-dev zip unzip
+# (añadimos librerías para PostgreSQL, SSL, curl y zip para Composer)
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    zip \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
 
-# 3. Instalar las extensiones de PHP para PostgreSQL
-RUN docker-php-ext-install pdo pdo_pgsql
+# 3. Instalar extensiones de PHP necesarias
+# - PostgreSQL: pdo, pdo_pgsql
+# - SendGrid/PHPMailer: openssl, curl, mbstring
+RUN docker-php-ext-install \
+    pdo \
+    pdo_pgsql \
+    curl \
+    mbstring
+
+# 3.1. Asegurar que OpenSSL está habilitado (viene por defecto pero lo verificamos)
+RUN php -m | grep -i openssl || echo "OpenSSL no encontrado - revisar configuración"
 
 # --- NUEVOS PASOS PARA COMPOSER ---
 # 4. Copiar Composer desde su imagen oficial (método moderno y limpio)
