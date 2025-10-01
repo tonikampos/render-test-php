@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // No mostrar errores en pantalla (por seguridad)
+ini_set('log_errors', 1);    // Sí escribir errores en los logs
 // Cargar la librería PHPMailer instalada con Composer
 require 'vendor/autoload.php';
 
