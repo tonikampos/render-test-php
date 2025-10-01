@@ -42,17 +42,20 @@ apache2ctl configtest || echo "⚠️ Warning en configuración (se puede ignora
 
 echo "🚀 Iniciando Apache..."
 
-# NO usar apache2-foreground - arrancamos Apache manualmente
-# para tener control total sobre el puerto
-
-# Asegurar que Apache use nuestro puerto
+# Configurar TODAS las variables de entorno que Apache necesita
 export APACHE_RUN_USER=www-data
 export APACHE_RUN_GROUP=www-data
 export APACHE_LOG_DIR=/var/log/apache2
+export APACHE_RUN_DIR=/var/run/apache2
 export APACHE_PID_FILE=/var/run/apache2/apache2.pid
+export APACHE_LOCK_DIR=/var/lock/apache2
 
-# Crear directorio para PID si no existe
+# Crear directorios necesarios
 mkdir -p /var/run/apache2
+mkdir -p /var/lock/apache2
+mkdir -p /var/log/apache2
 
-# Iniciar Apache en foreground con nuestra configuración
-exec /usr/sbin/apache2 -D FOREGROUND -k start
+echo "✅ Variables de entorno configuradas"
+
+# Iniciar Apache en foreground
+exec /usr/sbin/apache2 -D FOREGROUND
