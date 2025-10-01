@@ -41,5 +41,18 @@ cat /etc/apache2/sites-available/000-default.conf
 apache2ctl configtest || echo "⚠️ Warning en configuración (se puede ignorar)"
 
 echo "🚀 Iniciando Apache..."
-# Iniciar Apache en foreground
-exec apache2-foreground
+
+# NO usar apache2-foreground - arrancamos Apache manualmente
+# para tener control total sobre el puerto
+
+# Asegurar que Apache use nuestro puerto
+export APACHE_RUN_USER=www-data
+export APACHE_RUN_GROUP=www-data
+export APACHE_LOG_DIR=/var/log/apache2
+export APACHE_PID_FILE=/var/run/apache2/apache2.pid
+
+# Crear directorio para PID si no existe
+mkdir -p /var/run/apache2
+
+# Iniciar Apache en foreground con nuestra configuración
+exec /usr/sbin/apache2 -D FOREGROUND -k start
