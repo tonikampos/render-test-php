@@ -37,17 +37,20 @@ function enviarEmailSendGrid($apiKey, $contador) {
         'Content-Type: application/json'
     ]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_VERBOSE, true); // DEBUG
     
     $resultado = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $error = curl_error($ch);
+    $curlInfo = curl_getinfo($ch);
     curl_close($ch);
     
     return [
         'success' => ($httpCode >= 200 && $httpCode < 300),
         'http_code' => $httpCode,
         'response' => $resultado,
-        'error' => $error
+        'error' => $error,
+        'curl_info' => $curlInfo
     ];
 }
 
@@ -78,8 +81,21 @@ if (isset($_POST['enviar_email'])) {
                 if ($resultado_email['success']) {
                     $email_enviado = true;
                     $email_status = "✅ ¡Email enviado correctamente! (HTTP " . $resultado_email['http_code'] . ")";
+                    
+                    // DEBUG: Mostrar respuesta completa de SendGrid
+                    if (!empty($resultado_email['response'])) {
+                        $email_status .= "<br><small style='opacity: 0.8;'>Respuesta: " . htmlspecialchars($resultado_email['response']) . "</small>";
+                    }
                 } else {
-                    $email_status = "❌ Error enviando email: HTTP " . $resultado_email['http_code'] . " - " . htmlspecialchars($resultado_email['error']);
+                    $email_status = "❌ Error enviando email: HTTP " . $resultado_email['http_code'];
+                    
+                    // Mostrar detalles del error
+                    if (!empty($resultado_email['response'])) {
+                        $email_status .= "<br><small>Respuesta: " . htmlspecialchars($resultado_email['response']) . "</small>";
+                    }
+                    if (!empty($resultado_email['error'])) {
+                        $email_status .= "<br><small>Error cURL: " . htmlspecialchars($resultado_email['error']) . "</small>";
+                    }
                 }
             }
         } catch (Exception $e) {
@@ -254,6 +270,16 @@ echo "</div>";
 echo "<div class='info'>";
 echo "<p class='label'>Estado de SendGrid:</p>";
 echo "<p><strong>API Key:</strong> $sendgrid_configurado</p>";
+
+// Mostrar información de la API Key (primeros y últimos caracteres)
+$api_key = getenv('SENDGRID_API_KEY');
+if ($api_key) {
+    $key_length = strlen($api_key);
+    $key_preview = substr($api_key, 0, 7) . '...' . substr($api_key, -4);
+    echo "<p><strong>Key Preview:</strong> <code>$key_preview</code> (longitud: $key_length)</p>";
+}
+
+echo "<p><strong>Email remitente:</strong> kampos@gmail.com</p>";
 echo "<p><strong>Email destino:</strong> kampos@gmail.com</p>";
 echo "<p style='opacity: 0.7; font-size: 0.85rem; margin-top: 10px;'>💡 Pulsa el botón para enviar un email de prueba con el contador actual</p>";
 echo "</div>";
