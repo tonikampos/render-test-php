@@ -1,13 +1,32 @@
 <?php
-// VERSIÓN ULTRA SIMPLE - SIN PHPMAILER
+// VERSIÓN CON EMAIL AÑADIDO DE FORMA SEGURA
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+
+// CARGAR PHPMAILER AL INICIO (FUERA DE CONDICIONALES)
+$phpmailer_available = false;
+$phpmailer_error = '';
+
+if (file_exists('vendor/autoload.php')) {
+    try {
+        require_once 'vendor/autoload.php';
+        if (class_exists('PHPMailer\\PHPMailer\\PHPMailer')) {
+            $phpmailer_available = true;
+        } else {
+            $phpmailer_error = 'Clase PHPMailer no encontrada';
+        }
+    } catch (Throwable $e) {
+        $phpmailer_error = 'Error cargando autoload: ' . $e->getMessage();
+    }
+} else {
+    $phpmailer_error = 'vendor/autoload.php no existe';
+}
 
 echo "<!DOCTYPE html>
 <html>
 <head>
     <meta charset='UTF-8'>
-    <title>🚀 Render + PHP FUNCIONA!</title>
+    <title>🚀 Render + PHP + Email</title>
     <style>
         body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
         .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin: 20px 0; }
@@ -20,11 +39,11 @@ echo "<!DOCTYPE html>
 </head>
 <body>
     <div class='card'>
-        <h1>🚀 ¡RENDER + PHP FUNCIONANDO!</h1>
-        <div class='success'>✅ Sistema operativo correctamente</div>
+        <h1>🚀 ¡RENDER + PHP + EMAIL!</h1>
+        <div class='success'>✅ Sistema funcionando correctamente</div>
         <p><strong>Versión PHP:</strong> " . phpversion() . "</p>
         <p><strong>Fecha:</strong> " . date('Y-m-d H:i:s') . "</p>
-        <p><strong>Servidor:</strong> " . ($_SERVER['SERVER_SOFTWARE'] ?? 'Apache') . "</p>
+        <p><strong>PHPMailer:</strong> " . ($phpmailer_available ? "✅ Disponible" : "❌ " . $phpmailer_error) . "</p>
     </div>";
 
 // Test de base de datos
@@ -63,35 +82,70 @@ echo "<div class='counter'>$contador</div>";
 echo "<p style='text-align: center;'><strong>Visitas totales</strong></p>";
 echo "</div>";
 
-// Estado del email (sin enviar)
+// ENVÍO DE EMAIL - VERSIÓN SEGURA
+$email_status = '';
 $sendgrid_key = getenv('SENDGRID_API_KEY');
+
 echo "<div class='card'>";
 echo "<h2>📧 Sistema de email</h2>";
-if ($sendgrid_key) {
-    echo "<div class='info'>✅ SendGrid configurado (longitud: " . strlen($sendgrid_key) . ")</div>";
-    echo "<p>Email: kampos@gmail.com</p>";
-    echo "<p><em>Sistema preparado para envío de emails</em></p>";
-} else {
-    echo "<div class='error'>❌ SENDGRID_API_KEY no configurada</div>";
+
+if ($sendgrid_key && $phpmailer_available) {
+    echo "<div class='info'>✅ SendGrid y PHPMailer configurados</div>";
+    
+    // INTENTAR ENVÍO DE EMAIL DE FORMA SEGURA
+    try {
+        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+        
+        // Configuración SMTP básica
+        $mail->isSMTP();
+        $mail->Host = 'smtp.sendgrid.net';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'apikey';
+        $mail->Password = $sendgrid_key;
+        $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+        
+        // Configurar emails
+        $mail->setFrom('kampos@gmail.com', 'GaliTroco');
+        $mail->addAddress('kampos@gmail.com', 'Toni');
+        
+        // Contenido simple
+        $mail->isHTML(true);
+        $mail->Subject = 'Nueva visita en GaliTroco - Contador: ' . $contador;
+        $mail->Body = "<h1>¡Nueva visita!</h1><p>Contador: <strong>$contador</strong></p><p>Fecha: " . date('Y-m-d H:i:s') . "</p>";
+        
+        // ENVIAR
+        $mail->send();
+        $email_status = "<div class='success'>🎉 ¡Email enviado exitosamente!</div>";
+        
+    } catch (Exception $e) {
+        $email_status = "<div class='error'>❌ Error enviando: " . htmlspecialchars($e->getMessage()) . "</div>";
+    }
+    
+} elseif (!$sendgrid_key) {
+    $email_status = "<div class='error'>❌ SENDGRID_API_KEY no configurada</div>";
+} elseif (!$phpmailer_available) {
+    $email_status = "<div class='error'>❌ PHPMailer no disponible: $phpmailer_error</div>";
 }
+
+echo $email_status;
 echo "</div>";
 
-// Resumen del sistema
+// Resumen
 echo "<div class='card'>";
 echo "<h2>🔧 Estado del sistema</h2>";
 echo "<ul>";
 echo "<li>✅ <strong>PHP:</strong> " . phpversion() . "</li>";
 echo "<li>✅ <strong>Apache:</strong> Funcionando</li>";
-echo "<li>✅ <strong>Base de datos:</strong> PostgreSQL en Supabase</li>";
-echo "<li>✅ <strong>Contador:</strong> $contador visitas registradas</li>";
-echo "<li>" . ($sendgrid_key ? "✅" : "❌") . " <strong>Email:</strong> " . ($sendgrid_key ? "SendGrid configurado" : "Pendiente configuración") . "</li>";
+echo "<li>✅ <strong>Base de datos:</strong> $contador visitas</li>";
+echo "<li>" . ($phpmailer_available ? "✅" : "❌") . " <strong>PHPMailer:</strong> " . ($phpmailer_available ? "Disponible" : $phpmailer_error) . "</li>";
+echo "<li>" . ($sendgrid_key ? "✅" : "❌") . " <strong>SendGrid:</strong> " . ($sendgrid_key ? "Configurado" : "No configurado") . "</li>";
 echo "</ul>";
 echo "</div>";
 
 echo "<div class='card' style='text-align: center;'>";
-echo "<h3>🎉 ¡DEPLOY EXITOSO!</h3>";
+echo "<h3>🎉 DEPLOY CON EMAIL FUNCIONANDO</h3>";
 echo "<p><strong>GitHub</strong> → <strong>Render</strong> → <strong>Supabase</strong> → <strong>SendGrid</strong></p>";
-echo "<p><em>Tu arquitectura de proyecto final está funcionando correctamente</em></p>";
 echo "</div>";
 
 echo "</body></html>";
