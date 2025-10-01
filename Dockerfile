@@ -9,21 +9,18 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libssl-dev \
     libcurl4-openssl-dev \
+    libonig-dev \
     zip \
     unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # 3. Instalar extensiones de PHP necesarias
 # - PostgreSQL: pdo, pdo_pgsql
-# - SendGrid/PHPMailer: openssl, curl, mbstring
+# - SendGrid/PHPMailer: mbstring (curl y openssl vienen por defecto)
 RUN docker-php-ext-install \
     pdo \
     pdo_pgsql \
-    curl \
     mbstring
-
-# 3.1. Asegurar que OpenSSL está habilitado (viene por defecto pero lo verificamos)
-RUN php -m | grep -i openssl || echo "OpenSSL no encontrado - revisar configuración"
 
 # --- NUEVOS PASOS PARA COMPOSER ---
 # 4. Copiar Composer desde su imagen oficial (método moderno y limpio)
