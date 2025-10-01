@@ -1,4 +1,0 @@
-<?php
-// VERSIÓN MÍNIMA PARA DIAGNOSTICAR ERROR 502
-phpinfo();
-?>
