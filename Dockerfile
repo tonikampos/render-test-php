@@ -1,5 +1,7 @@
 # 1. Imagen base con PHP 8.2 y Apache
 FROM php:8.2-apache
+# Anunciamos que el contenedor escuchará en el puerto 80
+EXPOSE 80
 
 # 2. Instalar dependencias del sistema operativo necesarias
 # (añadimos zip y unzip, que Composer a veces necesita)
