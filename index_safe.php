@@ -81,8 +81,8 @@ try {
             $mail->Port = 587;
             $mail->Timeout = 10; // 10 segundos timeout
             
-            $mail->setFrom('TONI.KAMPOS@gmail.com', 'App GaliTroco');
-            $mail->addAddress('TONI.KAMPOS@gmail.com', 'Usuario de Prueba');
+            $mail->setFrom('kampos@gmail.com', 'App GaliTroco');
+            $mail->addAddress('kampos@gmail.com', 'Usuario de Prueba');
             
             $mail->isHTML(true);
             $mail->Subject = 'Nueva visita en GaliTroco (Modo Seguro)';

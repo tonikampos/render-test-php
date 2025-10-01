@@ -1,4 +1,7 @@
-# 🔧 Guía para configurar SendGrid en Render
+# 🔧 Guía para configurar Sen**IMPORTANTE**: El email en `setFrom()` debe estar verificado en SendGrid:
+1. Ve a Settings → Sender Authentication
+2. Verifica tu dominio O single sender verification
+3. El email `kampos@gmail.com` debe aparecer como verificadod en Render
 
 ## Pasos para resolver el problema de pantalla en blanco
 
