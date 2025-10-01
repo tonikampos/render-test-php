@@ -3,33 +3,33 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // ============================================
-// FUNCIÓN PARA ENVIAR EMAIL CON SENDGRID + cURL
+// FUNCIÓN PARA ENVIAR EMAIL CON RESEND + cURL
 // ============================================
-function enviarEmailSendGrid($apiKey, $contador) {
+function enviarEmailResend($apiKey, $contador) {
     $data = [
-        'personalizations' => [[
-            'to' => [['email' => 'kampos@gmail.com', 'name' => 'Toni']]
-        ]],
-        'from' => ['email' => 'kampos@gmail.com', 'name' => 'GaliTroco'],
+        'from' => 'GaliTroco <onboarding@resend.dev>',
+        'to' => ['kampos@gmail.com'],
         'subject' => '🚀 Prueba de email desde Render - Contador: ' . $contador,
-        'content' => [[
-            'type' => 'text/html',
-            'value' => '
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <h1 style="color: #667eea;">🎉 ¡Email enviado correctamente!</h1>
-                    <p><strong>Contador de visitas:</strong> ' . $contador . '</p>
-                    <p><strong>Fecha:</strong> ' . date('Y-m-d H:i:s') . '</p>
-                    <p><strong>Servidor:</strong> Render + PHP + Apache</p>
-                    <hr style="margin: 20px 0;">
-                    <p style="color: #666; font-size: 0.9rem;">
-                        Este email se envió desde tu proyecto de TFM usando SendGrid API con cURL nativo.
-                    </p>
-                </div>
-            '
-        ]]
+        'html' => '
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h1 style="color: #667eea;">🎉 ¡Email enviado correctamente con Resend!</h1>
+                <p><strong>Contador de visitas:</strong> ' . $contador . '</p>
+                <p><strong>Fecha:</strong> ' . date('Y-m-d H:i:s') . '</p>
+                <p><strong>Servidor:</strong> Render + PHP + Apache</p>
+                <hr style="margin: 20px 0;">
+                <p style="color: #666; font-size: 0.9rem;">
+                    Este email se envió desde tu proyecto de TFM usando <strong>Resend API</strong> con cURL nativo.
+                </p>
+                <p style="color: #999; font-size: 0.8rem; margin-top: 20px;">
+                    ✅ 100 emails/día gratis para siempre<br>
+                    ✅ Sin tarjeta de crédito<br>
+                    ✅ API moderna y simple
+                </p>
+            </div>
+        '
     ];
     
-    $ch = curl_init('https://api.sendgrid.com/v3/mail/send');
+    $ch = curl_init('https://api.resend.com/emails');
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -61,9 +61,9 @@ $email_enviado = false;
 $email_status = '';
 
 if (isset($_POST['enviar_email'])) {
-    $sendgrid_key = getenv('SENDGRID_API_KEY');
+    $resend_key = getenv('RESEND_API_KEY');
     
-    if ($sendgrid_key) {
+    if ($resend_key) {
         // Obtener contador actual antes de enviar
         try {
             $db_url = getenv('DATABASE_URL');
@@ -76,7 +76,7 @@ if (isset($_POST['enviar_email'])) {
                 $contador_temp = $result_temp ? $result_temp['contador'] : 0;
                 
                 // Enviar email
-                $resultado_email = enviarEmailSendGrid($sendgrid_key, $contador_temp);
+                $resultado_email = enviarEmailResend($resend_key, $contador_temp);
                 
                 if ($resultado_email['success']) {
                     $email_enviado = true;
@@ -102,7 +102,7 @@ if (isset($_POST['enviar_email'])) {
             $email_status = "❌ Error: " . htmlspecialchars($e->getMessage());
         }
     } else {
-        $email_status = "❌ SENDGRID_API_KEY no configurada en Render";
+        $email_status = "❌ RESEND_API_KEY no configurada en Render";
     }
 }
 
@@ -259,8 +259,8 @@ echo "<button type='submit' name='enviar_email' class='btn-email'>📧 Enviar Em
 echo "</form>";
 echo "</div>";
 
-// Verificar si SendGrid está configurado
-$sendgrid_configurado = getenv('SENDGRID_API_KEY') ? '✅ Configurada' : '❌ No configurada';
+// Verificar si Resend está configurado
+$resend_configurado = getenv('RESEND_API_KEY') ? '✅ Configurada' : '❌ No configurada';
 
 echo "<div class='info'>";
 echo "<p class='label'>Estado de la base de datos:</p>";
@@ -268,18 +268,18 @@ echo "<p>$db_status</p>";
 echo "</div>";
 
 echo "<div class='info'>";
-echo "<p class='label'>Estado de SendGrid:</p>";
-echo "<p><strong>API Key:</strong> $sendgrid_configurado</p>";
+echo "<p class='label'>Estado de Resend:</p>";
+echo "<p><strong>API Key:</strong> $resend_configurado</p>";
 
 // Mostrar información de la API Key (primeros y últimos caracteres)
-$api_key = getenv('SENDGRID_API_KEY');
+$api_key = getenv('RESEND_API_KEY');
 if ($api_key) {
     $key_length = strlen($api_key);
-    $key_preview = substr($api_key, 0, 7) . '...' . substr($api_key, -4);
+    $key_preview = substr($api_key, 0, 5) . '...' . substr($api_key, -4);
     echo "<p><strong>Key Preview:</strong> <code>$key_preview</code> (longitud: $key_length)</p>";
 }
 
-echo "<p><strong>Email remitente:</strong> kampos@gmail.com</p>";
+echo "<p><strong>Email remitente:</strong> onboarding@resend.dev</p>";
 echo "<p><strong>Email destino:</strong> kampos@gmail.com</p>";
 echo "<p style='opacity: 0.7; font-size: 0.85rem; margin-top: 10px;'>💡 Pulsa el botón para enviar un email de prueba con el contador actual</p>";
 echo "</div>";
@@ -293,7 +293,7 @@ echo "<p><strong>cURL:</strong> " . (function_exists('curl_version') ? '✅ Disp
 echo "</div>";
 
 echo "<div style='text-align: center; margin-top: 30px; opacity: 0.7;'>";
-echo "<p>🔗 GitHub → Render → Supabase → SendGrid</p>";
+echo "<p>🔗 GitHub → Render → Supabase → Resend</p>";
 echo "</div>";
 
 echo "</div>
