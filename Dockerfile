@@ -15,20 +15,15 @@ RUN apt-get update && apt-get install -y \
 # 3. Instalar extensiones de PHP necesarias
 RUN docker-php-ext-install pdo pdo_pgsql mbstring
 
-# 4. Copiar Composer desde su imagen oficial
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# 5. Establecer el directorio de trabajo
+# 4. Establecer el directorio de trabajo
 WORKDIR /var/www/html
 
-# 6. Copiar archivos de dependencias primero (para optimizar caché de Docker)
-COPY composer.json composer.lock* ./
-
-# 7. Instalar dependencias PHP (solo si existen)
-RUN if [ -f composer.json ]; then composer install --no-dev --optimize-autoloader --no-interaction; fi
-
-# 8. Copiar toda la aplicación
+# 5. Copiar toda la aplicación PRIMERO
 COPY . .
 
-# 9. Asegurar permisos correctos
+# 6. Asegurar permisos correctos ANTES de Composer
 RUN chown -R www-data:www-data /var/www/html
+
+# 7. Copiar Composer e instalar dependencias como root
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN if [ -f composer.json ]; then composer install --no-dev --optimize-autoloader --no-interaction; fi
