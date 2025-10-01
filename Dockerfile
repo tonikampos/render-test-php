@@ -33,18 +33,9 @@ RUN chown -R www-data:www-data /var/www/html
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN if [ -f composer.json ]; then composer install --no-dev --optimize-autoloader --no-interaction; fi
 
-# 9. Configurar script de inicio que reconfigure Apache dinámicamente
-RUN echo '#!/bin/bash' > /start.sh && \
-    echo '# Configurar puerto dinámicamente' >> /start.sh && \
-    echo 'export PORT=${PORT:-80}' >> /start.sh && \
-    echo 'echo "Listen $PORT" > /etc/apache2/ports.conf' >> /start.sh && \
-    echo 'echo "<VirtualHost *:$PORT>" > /etc/apache2/sites-available/000-default.conf' >> /start.sh && \
-    echo 'echo "    DocumentRoot /var/www/html" >> /etc/apache2/sites-available/000-default.conf' >> /start.sh && \
-    echo 'echo "    ErrorLog \${APACHE_LOG_DIR}/error.log" >> /etc/apache2/sites-available/000-default.conf' >> /start.sh && \
-    echo 'echo "    CustomLog \${APACHE_LOG_DIR}/access.log combined" >> /etc/apache2/sites-available/000-default.conf' >> /start.sh && \
-    echo 'echo "</VirtualHost>" >> /etc/apache2/sites-available/000-default.conf' >> /start.sh && \
-    echo 'apache2-foreground' >> /start.sh && \
-    chmod +x /start.sh
+# 9. Copiar y configurar script de inicio
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
 
 # 10. Exponer puerto por defecto
 EXPOSE 80
