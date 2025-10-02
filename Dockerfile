@@ -7,11 +7,27 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo pdo_pgsql \
     && rm -rf /var/lib/apt/lists/*
 
+# Habilitar mod_rewrite de Apache
+RUN a2enmod rewrite
+
+# Configurar Apache para permitir .htaccess
+RUN echo '<Directory /var/www/html/>\n\
+    Options Indexes FollowSymLinks\n\
+    AllowOverride All\n\
+    Require all granted\n\
+</Directory>' > /etc/apache2/conf-available/override.conf \
+    && a2enconf override
+
 # Copiar el código de la aplicación
 COPY . /var/www/html/
 
 # Configurar permisos
 RUN chown -R www-data:www-data /var/www/html
+
+# Habilitar display de errores para diagnóstico
+RUN echo "display_errors = On" >> /usr/local/etc/php/php.ini-production \
+    && echo "error_reporting = E_ALL" >> /usr/local/etc/php/php.ini-production \
+    && cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
 
 # Exponer puerto 80
 EXPOSE 80
