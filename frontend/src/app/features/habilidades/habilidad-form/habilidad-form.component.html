@@ -1,0 +1,131 @@
+<div class="form-container">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>
+        <h1>
+          <mat-icon>add_circle</mat-icon>
+          Nueva Habilidad
+        </h1>
+      </mat-card-title>
+      <mat-card-subtitle>Comparte tu habilidad con la comunidad</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="habilidadForm" (ngSubmit)="onSubmit()">
+        
+        <!-- Título -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Título</mat-label>
+          <input 
+            matInput 
+            formControlName="titulo"
+            placeholder="Ej: Clases de inglés nivel básico">
+          <mat-icon matPrefix>title</mat-icon>
+          <mat-hint>Mínimo 5 caracteres, máximo 150</mat-hint>
+          <mat-error *ngIf="titulo?.hasError('required')">
+            El título es obligatorio
+          </mat-error>
+          <mat-error *ngIf="titulo?.hasError('minlength')">
+            Mínimo 5 caracteres
+          </mat-error>
+          <mat-error *ngIf="titulo?.hasError('maxlength')">
+            Máximo 150 caracteres
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Tipo -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tipo</mat-label>
+          <mat-select formControlName="tipo">
+            <mat-option value="oferta">
+              <mat-icon>volunteer_activism</mat-icon>
+              Oferta - Ofrezco esta habilidad
+            </mat-option>
+            <mat-option value="demanda">
+              <mat-icon>search</mat-icon>
+              Demanda - Busco esta habilidad
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>swap_horiz</mat-icon>
+          <mat-error *ngIf="tipo?.hasError('required')">
+            Selecciona un tipo
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Categoría -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Categoría</mat-label>
+          <mat-select formControlName="categoria_id">
+            <mat-option *ngFor="let cat of categorias" [value]="cat.id">
+              <mat-icon>{{ cat.icono }}</mat-icon>
+              {{ cat.nombre }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>label</mat-icon>
+          <mat-error *ngIf="categoria_id?.hasError('required')">
+            Selecciona una categoría
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Descripción -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Descripción</mat-label>
+          <textarea 
+            matInput 
+            formControlName="descripcion"
+            rows="6"
+            placeholder="Describe tu habilidad con detalle..."></textarea>
+          <mat-icon matPrefix>description</mat-icon>
+          <mat-hint>Mínimo 20 caracteres, máximo 500</mat-hint>
+          <mat-error *ngIf="descripcion?.hasError('required')">
+            La descripción es obligatoria
+          </mat-error>
+          <mat-error *ngIf="descripcion?.hasError('minlength')">
+            Mínimo 20 caracteres
+          </mat-error>
+          <mat-error *ngIf="descripcion?.hasError('maxlength')">
+            Máximo 500 caracteres
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Duración Estimada -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Duración estimada (minutos)</mat-label>
+          <input 
+            matInput 
+            type="number"
+            formControlName="duracion_estimada"
+            placeholder="60">
+          <mat-icon matPrefix>schedule</mat-icon>
+          <mat-hint>Opcional - Entre 5 y 1440 minutos (24h)</mat-hint>
+          <mat-error *ngIf="duracion_estimada?.hasError('min')">
+            Mínimo 5 minutos
+          </mat-error>
+          <mat-error *ngIf="duracion_estimada?.hasError('max')">
+            Máximo 1440 minutos (24 horas)
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Botones -->
+        <div class="form-actions">
+          <button 
+            mat-stroked-button 
+            type="button"
+            routerLink="/habilidades"
+            [disabled]="submitting">
+            Cancelar
+          </button>
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit"
+            [disabled]="habilidadForm.invalid || submitting">
+            <mat-spinner *ngIf="submitting" diameter="20"></mat-spinner>
+            <mat-icon *ngIf="!submitting">save</mat-icon>
+            <span *ngIf="!submitting">Crear Habilidad</span>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

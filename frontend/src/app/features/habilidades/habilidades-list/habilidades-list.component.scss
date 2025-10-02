@@ -1,0 +1,269 @@
+.habilidades-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+// Header
+.page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+
+    mat-icon {
+      font-size: 2.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+  }
+
+  .subtitle {
+    font-size: 1.2rem;
+    color: #666;
+  }
+}
+
+// Filtros
+.filters-card {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+
+  .filters-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr 1fr auto;
+    gap: 1rem;
+    align-items: center;
+
+    mat-form-field {
+      width: 100%;
+    }
+
+    .search-field {
+      grid-column: span 1;
+    }
+  }
+}
+
+// Loading
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+
+  mat-spinner {
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: #666;
+  }
+}
+
+// Grid
+.habilidades-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+// Tarjetas
+.habilidad-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .tipo-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    z-index: 1;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+
+    &.oferta {
+      background: #e3f2fd;
+      color: #1976d2;
+    }
+
+    &.demanda {
+      background: #fce4ec;
+      color: #c2185b;
+    }
+  }
+
+  mat-card-header {
+    padding-right: 5rem; // Espacio para el badge
+
+    mat-card-title {
+      a {
+        color: #333;
+        text-decoration: none;
+        font-size: 1.25rem;
+        font-weight: 600;
+        line-height: 1.4;
+
+        &:hover {
+          color: #1976d2;
+        }
+      }
+    }
+
+    mat-card-subtitle {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-top: 0.5rem;
+      color: #666;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+
+  mat-card-content {
+    flex: 1;
+    padding: 1rem 0;
+
+    .descripcion {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .habilidad-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.9rem;
+        color: #777;
+
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+        }
+      }
+    }
+  }
+
+  mat-card-actions {
+    padding: 0 1rem 1rem;
+    margin: 0;
+
+    button {
+      mat-icon {
+        margin-left: 0.25rem;
+      }
+    }
+  }
+}
+
+// Sin resultados
+.no-results {
+  text-align: center;
+  padding: 4rem 2rem;
+
+  mat-icon {
+    font-size: 80px;
+    width: 80px;
+    height: 80px;
+    color: #ccc;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: #999;
+    margin-bottom: 1.5rem;
+  }
+}
+
+// Paginador
+mat-paginator {
+  background: transparent;
+}
+
+// Responsive
+@media (max-width: 1200px) {
+  .filters-card .filters-form {
+    grid-template-columns: 1fr 1fr;
+
+    .search-field {
+      grid-column: span 2;
+    }
+
+    button {
+      grid-column: span 2;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .habilidades-container {
+    padding: 1rem;
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+  }
+
+  .filters-card .filters-form {
+    grid-template-columns: 1fr;
+
+    .search-field {
+      grid-column: span 1;
+    }
+
+    button {
+      grid-column: span 1;
+    }
+  }
+
+  .habilidades-grid {
+    grid-template-columns: 1fr;
+  }
+}

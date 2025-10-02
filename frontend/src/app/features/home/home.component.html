@@ -1,0 +1,38 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>GaliTroco</h1>
+      <p class="tagline">Intercambia habilidades y servicios con tu comunidad</p>
+      <div class="hero-actions">
+        <button mat-raised-button color="primary" routerLink="/register">
+          Comenzar Ahora
+        </button>
+        <button mat-stroked-button routerLink="/habilidades">
+          Explorar Habilidades
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <h2>¿Cómo funciona?</h2>
+    <div class="features-grid">
+      <mat-card *ngFor="let feature of features" class="feature-card">
+        <mat-icon class="feature-icon">{{ feature.icon }}</mat-icon>
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+      </mat-card>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <h2>¿Listo para empezar?</h2>
+    <p>Únete a nuestra comunidad y comienza a intercambiar habilidades hoy mismo</p>
+    <button mat-raised-button color="accent" routerLink="/register">
+      Crear Cuenta Gratis
+    </button>
+  </section>
+</div>

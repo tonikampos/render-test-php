@@ -1,0 +1,139 @@
+<div class="detail-container">
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Cargando habilidad...</p>
+  </div>
+
+  <!-- Contenido -->
+  <div *ngIf="!loading && habilidad" class="detail-content">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+      <a routerLink="/habilidades">
+        <mat-icon>arrow_back</mat-icon>
+        Volver al listado
+      </a>
+    </nav>
+
+    <div class="detail-grid">
+      <!-- Columna Principal -->
+      <div class="main-column">
+        <mat-card class="habilidad-card">
+          <!-- Header con Tipo -->
+          <div class="card-header">
+            <mat-chip-set>
+              <mat-chip [class.oferta-chip]="habilidad.tipo === 'oferta'" 
+                        [class.demanda-chip]="habilidad.tipo === 'demanda'">
+                <mat-icon>{{ getTipoIcon() }}</mat-icon>
+                {{ habilidad.tipo | uppercase }}
+              </mat-chip>
+              <mat-chip>
+                <mat-icon>label</mat-icon>
+                {{ habilidad.categoria }}
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+
+          <mat-card-content>
+            <!-- Título -->
+            <h1 class="titulo">{{ habilidad.titulo }}</h1>
+
+            <!-- Meta Info -->
+            <div class="meta-info">
+              <div class="meta-item">
+                <mat-icon>schedule</mat-icon>
+                <span *ngIf="habilidad.duracion_estimada">
+                  {{ formatDuration(habilidad.duracion_estimada) }}
+                </span>
+                <span *ngIf="!habilidad.duracion_estimada">
+                  Duración a convenir
+                </span>
+              </div>
+              <div class="meta-item">
+                <mat-icon>calendar_today</mat-icon>
+                <span>{{ habilidad.fecha_publicacion | date:'dd/MM/yyyy' }}</span>
+              </div>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <!-- Descripción -->
+            <div class="descripcion-section">
+              <h2>Descripción</h2>
+              <p class="descripcion">{{ habilidad.descripcion }}</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Columna Lateral -->
+      <div class="sidebar-column">
+        <!-- Usuario -->
+        <mat-card class="user-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>account_circle</mat-icon>
+            <mat-card-title>{{ habilidad.usuario_nombre }}</mat-card-title>
+            <mat-card-subtitle>
+              <mat-icon inline="true">location_on</mat-icon>
+              {{ habilidad.usuario_ubicacion }}
+            </mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p class="user-email" *ngIf="habilidad.usuario_email">
+              <mat-icon>email</mat-icon>
+              {{ habilidad.usuario_email }}
+            </p>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button 
+              mat-raised-button 
+              color="primary" 
+              class="full-width"
+              (click)="contactUser()"
+              *ngIf="authService.isAuthenticated() && !isOwner">
+              <mat-icon>message</mat-icon>
+              Contactar
+            </button>
+
+            <button 
+              mat-stroked-button
+              routerLink="/login"
+              class="full-width"
+              *ngIf="!authService.isAuthenticated()">
+              <mat-icon>login</mat-icon>
+              Inicia sesión para contactar
+            </button>
+          </mat-card-actions>
+        </mat-card>
+
+        <!-- Acciones del propietario -->
+        <mat-card *ngIf="isOwner" class="owner-actions-card">
+          <mat-card-header>
+            <mat-card-title>Tus Acciones</mat-card-title>
+          </mat-card-header>
+          <mat-card-actions>
+            <button mat-button color="primary" (click)="editHabilidad()">
+              <mat-icon>edit</mat-icon>
+              Editar
+            </button>
+            <button mat-button color="warn" (click)="deleteHabilidad()">
+              <mat-icon>delete</mat-icon>
+              Eliminar
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error / No encontrado -->
+  <div *ngIf="!loading && !habilidad" class="error-container">
+    <mat-icon>error_outline</mat-icon>
+    <h2>Habilidad no encontrada</h2>
+    <button mat-raised-button color="primary" routerLink="/habilidades">
+      Volver al listado
+    </button>
+  </div>
+</div>
