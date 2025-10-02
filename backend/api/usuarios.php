@@ -150,7 +150,7 @@ function obtenerEstadisticasUsuario($id) {
         $db = Database::getConnection();
         
         // Usar la vista estadisticas_usuarios
-        $sql = "SELECT * FROM estadisticas_usuarios WHERE usuario_id = :id";
+        $sql = "SELECT * FROM estadisticas_usuarios WHERE id = :id";
         $stmt = $db->prepare($sql);
         $stmt->execute(['id' => $id]);
         $stats = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -166,12 +166,13 @@ function obtenerEstadisticasUsuario($id) {
             
             // Devolver estadísticas vacías
             $stats = [
-                'usuario_id' => $id,
-                'total_habilidades_oferta' => 0,
-                'total_habilidades_demanda' => 0,
+                'id' => $id,
+                'total_habilidades' => 0,
+                'ofertas_activas' => 0,
+                'demandas_activas' => 0,
                 'total_intercambios' => 0,
                 'intercambios_completados' => 0,
-                'valoracion_promedio' => null,
+                'valoracion_promedio' => 0,
                 'total_valoraciones' => 0
             ];
         }
