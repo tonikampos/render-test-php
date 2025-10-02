@@ -10,7 +10,8 @@ function setupCORS() {
     $allowed_origins = [
         'http://localhost:4200',      // Angular development
         'http://127.0.0.1:4200',      // Angular development (alternativa)
-        'https://render-test-php-1.onrender.com', // Producción en Render
+        'https://render-test-php-1.onrender.com', // Producción en Render (backend)
+        'https://galitroco-frontend.onrender.com', // Producción en Render (frontend)
     ];
     
     $origin = $_SERVER['HTTP_ORIGIN'] ?? '';

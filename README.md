@@ -1,93 +1,315 @@
-# Render Test PHP - Contador de Visitas
+# 🤝 Galitroco - Plataforma de Intercambio de Habilidades
 
-Un sencillo contador de visitas desarrollado en PHP que utiliza PostgreSQL como base de datos, diseñado específicamente para ser desplegado en Render.
+**TFM (Trabajo Final de Máster)** - Plataforma web para intercambiar habilidades entre usuarios mediante un sistema de trueque basado en tiempo.
+
+---
 
 ## 🚀 Características
 
-- **Contador de visitas**: Lleva la cuenta de cuántas veces se ha visitado la página
-- **Base de datos PostgreSQL**: Utiliza PostgreSQL para persistir el contador
-- **Conexión segura**: Usa variables de entorno para la configuración de la base de datos
-- **Diseño responsive**: Interfaz simple y atractiva
-- **Preparado para Render**: Configurado para funcionar perfectamente en la plataforma Render
+### Frontend (Angular 19)
+- ✅ Sistema de autenticación (registro/login)
+- ✅ Gestión de habilidades (crear, editar, buscar)
+- ✅ Sistema de intercambios entre usuarios
+- ✅ Valoraciones y reputación
+- ✅ Chat/Conversaciones
+- ✅ Notificaciones
+- ✅ Panel de administración
+- ✅ Diseño responsive con Angular Material
 
-## 🛠️ Tecnologías utilizadas
+### Backend (PHP 8.2 + API REST)
+- ✅ API REST completa
+- ✅ Autenticación con JWT
+- ✅ CRUD de usuarios, habilidades, intercambios
+- ✅ Sistema de valoraciones
+- ✅ Gestión de conversaciones
+- ✅ Sistema de reportes
+- ✅ Categorías de habilidades
+- ✅ CORS configurado
 
-- **PHP**: Lenguaje de programación principal
-- **PostgreSQL**: Base de datos para almacenar el contador
-- **PDO**: Para conexiones seguras a la base de datos
-- **HTML5 & CSS3**: Para la interfaz de usuario
+### Base de Datos (PostgreSQL - Supabase)
+- ✅ Esquema completo con relaciones
+- ✅ Triggers y funciones automáticas
+- ✅ Seeds de datos de prueba
+- ✅ Gestión de timestamps
 
-## 📋 Requisitos
+---
 
-- PHP 7.4 o superior
-- PostgreSQL
-- Variable de entorno `DATABASE_URL`
+## 🛠️ Tecnologías Utilizadas
 
-## ⚙️ Configuración para desarrollo local
+### Frontend
+- **Angular 19**: Framework principal
+- **Angular Material**: Componentes UI
+- **TypeScript 5.7**: Lenguaje
+- **RxJS 7.8**: Programación reactiva
+- **SCSS**: Estilos
 
-1. **Clona el repositorio:**
-   ```bash
-   git clone https://github.com/tonikampos/render-test-php.git
-   cd render-test-php
-   ```
+### Backend
+- **PHP 8.2**: Lenguaje del servidor
+- **Apache**: Servidor web
+- **PDO**: Acceso a base de datos
+- **JWT**: Autenticación
 
-2. **Configura la base de datos PostgreSQL:**
-   - Crea una base de datos en PostgreSQL
-   - Crea la tabla necesaria:
-     ```sql
-     CREATE TABLE visitantes (
-         id SERIAL PRIMARY KEY,
-         contador INTEGER DEFAULT 0
-     );
-     
-     INSERT INTO visitantes (contador) VALUES (0);
-     ```
+### Base de Datos
+- **PostgreSQL 15**: Base de datos relacional
+- **Supabase**: Hosting de PostgreSQL
 
-3. **Configura las variables de entorno:**
-   - Crea un archivo `.env` (local) con:
-     ```
-     DATABASE_URL=postgres://usuario:contraseña@localhost:5432/nombre_bd
-     ```
+### Deploy
+- **Render.com**: Hosting (Free Tier)
+  - Web Service (Backend - Docker)
+  - Static Site (Frontend)
+- **GitHub Actions**: CI/CD
+- **Docker**: Containerización del backend
 
-4. **Ejecuta en un servidor local:**
-   ```bash
-   php -S localhost:8000
-   ```
+---
 
-## 🌐 Despliegue en Render
+## 📋 Requisitos de Desarrollo Local
 
-Este proyecto está optimizado para Render:
+### Backend
+- PHP 8.2 o superior
+- Composer
+- PostgreSQL 15 o Supabase
+- Apache o nginx
 
-1. Conecta tu repositorio de GitHub con Render
-2. Configura la variable de entorno `DATABASE_URL` en Render
-3. Render detectará automáticamente que es un proyecto PHP
-4. ¡Tu aplicación estará lista!
+### Frontend
+- Node.js 20 o superior
+- npm 10 o superior
+- Angular CLI 19
 
-## 📁 Estructura del proyecto
+---
+
+## ⚙️ Configuración para Desarrollo Local
+
+## ⚙️ Configuración para Desarrollo Local
+
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/tonikampos/render-test-php.git
+cd render-test-php
+```
+
+### 2. Configurar el Backend
+
+```bash
+# Copiar configuración de ejemplo
+cp backend/config/database.php.example backend/config/database.php
+
+# Editar con tus credenciales de Supabase o PostgreSQL local
+# DB_HOST, DB_NAME, DB_USER, DB_PASSWORD, DB_PORT
+```
+
+#### Crear el esquema de base de datos:
+```bash
+# Usando psql
+psql -U tu_usuario -d tu_base_datos -f database/schema.sql
+psql -U tu_usuario -d tu_base_datos -f database/seeds.sql
+
+# O desde Supabase SQL Editor
+# Copiar y ejecutar database/schema.sql y database/seeds.sql
+```
+
+#### Iniciar servidor PHP local (XAMPP, WAMP, MAMP o PHP built-in):
+```bash
+# Opción 1: PHP built-in server
+php -S localhost:8000 -t .
+
+# Opción 2: XAMPP
+# Copiar proyecto a htdocs/ y acceder desde http://localhost/probatfm/
+```
+
+### 3. Configurar el Frontend
+
+```bash
+cd frontend
+
+# Instalar dependencias
+npm install
+
+# Configurar entorno de desarrollo
+# Editar src/environments/environment.ts
+# apiUrl: 'http://localhost:8000/api.php'
+
+# Iniciar servidor de desarrollo
+npm start
+# o
+ng serve
+
+# Acceder a: http://localhost:4200
+```
+
+---
+
+## 🌐 Despliegue en Producción (Render.com)
+
+### 🔹 Backend (Ya desplegado)
+- **URL**: https://render-test-php-1.onrender.com
+- **Tipo**: Web Service (Docker)
+- **Auto-deploy**: Activado desde `main` branch
+
+### 🔹 Frontend (Por desplegar)
+- **Guía completa**: Ver `DEPLOY_FRONTEND_RENDER.md`
+- **URL prevista**: https://galitroco-frontend.onrender.com
+- **Tipo**: Static Site
+
+#### Resumen rápido:
+```bash
+# 1. En Render Dashboard: New + → Static Site
+# 2. Configuración:
+#    - Repository: tonikampos/render-test-php
+#    - Build Command: cd frontend && npm install && npm run build:prod
+#    - Publish Directory: frontend/dist/frontend/browser
+# 3. ¡Listo! Deploy automático cada push a main
+```
+
+---
+
+## 📁 Estructura del Proyecto
 
 ```
-render-test-php/
-├── index.php          # Archivo principal de la aplicación
-├── .gitignore         # Archivos ignorados por Git
-└── README.md          # Este archivo
+probatfm/
+├── backend/                    # API REST en PHP
+│   ├── api/                    # Endpoints de la API
+│   │   ├── auth.php           # Login/Register
+│   │   ├── usuarios.php       # CRUD usuarios
+│   │   ├── habilidades.php    # CRUD habilidades
+│   │   ├── intercambios.php   # Gestión de intercambios
+│   │   ├── valoraciones.php   # Sistema de reputación
+│   │   ├── conversaciones.php # Chat
+│   │   ├── notificaciones.php # Notificaciones
+│   │   ├── categorias.php     # Categorías
+│   │   └── reportes.php       # Reportes/denuncias
+│   ├── config/                # Configuración
+│   │   ├── database.php       # Conexión a PostgreSQL
+│   │   └── cors.php           # CORS settings
+│   └── utils/                 # Utilidades
+│       ├── Auth.php           # JWT & autenticación
+│       └── Response.php       # Respuestas estandarizadas
+│
+├── frontend/                   # SPA en Angular 19
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── core/          # Servicios core, guards, interceptors
+│   │   │   ├── features/      # Módulos principales
+│   │   │   │   ├── auth/      # Login/Register
+│   │   │   │   ├── habilidades/ # Gestión de habilidades
+│   │   │   │   ├── home/      # Página principal
+│   │   │   │   └── perfil/    # Perfil de usuario
+│   │   │   ├── layout/        # Header, footer
+│   │   │   └── shared/        # Componentes y modelos compartidos
+│   │   └── environments/      # Configuración por entorno
+│   ├── public/
+│   │   └── _redirects         # SPA routing para Render
+│   └── angular.json           # Configuración Angular
+│
+├── database/                   # Scripts SQL
+│   ├── schema.sql             # Estructura completa de BD
+│   ├── schema_supabase.sql    # Versión para Supabase
+│   └── seeds.sql              # Datos de prueba
+│
+├── Dockerfile                  # Docker para backend
+├── render.yaml                 # Configuración multi-servicio Render
+├── DEPLOY_FRONTEND_RENDER.md   # Guía completa de deploy
+├── DOCUMENTACION_FRONTEND.md   # Documentación técnica frontend
+└── README.md                   # Este archivo
 ```
 
-## 🔧 Funcionamiento
+---
 
-La aplicación:
+## � URLs de Producción
 
-1. Se conecta a PostgreSQL usando la variable de entorno `DATABASE_URL`
-2. Incrementa el contador en la base de datos cada vez que se carga la página
-3. Muestra el número total de visitas
-4. Maneja errores de conexión de forma elegante
+| Servicio | URL | Estado |
+|----------|-----|--------|
+| **Backend API** | https://render-test-php-1.onrender.com/api.php | ✅ Desplegado |
+| **Frontend** | https://galitroco-frontend.onrender.com | 🔜 Por desplegar |
+| **GitHub** | https://github.com/tonikampos/render-test-php | ✅ Activo |
+| **Base de Datos** | Supabase (PostgreSQL) | ✅ Activo |
 
-## 📝 Notas
+---
 
-- La aplicación usa PDO para conexiones seguras a la base de datos
-- Todas las variables de entorno se manejan de forma segura
-- El diseño es responsive y funciona en dispositivos móviles
-- Incluye manejo de errores para conexiones fallidas
+## 🧪 Testing
+
+### Backend
+```bash
+# Test de conexión a base de datos
+curl https://render-test-php-1.onrender.com/backend/test_db.php
+
+# Test de autenticación
+curl -X POST https://render-test-php-1.onrender.com/api.php/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@test.com","password":"password"}'
+```
+
+### Frontend
+```bash
+cd frontend
+
+# Tests unitarios
+npm test
+
+# Tests e2e (requiere configuración adicional)
+# ng e2e
+```
+
+---
+
+## 📖 Documentación Adicional
+
+- **Frontend**: Ver `DOCUMENTACION_FRONTEND.md` para arquitectura detallada
+- **Deploy**: Ver `DEPLOY_FRONTEND_RENDER.md` para guía paso a paso
+- **API**: Ver endpoints en `backend/api/README.md` (pendiente crear)
+
+---
+
+## 🐛 Troubleshooting
+
+### CORS errors en desarrollo
+```javascript
+// Asegúrate de que cors.php incluye http://localhost:4200
+$allowed_origins = [
+    'http://localhost:4200',
+    // ...
+];
+```
+
+### Build de producción falla
+```bash
+# Limpiar cache de Angular
+rm -rf frontend/.angular
+rm -rf frontend/node_modules
+cd frontend && npm install
+npm run build:prod
+```
+
+### Base de datos no conecta
+```bash
+# Verificar variables de entorno en backend/config/database.php
+# O en Render: Settings → Environment → DB_HOST, DB_NAME, etc.
+```
+
+---
+
+## 🎓 Información del TFM
+
+- **Universidad**: UOC (Universitat Oberta de Catalunya)
+- **Programa**: Máster (TFM)
+- **Proyecto**: Galitroco - Plataforma de Intercambio de Habilidades
+- **Tecnologías**: Angular + PHP + PostgreSQL + Render
+- **Arquitectura**: Frontend desacoplado (JAMstack)
+- **Año**: 2024-2025
+
+---
+
+## 📝 Licencia
+
+Proyecto académico para TFM - Todos los derechos reservados.
+
+---
 
 ## 👨‍💻 Autor
 
-Desarrollado para pruebas de despliegue en Render.
+**Toni Kampos**  
+GitHub: [@tonikampos](https://github.com/tonikampos)  
+Repositorio: [render-test-php](https://github.com/tonikampos/render-test-php)
+
+---
+
+**Última actualización**: 2 de octubre de 2025

@@ -1,0 +1,43 @@
+# Configuración de Render para TFM - Galitroco
+# Define ambos servicios: backend (Web Service) y frontend (Static Site)
+
+services:
+  # Backend API - PHP en Docker
+  - type: web
+    name: galitroco-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DB_HOST
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_PORT
+        value: 5432
+    healthCheckPath: /backend/info.php
+
+  # Frontend Angular - Static Site
+  - type: web
+    name: galitroco-frontend
+    runtime: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist/frontend/browser
+    pullRequestPreviewsEnabled: true
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-XSS-Protection
+        value: 1; mode=block
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
