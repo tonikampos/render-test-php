@@ -304,4 +304,217 @@ class Auth {
             exit();
         }
     }
+    
+    /**
+     * Solicitar recuperación de contraseña
+     * Genera token y envía email con enlace de recuperación
+     * 
+     * @param string $email Email del usuario
+     * @return array Resultado de la operación
+     */
+    public static function forgotPassword($email) {
+        try {
+            // Validar formato de email
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return [
+                    'success' => false,
+                    'message' => 'Email inválido'
+                ];
+            }
+            
+            $db = Database::getConnection();
+            
+            // Verificar que el usuario existe
+            $stmt = $db->prepare("
+                SELECT id, nombre_usuario 
+                FROM usuarios 
+                WHERE email = :email AND activo = true
+            ");
+            $stmt->execute(['email' => $email]);
+            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // IMPORTANTE: Por seguridad, NO revelar si el email existe o no
+            // Siempre responder con el mismo mensaje
+            if (!$usuario) {
+                // Esperar un poco para evitar timing attacks
+                usleep(500000); // 0.5 segundos
+                
+                return [
+                    'success' => true,
+                    'message' => 'Si el email está registrado, recibirás instrucciones para recuperar tu contraseña'
+                ];
+            }
+            
+            // Generar token aleatorio seguro (64 caracteres hexadecimales)
+            $token = bin2hex(random_bytes(32));
+            
+            // Guardar token en base de datos con expiración de 1 hora
+            $stmt = $db->prepare("
+                INSERT INTO password_resets (email, token, fecha_creacion, fecha_expiracion, usado)
+                VALUES (:email, :token, NOW(), NOW() + INTERVAL '1 hour', false)
+            ");
+            $stmt->execute([
+                'email' => $email,
+                'token' => $token
+            ]);
+            
+            // Enviar email con el token
+            require_once __DIR__ . '/EmailService.php';
+            $email_enviado = EmailService::enviarRecuperacionPassword($email, $token);
+            
+            if (!$email_enviado) {
+                error_log("Error: No se pudo enviar email de recuperación a: $email");
+                // No revelar el error al usuario por seguridad
+            }
+            
+            return [
+                'success' => true,
+                'message' => 'Si el email está registrado, recibirás instrucciones para recuperar tu contraseña'
+            ];
+            
+        } catch (Exception $e) {
+            error_log("Error en forgotPassword: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error en el servidor. Inténtalo de nuevo más tarde'
+            ];
+        }
+    }
+    
+    /**
+     * Restablecer contraseña con token
+     * 
+     * @param string $token Token de recuperación
+     * @param string $new_password Nueva contraseña
+     * @param string $confirm_password Confirmación de contraseña
+     * @return array Resultado de la operación
+     */
+    public static function resetPassword($token, $new_password, $confirm_password) {
+        try {
+            // Validaciones básicas
+            if (empty($token) || empty($new_password) || empty($confirm_password)) {
+                return [
+                    'success' => false,
+                    'message' => 'Todos los campos son obligatorios'
+                ];
+            }
+            
+            // Validar que las contraseñas coinciden
+            if ($new_password !== $confirm_password) {
+                return [
+                    'success' => false,
+                    'message' => 'Las contraseñas no coinciden'
+                ];
+            }
+            
+            // Validar longitud de contraseña
+            if (strlen($new_password) < 8) {
+                return [
+                    'success' => false,
+                    'message' => 'La contraseña debe tener al menos 8 caracteres'
+                ];
+            }
+            
+            // Validar complejidad de contraseña (opcional pero recomendado)
+            if (!preg_match('/[A-Za-z]/', $new_password) || !preg_match('/[0-9]/', $new_password)) {
+                return [
+                    'success' => false,
+                    'message' => 'La contraseña debe contener al menos una letra y un número'
+                ];
+            }
+            
+            $db = Database::getConnection();
+            
+            // Buscar token en la base de datos
+            $stmt = $db->prepare("
+                SELECT email, fecha_expiracion, usado
+                FROM password_resets
+                WHERE token = :token
+            ");
+            $stmt->execute(['token' => $token]);
+            $reset = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Validar que el token existe
+            if (!$reset) {
+                return [
+                    'success' => false,
+                    'message' => 'Token inválido o expirado'
+                ];
+            }
+            
+            // Validar que el token no ha sido usado
+            if ($reset['usado']) {
+                return [
+                    'success' => false,
+                    'message' => 'Este token ya fue utilizado. Solicita uno nuevo'
+                ];
+            }
+            
+            // Validar que el token no ha expirado
+            $fecha_expiracion = strtotime($reset['fecha_expiracion']);
+            $fecha_actual = time();
+            
+            if ($fecha_expiracion < $fecha_actual) {
+                return [
+                    'success' => false,
+                    'message' => 'El token ha expirado. Solicita uno nuevo (válido por 1 hora)'
+                ];
+            }
+            
+            // Hash de la nueva contraseña
+            $password_hash = password_hash($new_password, PASSWORD_BCRYPT, ['cost' => 12]);
+            
+            // Actualizar contraseña del usuario
+            $stmt = $db->prepare("
+                UPDATE usuarios 
+                SET contrasena_hash = :password_hash 
+                WHERE email = :email AND activo = true
+            ");
+            $resultado = $stmt->execute([
+                'password_hash' => $password_hash,
+                'email' => $reset['email']
+            ]);
+            
+            if (!$resultado || $stmt->rowCount() === 0) {
+                return [
+                    'success' => false,
+                    'message' => 'No se pudo actualizar la contraseña. Usuario no encontrado'
+                ];
+            }
+            
+            // Marcar token como usado
+            $stmt = $db->prepare("
+                UPDATE password_resets 
+                SET usado = true 
+                WHERE token = :token
+            ");
+            $stmt->execute(['token' => $token]);
+            
+            // Cerrar todas las sesiones activas del usuario por seguridad
+            $stmt = $db->prepare("
+                UPDATE sesiones 
+                SET activa = false 
+                WHERE usuario_id = (
+                    SELECT id FROM usuarios WHERE email = :email
+                )
+                AND activa = true
+            ");
+            $stmt->execute(['email' => $reset['email']]);
+            
+            // Log de seguridad
+            error_log("Contraseña restablecida exitosamente para: " . $reset['email']);
+            
+            return [
+                'success' => true,
+                'message' => 'Contraseña actualizada correctamente. Ya puedes iniciar sesión'
+            ];
+            
+        } catch (Exception $e) {
+            error_log("Error en resetPassword: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error en el servidor. Inténtalo de nuevo más tarde'
+            ];
+        }
+    }
 }

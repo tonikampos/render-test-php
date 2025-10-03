@@ -5,6 +5,8 @@
  * POST /api/auth/login - Iniciar sesión
  * POST /api/auth/logout - Cerrar sesión
  * GET /api/auth/me - Obtener usuario actual
+ * POST /api/auth/forgot-password - Solicitar recuperación de contraseña
+ * POST /api/auth/reset-password - Restablecer contraseña con token
  */
 
 function handleAuthRoutes($method, $action, $input) {
@@ -61,6 +63,48 @@ function handleAuthRoutes($method, $action, $input) {
             Response::success($result['user'], 'Usuario autenticado');
         } else {
             Response::unauthorized($result['message']);
+        }
+    }
+    
+    // POST /api/auth/forgot-password
+    if ($method === 'POST' && $action === 'forgot-password') {
+        // Validar email
+        if (empty($input['email'])) {
+            Response::validationError([
+                'email' => 'Email es requerido'
+            ]);
+        }
+        
+        $result = Auth::forgotPassword($input['email']);
+        
+        if ($result['success']) {
+            Response::success(null, $result['message']);
+        } else {
+            Response::error($result['message'], 400);
+        }
+    }
+    
+    // POST /api/auth/reset-password
+    if ($method === 'POST' && $action === 'reset-password') {
+        // Validar campos requeridos
+        if (empty($input['token']) || empty($input['new_password']) || empty($input['confirm_password'])) {
+            Response::validationError([
+                'token' => 'Token es requerido',
+                'new_password' => 'Nueva contraseña es requerida',
+                'confirm_password' => 'Confirmación de contraseña es requerida'
+            ]);
+        }
+        
+        $result = Auth::resetPassword(
+            $input['token'], 
+            $input['new_password'], 
+            $input['confirm_password']
+        );
+        
+        if ($result['success']) {
+            Response::success(null, $result['message']);
+        } else {
+            Response::error($result['message'], 400);
         }
     }
     
