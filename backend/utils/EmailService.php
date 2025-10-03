@@ -1,18 +1,20 @@
 <?php
 /**
  * Servicio de envío de emails
- * Integración con Resend
+ * Integración con Brevo (antes Sendinblue)
  * 
  * CONFIGURACIÓN REQUERIDA:
- * - Variable de entorno: RESEND_API_KEY
+ * - Variable de entorno: BREVO_API_KEY
  * - Variable de entorno: FRONTEND_URL
  * 
- * Para Resend:
- * 1. Crear cuenta en https://resend.com
- * 2. Obtener API Key en: API Keys → Create API Key
- * 3. (Opcional) Añadir dominio propio para emails profesionales
+ * Para Brevo:
+ * 1. Crear cuenta en https://www.brevo.com
+ * 2. Ir a Settings → SMTP & API → API Keys
+ * 3. Crear API Key (Create a new API Key)
+ * 4. Copiar la key y añadirla como variable de entorno en Render
  * 
- * Plan gratuito: 3,000 emails/mes + 100 emails/día
+ * Plan gratuito: 300 emails/día (9,000/mes)
+ * ✅ Ventaja: Puedes enviar a CUALQUIER email sin verificar dominio
  */
 
 class EmailService {
@@ -27,11 +29,11 @@ class EmailService {
     public static function enviarRecuperacionPassword($email, $token) {
         try {
             // Obtener configuración
-            $resend_api_key = getenv('RESEND_API_KEY');
+            $brevo_api_key = getenv('BREVO_API_KEY');
             $frontend_url = getenv('FRONTEND_URL') ?: 'http://localhost:4200';
             
             // Si no hay API key, modo desarrollo (solo log)
-            if (empty($resend_api_key)) {
+            if (empty($brevo_api_key)) {
                 error_log("=== MODO DESARROLLO - EMAIL NO ENVIADO ===");
                 error_log("Destinatario: $email");
                 error_log("Token: $token");
@@ -46,27 +48,35 @@ class EmailService {
             // Contenido HTML del email
             $html_content = self::getEmailTemplate($reset_link);
             
-            // Preparar datos para Resend API
-            // NOTA: Usa 'onboarding@resend.dev' para testing o tu dominio verificado
-            $from_email = getenv('RESEND_FROM_EMAIL') ?: 'onboarding@resend.dev';
+            // Preparar datos para Brevo API
+            // NOTA: El email "from" debe ser un email que hayas verificado en Brevo
+            // O usa el email con el que te registraste en Brevo
+            $from_email = getenv('BREVO_FROM_EMAIL') ?: 'noreply@galitroco.com';
+            $from_name = getenv('BREVO_FROM_NAME') ?: 'GaliTroco';
             
             $data = [
-                'from' => "GaliTroco <$from_email>",
-                'to' => [$email],
+                'sender' => [
+                    'name' => $from_name,
+                    'email' => $from_email
+                ],
+                'to' => [
+                    ['email' => $email]
+                ],
                 'subject' => 'Recuperación de Contraseña - GaliTroco',
-                'html' => $html_content
+                'htmlContent' => $html_content
             ];
             
-            // Enviar email mediante API de Resend
+            // Enviar email mediante API de Brevo
             $ch = curl_init();
             
-            curl_setopt($ch, CURLOPT_URL, 'https://api.resend.com/emails');
+            curl_setopt($ch, CURLOPT_URL, 'https://api.brevo.com/v3/smtp/email');
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
             curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'Authorization: Bearer ' . $resend_api_key,
-                'Content-Type: application/json'
+                'api-key: ' . $brevo_api_key,
+                'Content-Type: application/json',
+                'accept: application/json'
             ]);
             
             $response = curl_exec($ch);
@@ -75,10 +85,10 @@ class EmailService {
             
             // Verificar respuesta
             if ($http_code >= 200 && $http_code < 300) {
-                error_log("Email de recuperación enviado exitosamente a: $email");
+                error_log("Email de recuperación enviado exitosamente a: $email (via Brevo)");
                 return true;
             } else {
-                error_log("Error enviando email. HTTP Code: $http_code, Response: $response");
+                error_log("Error enviando email via Brevo. HTTP Code: $http_code, Response: $response");
                 return false;
             }
             
