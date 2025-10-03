@@ -13,7 +13,11 @@ export class StorageService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    if (!token || token === 'undefined' || token === 'null') {
+      return null;
+    }
+    return token;
   }
 
   removeToken(): void {
@@ -27,7 +31,16 @@ export class StorageService {
 
   getUser(): any | null {
     const user = localStorage.getItem(this.USER_KEY);
-    return user ? JSON.parse(user) : null;
+    if (!user || user === 'undefined' || user === 'null') {
+      return null;
+    }
+    try {
+      return JSON.parse(user);
+    } catch (error) {
+      console.error('Error parsing user from localStorage:', error);
+      this.removeUser(); // Limpiar dato corrupto
+      return null;
+    }
   }
 
   removeUser(): void {

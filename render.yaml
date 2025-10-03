@@ -21,11 +21,11 @@ services:
     healthCheckPath: /backend/info.php
 
   # Frontend Angular - Static Site
-  - type: web
+  - type: static
     name: galitroco-frontend
-    runtime: static
-    buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: frontend/dist/frontend/browser
+    buildCommand: cd frontend && npm ci && npm run build:prod
+    staticPublishPath: ./frontend/dist/frontend/browser
+    publishPath: ./frontend/dist/frontend/browser
     pullRequestPreviewsEnabled: true
     headers:
       - path: /*
