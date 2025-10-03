@@ -24,8 +24,9 @@ services:
   - type: web
     name: galitroco-frontend
     runtime: static
-    buildCommand: cd frontend && npm ci && npm run build:prod
-    staticPublishPath: ./frontend/dist/frontend/browser
+    rootDir: frontend
+    buildCommand: npm install && npm run build:prod
+    staticPublishPath: dist/frontend/browser
     routes:
       - type: rewrite
         source: /reset-password
