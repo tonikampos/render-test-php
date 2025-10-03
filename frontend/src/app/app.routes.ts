@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { ResetPasswordComponent } from './features/auth/reset-password/reset-password.component';
+import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
 
 export const routes: Routes = [
   {
@@ -16,11 +18,11 @@ export const routes: Routes = [
   },
   {
     path: 'forgot-password',
-    loadComponent: () => import('./features/auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
+    component: ForgotPasswordComponent  // EAGER LOADING - TEST
   },
   {
     path: 'reset-password',
-    loadComponent: () => import('./features/auth/reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
+    component: ResetPasswordComponent  // EAGER LOADING - TEST
   },
   {
     path: 'habilidades',
