@@ -21,31 +21,16 @@ services:
     healthCheckPath: /backend/info.php
 
   # Frontend Angular - Static Site
-  - type: web
+  - type: static
     name: galitroco-frontend
-    runtime: static
-    rootDir: frontend
-    buildCommand: npm install && npm run build:prod
-    staticPublishPath: dist/frontend/browser
+    buildCommand: cd frontend && npm install && npm run build:prod
+    staticPublishPath: frontend/dist/frontend/browser
+    pullRequestPreviewsEnabled: true
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
     routes:
-      - type: rewrite
-        source: /reset-password
-        destination: /index.html
-      - type: rewrite
-        source: /forgot-password
-        destination: /index.html
-      - type: rewrite
-        source: /login
-        destination: /index.html
-      - type: rewrite
-        source: /register
-        destination: /index.html
-      - type: rewrite
-        source: /habilidades*
-        destination: /index.html
-      - type: rewrite
-        source: /perfil
-        destination: /index.html
       - type: rewrite
         source: /*
         destination: /index.html
