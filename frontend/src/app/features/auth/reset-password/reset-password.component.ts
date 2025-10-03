@@ -27,6 +27,7 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss']
 })
+
 export class ResetPasswordComponent implements OnInit {
   resetPasswordForm: FormGroup;
   loading = false;
