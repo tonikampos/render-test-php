@@ -23,8 +23,9 @@ services:
   # Frontend Angular - Static Site
   - type: static
     name: galitroco-frontend
-    buildCommand: cd frontend && npm install && npm run build:prod
-    staticPublishPath: frontend/dist/frontend/browser
+    buildCommand: npm install && npm run build:prod
+    staticPublishPath: dist/frontend/browser
+    rootDirectory: frontend
     pullRequestPreviewsEnabled: true
     headers:
       - path: /*
