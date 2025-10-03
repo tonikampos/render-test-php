@@ -132,4 +132,25 @@ export class ResetPasswordComponent implements OnInit {
   goToLogin(): void {
     this.router.navigate(['/login']);
   }
+
+  /**
+   * Verificar si la contraseña tiene al menos 8 caracteres
+   */
+  hasMinLength(): boolean {
+    return this.newPassword?.value?.length >= 8;
+  }
+
+  /**
+   * Verificar si la contraseña contiene letras
+   */
+  hasLetters(): boolean {
+    return /[a-zA-Z]/.test(this.newPassword?.value || '');
+  }
+
+  /**
+   * Verificar si la contraseña contiene números
+   */
+  hasNumbers(): boolean {
+    return /[0-9]/.test(this.newPassword?.value || '');
+  }
 }
