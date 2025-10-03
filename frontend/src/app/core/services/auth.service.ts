@@ -110,4 +110,22 @@ export class AuthService {
     this.storageService.clearAll();
     this.currentUserSubject.next(null);
   }
+
+  /**
+   * Solicitar recuperación de contraseña
+   */
+  forgotPassword(email: string): Observable<ApiResponse<null>> {
+    return this.apiService.post<ApiResponse<null>>('auth/forgot-password', { email });
+  }
+
+  /**
+   * Restablecer contraseña con token
+   */
+  resetPassword(token: string, newPassword: string, confirmPassword: string): Observable<ApiResponse<null>> {
+    return this.apiService.post<ApiResponse<null>>('auth/reset-password', {
+      token,
+      new_password: newPassword,
+      confirm_password: confirmPassword
+    });
+  }
 }
