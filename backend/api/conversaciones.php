@@ -181,6 +181,12 @@ function obtenerMensajes($conversacion_id) {
 function crearConversacion($input) {
     try {
         $db = Database::getConnection();
+        
+        // SAFETY: Si hay transacción activa fallida, hacer rollback
+        if ($db->inTransaction()) {
+            $db->rollBack();
+        }
+        
         $usuario_id = $_SESSION['user_id'];
         
         // Validar entrada (aceptar tanto receptor_id como otro_usuario_id)
