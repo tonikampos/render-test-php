@@ -198,11 +198,15 @@ function crearConversacion($input) {
             Response::error('No puedes crear una conversación contigo mismo', 400);
         }
         
+        // Iniciar transacción ANTES de cualquier query
+        $db->beginTransaction();
+        
         // Verificar que el receptor existe
         $sqlCheckUser = "SELECT id FROM usuarios WHERE id = :receptor_id AND activo = TRUE";
         $stmtCheckUser = $db->prepare($sqlCheckUser);
         $stmtCheckUser->execute(['receptor_id' => $receptor_id]);
         if (!$stmtCheckUser->fetch()) {
+            $db->rollBack();
             Response::error('El usuario receptor no existe o no está activo', 404);
         }
         
@@ -225,14 +229,12 @@ function crearConversacion($input) {
             // Si ya existe, devolver su ID y enviar el mensaje ahí
             $conversacion_id = $conversacion_existente['id'];
             enviarMensajeInterno($db, $conversacion_id, $usuario_id, $mensaje_inicial);
+            $db->commit();
             Response::success([
                 'conversacion_id' => $conversacion_id,
                 'mensaje' => 'Mensaje enviado en conversación existente'
             ], 200);
         }
-        
-        // Iniciar transacción
-        $db->beginTransaction();
         
         // Crear conversación
         $sqlConversacion = "
