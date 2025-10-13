@@ -236,8 +236,8 @@ function crearConversacion($input) {
         
         // Crear conversación
         $sqlConversacion = "
-            INSERT INTO conversaciones (fecha_creacion, ultima_actualizacion)
-            VALUES (NOW(), NOW())
+            INSERT INTO conversaciones (intercambio_id, fecha_creacion, ultima_actualizacion)
+            VALUES (NULL, NOW(), NOW())
             RETURNING id
         ";
         $stmtConversacion = $db->prepare($sqlConversacion);
