@@ -273,7 +273,9 @@ function crearConversacion($input) {
             $db->rollBack();
         }
         error_log('Error en crearConversacion: ' . $e->getMessage());
-        Response::error('Error al crear conversación', 500);
+        error_log('Stack trace: ' . $e->getTraceAsString());
+        // Temporalmente devolver error detallado para debugging
+        Response::error('Error al crear conversación: ' . $e->getMessage(), 500);
     }
 }
 
