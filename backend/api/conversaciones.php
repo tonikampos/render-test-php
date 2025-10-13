@@ -250,7 +250,7 @@ function crearConversacion($input) {
         $stmtConversacion = $db->prepare($sqlConversacion);
         $stmtConversacion->execute();
         $conversacion_id = $stmtConversacion->fetchColumn();
-        
+        error_log('[DEBUG] conversacion_id generado: ' . var_export($conversacion_id, true));
         if (!$conversacion_id) {
             throw new Exception("No se pudo obtener el ID de la conversación creada");
         }
