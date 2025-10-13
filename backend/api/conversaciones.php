@@ -251,19 +251,18 @@ function crearConversacion($input) {
         $stmtConversacion->execute();
         $conversacion_id = $stmtConversacion->fetchColumn();
         
-        // Añadir participantes
-        $sqlParticipantes = "
-            INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union)
-            VALUES 
-                (:conversacion_id, :usuario_id, NOW()),
-                (:conversacion_id, :receptor_id, NOW())
-        ";
-        $stmtParticipantes = $db->prepare($sqlParticipantes);
-        $stmtParticipantes->execute([
-            'conversacion_id' => $conversacion_id,
-            'usuario_id' => $usuario_id,
-            'receptor_id' => $receptor_id
-        ]);
+        if (!$conversacion_id) {
+            throw new Exception("No se pudo obtener el ID de la conversación creada");
+        }
+        
+        // Añadir participantes UNO POR UNO para identificar errores
+        $sqlPart1 = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
+        $stmtPart1 = $db->prepare($sqlPart1);
+        $stmtPart1->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $usuario_id]);
+        
+        $sqlPart2 = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
+        $stmtPart2 = $db->prepare($sqlPart2);
+        $stmtPart2->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $receptor_id]);
         
         // Enviar mensaje inicial
         enviarMensajeInterno($db, $conversacion_id, $usuario_id, $mensaje_inicial);
