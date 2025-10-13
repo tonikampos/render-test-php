@@ -152,13 +152,13 @@ function obtenerIntercambio($id) {
                 u1.id as proponente_id,
                 u1.nombre_usuario as proponente_nombre,
                 u1.email as proponente_email,
-                u1.telefono as proponente_telefono,
+                u1.ubicacion as proponente_ubicacion,
                 u1.foto_url as proponente_foto,
                 -- Receptor
                 u2.id as receptor_id,
                 u2.nombre_usuario as receptor_nombre,
                 u2.email as receptor_email,
-                u2.telefono as receptor_telefono,
+                u2.ubicacion as receptor_ubicacion,
                 u2.foto_url as receptor_foto
             FROM intercambios i
             INNER JOIN habilidades h1 ON i.habilidad_ofrecida_id = h1.id

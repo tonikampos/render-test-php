@@ -183,16 +183,27 @@ function crearConversacion($input) {
         $db = Database::getConnection();
         $usuario_id = $_SESSION['user_id'];
         
-        // Validar entrada
-        if (empty($input['receptor_id']) || empty($input['mensaje_inicial'])) {
-            Response::error('Faltan campos requeridos: receptor_id, mensaje_inicial', 400);
+        // Validar entrada (aceptar tanto receptor_id como otro_usuario_id)
+        $receptor_id = $input['receptor_id'] ?? $input['otro_usuario_id'] ?? null;
+        $mensaje_inicial = $input['mensaje_inicial'] ?? null;
+        
+        if (empty($receptor_id) || empty($mensaje_inicial)) {
+            Response::error('Faltan campos requeridos: receptor_id (o otro_usuario_id) y mensaje_inicial', 400);
         }
         
-        $receptor_id = intval($input['receptor_id']);
-        $mensaje_inicial = trim($input['mensaje_inicial']);
+        $receptor_id = intval($receptor_id);
+        $mensaje_inicial = trim($mensaje_inicial);
         
         if ($receptor_id === $usuario_id) {
             Response::error('No puedes crear una conversación contigo mismo', 400);
+        }
+        
+        // Verificar que el receptor existe
+        $sqlCheckUser = "SELECT id FROM usuarios WHERE id = :receptor_id AND activo = TRUE";
+        $stmtCheckUser = $db->prepare($sqlCheckUser);
+        $stmtCheckUser->execute(['receptor_id' => $receptor_id]);
+        if (!$stmtCheckUser->fetch()) {
+            Response::error('El usuario receptor no existe o no está activo', 404);
         }
         
         // Verificar si ya existe una conversación entre estos usuarios
