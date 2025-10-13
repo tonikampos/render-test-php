@@ -521,3 +521,5 @@ function completarIntercambio($id) {
         Response::error('Error al completar intercambio', 500);
     }
 }
+
+// Fix deployed
