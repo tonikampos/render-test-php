@@ -235,7 +235,6 @@ function crearConversacion($input) {
             // Si ya existe, devolver su ID y enviar el mensaje ahí
             $conversacion_id = $conversacion_existente['id'];
             enviarMensajeInterno($db, $conversacion_id, $usuario_id, $mensaje_inicial);
-            $db->commit();
             Response::success([
                 'conversacion_id' => $conversacion_id,
                 'mensaje' => 'Mensaje enviado en conversación existente'
@@ -301,7 +300,7 @@ function crearConversacion($input) {
             throw $e;
         }
         
-        $db->commit();
+    // $db->commit(); // No hay transacción activa, no llamar a commit
         
         Response::success([
             'conversacion_id' => $conversacion_id,
