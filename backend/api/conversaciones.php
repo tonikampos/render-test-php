@@ -256,18 +256,47 @@ function crearConversacion($input) {
         }
         
     // Añadir participantes UNO POR UNO para identificar errores
-    error_log('[DEBUG] Insert participante 1: conversacion_id=' . var_export($conversacion_id, true) . ', usuario_id=' . var_export($usuario_id, true));
-    $sqlPart1 = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
-    $stmtPart1 = $db->prepare($sqlPart1);
-    $stmtPart1->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $usuario_id]);
+        // Insert participante 1 con try/catch
+        error_log('[DEBUG] Insert participante 1: conversacion_id=' . var_export($conversacion_id, true) . ', usuario_id=' . var_export($usuario_id, true));
+        try {
+            $sqlPart1 = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
+            $stmtPart1 = $db->prepare($sqlPart1);
+            $stmtPart1->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $usuario_id]);
+        } catch (Exception $e) {
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE1] ' . $e->getMessage());
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE1] Código: ' . ($e->getCode() ?? 'N/A'));
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE1] Archivo: ' . ($e->getFile() ?? 'N/A'));
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE1] Línea: ' . ($e->getLine() ?? 'N/A'));
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE1] Stack trace: ' . $e->getTraceAsString());
+            throw $e;
+        }
 
-    error_log('[DEBUG] Insert participante 2: conversacion_id=' . var_export($conversacion_id, true) . ', usuario_id=' . var_export($receptor_id, true));
-    $sqlPart2 = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
-    $stmtPart2 = $db->prepare($sqlPart2);
-    $stmtPart2->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $receptor_id]);
-        
-        // Enviar mensaje inicial
-        enviarMensajeInterno($db, $conversacion_id, $usuario_id, $mensaje_inicial);
+        // Insert participante 2 con try/catch
+        error_log('[DEBUG] Insert participante 2: conversacion_id=' . var_export($conversacion_id, true) . ', usuario_id=' . var_export($receptor_id, true));
+        try {
+            $sqlPart2 = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
+            $stmtPart2 = $db->prepare($sqlPart2);
+            $stmtPart2->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $receptor_id]);
+        } catch (Exception $e) {
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE2] ' . $e->getMessage());
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE2] Código: ' . ($e->getCode() ?? 'N/A'));
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE2] Archivo: ' . ($e->getFile() ?? 'N/A'));
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE2] Línea: ' . ($e->getLine() ?? 'N/A'));
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE2] Stack trace: ' . $e->getTraceAsString());
+            throw $e;
+        }
+
+        // Enviar mensaje inicial con try/catch
+        try {
+            enviarMensajeInterno($db, $conversacion_id, $usuario_id, $mensaje_inicial);
+        } catch (Exception $e) {
+            error_log('[DEBUG][EXCEPTION][MENSAJE] ' . $e->getMessage());
+            error_log('[DEBUG][EXCEPTION][MENSAJE] Código: ' . ($e->getCode() ?? 'N/A'));
+            error_log('[DEBUG][EXCEPTION][MENSAJE] Archivo: ' . ($e->getFile() ?? 'N/A'));
+            error_log('[DEBUG][EXCEPTION][MENSAJE] Línea: ' . ($e->getLine() ?? 'N/A'));
+            error_log('[DEBUG][EXCEPTION][MENSAJE] Stack trace: ' . $e->getTraceAsString());
+            throw $e;
+        }
         
         $db->commit();
         
