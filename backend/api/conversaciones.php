@@ -27,13 +27,13 @@ function handleConversacionesRoutes($method, $id, $action, $input) {
     }
     
     // POST /api/conversaciones (crear nueva conversación)
-    if ($method === 'POST' && (empty($id) || !is_numeric($id))) {
+    if ($method === 'POST' && is_null($id)) {
         Auth::requireAuth();
         crearConversacion($input);
     }
     
     // POST /api/conversaciones/:id/mensaje (enviar mensaje)
-    if ($method === 'POST' && !empty($id) && $action === 'mensaje' && is_numeric($id)) {
+    if ($method === 'POST' && is_numeric($id) && intval($id) > 0 && $action === 'mensaje') {
         Auth::requireAuth();
         enviarMensaje($id, $input);
     }
