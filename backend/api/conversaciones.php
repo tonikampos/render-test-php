@@ -280,8 +280,11 @@ function crearConversacion($input) {
         if ($db && $db->inTransaction()) {
             $db->rollBack();
         }
-        error_log('Error en crearConversacion: ' . $e->getMessage());
-        error_log('Stack trace: ' . $e->getTraceAsString());
+        error_log('[DEBUG][EXCEPTION] Error en crearConversacion: ' . $e->getMessage());
+        error_log('[DEBUG][EXCEPTION] Código: ' . ($e->getCode() ?? 'N/A'));
+        error_log('[DEBUG][EXCEPTION] Archivo: ' . ($e->getFile() ?? 'N/A'));
+        error_log('[DEBUG][EXCEPTION] Línea: ' . ($e->getLine() ?? 'N/A'));
+        error_log('[DEBUG][EXCEPTION] Stack trace: ' . $e->getTraceAsString());
         // Temporalmente devolver error detallado para debugging
         Response::error('Error al crear conversación: ' . $e->getMessage(), 500);
     }
