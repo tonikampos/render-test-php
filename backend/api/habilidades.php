@@ -269,7 +269,7 @@ function actualizarHabilidad($id, $data) {
         
         $sql = "
             UPDATE habilidades 
-            SET " . implode(', ', $fields) . ", fecha_actualizacion = CURRENT_TIMESTAMP
+            SET " . implode(', ', $fields) . ", ultima_actualizacion = CURRENT_TIMESTAMP
             WHERE id = :id
             RETURNING id, titulo, descripcion, tipo, fecha_publicacion, estado
         ";
