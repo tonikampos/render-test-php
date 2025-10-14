@@ -258,35 +258,35 @@ function crearConversacion($input) {
         }
         
     // Añadir participantes UNO POR UNO para identificar errores
-        // Insert participante 1 con try/catch
-        error_log('[DEBUG] Antes de insertar participante 1');
+        // Insert participante receptor primero
+        error_log('[DEBUG] Antes de insertar participante receptor (usuario_id=' . var_export($receptor_id, true) . ')');
         try {
-            $sqlPart1 = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
-            $stmtPart1 = $db->prepare($sqlPart1);
-            $stmtPart1->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $usuario_id]);
-            error_log('[DEBUG] Participante 1 insertado correctamente');
+            $sqlPartR = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
+            $stmtPartR = $db->prepare($sqlPartR);
+            $stmtPartR->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $receptor_id]);
+            error_log('[DEBUG] Participante receptor insertado correctamente');
         } catch (Exception $e) {
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE1] ' . $e->getMessage());
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE1] Código: ' . ($e->getCode() ?? 'N/A'));
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE1] Archivo: ' . ($e->getFile() ?? 'N/A'));
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE1] Línea: ' . ($e->getLine() ?? 'N/A'));
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE1] Stack trace: ' . $e->getTraceAsString());
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_RECEPTOR] ' . $e->getMessage());
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_RECEPTOR] Código: ' . ($e->getCode() ?? 'N/A'));
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_RECEPTOR] Archivo: ' . ($e->getFile() ?? 'N/A'));
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_RECEPTOR] Línea: ' . ($e->getLine() ?? 'N/A'));
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_RECEPTOR] Stack trace: ' . $e->getTraceAsString());
             throw $e;
         }
 
-        // Insert participante 2 con try/catch
-        error_log('[DEBUG] Antes de insertar participante 2');
+        // Insert participante emisor después
+        error_log('[DEBUG] Antes de insertar participante emisor (usuario_id=' . var_export($usuario_id, true) . ')');
         try {
-            $sqlPart2 = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
-            $stmtPart2 = $db->prepare($sqlPart2);
-            $stmtPart2->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $receptor_id]);
-            error_log('[DEBUG] Participante 2 insertado correctamente');
+            $sqlPartE = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
+            $stmtPartE = $db->prepare($sqlPartE);
+            $stmtPartE->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $usuario_id]);
+            error_log('[DEBUG] Participante emisor insertado correctamente');
         } catch (Exception $e) {
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE2] ' . $e->getMessage());
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE2] Código: ' . ($e->getCode() ?? 'N/A'));
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE2] Archivo: ' . ($e->getFile() ?? 'N/A'));
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE2] Línea: ' . ($e->getLine() ?? 'N/A'));
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE2] Stack trace: ' . $e->getTraceAsString());
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_EMISOR] ' . $e->getMessage());
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_EMISOR] Código: ' . ($e->getCode() ?? 'N/A'));
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_EMISOR] Archivo: ' . ($e->getFile() ?? 'N/A'));
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_EMISOR] Línea: ' . ($e->getLine() ?? 'N/A'));
+            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_EMISOR] Stack trace: ' . $e->getTraceAsString());
             throw $e;
         }
 
