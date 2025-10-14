@@ -31,6 +31,10 @@ function handleUsuariosRoutes($method, $id, $action, $input) {
     if ($method === 'GET' && $id && $action === 'habilidades') {
         obtenerHabilidadesUsuario($id);
     }
+     // GET /api/usuarios/:id/valoraciones
+if ($method === 'GET' && $id && $action === 'valoraciones') {
+    obtenerValoracionesUsuario($id);
+}
     
     // PUT /api/usuarios/:id (actualizar)
     if ($method === 'PUT' && $id) {
@@ -266,5 +270,44 @@ function actualizarUsuario($id, $data) {
         
     } catch (Exception $e) {
         Response::serverError('Error al actualizar usuario', $e->getMessage());
+    }
+}
+/**
+ * Obter as valoracións recibidas por un usuario
+ */
+function obtenerValoracionesUsuario($id) {
+    try {
+        $db = Database::getConnection();
+
+        // Verificamos primeiro que o usuario existe
+        $stmtUser = $db->prepare("SELECT id FROM usuarios WHERE id = :id AND activo = true");
+        $stmtUser->execute(['id' => $id]);
+        if (!$stmtUser->fetch()) {
+            Response::notFound('Usuario non encontrado');
+        }
+
+        // Facemos un JOIN para obter tamén os datos de quen escribiu a valoración
+        $sql = "
+            SELECT 
+                v.id,
+                v.puntuacion,
+                v.comentario,
+                v.fecha_valoracion,
+                u.nombre_usuario AS evaluador_nombre,
+                u.foto_url AS evaluador_foto
+            FROM valoraciones v
+            INNER JOIN usuarios u ON v.evaluador_id = u.id
+            WHERE v.evaluado_id = :evaluado_id
+            ORDER BY v.fecha_valoracion DESC
+        ";
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute(['evaluado_id' => $id]);
+        $valoraciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        Response::success($valoraciones);
+
+    } catch (Exception $e) {
+        Response::serverError('Erro ao obter as valoracións do usuario', $e->getMessage());
     }
 }

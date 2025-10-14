@@ -1,7 +1,4 @@
-    // Forzar conversión de $id a entero si es numérico y log de depuración
-    $id = (isset($id) && is_numeric($id)) ? intval($id) : null;
-    error_log('[DEBUG][handleConversacionesRoutes] method=' . var_export($method, true) . ' id=' . var_export($id, true) . ' action=' . var_export($action, true));
-<?php
+  <?php
 /**
  * Endpoints de Conversaciones y Mensajes
  * GET /api/conversaciones - Listar mis conversaciones
