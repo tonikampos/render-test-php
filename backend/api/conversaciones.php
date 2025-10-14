@@ -213,9 +213,8 @@ function crearConversacion($input) {
         }
         
         // Iniciar transacción después de validaciones básicas
-    error_log('[DEBUG] Iniciando transacción...');
-    $db->beginTransaction();
-    error_log('[DEBUG] Transacción iniciada');
+    // Probar inserts fuera de la transacción para diagnóstico
+    error_log('[DEBUG] Ejecutando inserts fuera de transacción');
         
         // Verificar si ya existe una conversación entre estos usuarios
         $sqlCheck = "
@@ -258,7 +257,7 @@ function crearConversacion($input) {
         }
         
     // Añadir participantes UNO POR UNO para identificar errores
-        // Insert participante receptor primero
+        // Insert participante receptor primero (sin transacción)
         error_log('[DEBUG] Antes de insertar participante receptor (usuario_id=' . var_export($receptor_id, true) . ')');
         try {
             $sqlPartR = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
@@ -274,7 +273,7 @@ function crearConversacion($input) {
             throw $e;
         }
 
-        // Insert participante emisor después
+        // Insert participante emisor después (sin transacción)
         error_log('[DEBUG] Antes de insertar participante emisor (usuario_id=' . var_export($usuario_id, true) . ')');
         try {
             $sqlPartE = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
