@@ -255,14 +255,16 @@ function crearConversacion($input) {
             throw new Exception("No se pudo obtener el ID de la conversación creada");
         }
         
-        // Añadir participantes UNO POR UNO para identificar errores
-        $sqlPart1 = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
-        $stmtPart1 = $db->prepare($sqlPart1);
-        $stmtPart1->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $usuario_id]);
-        
-        $sqlPart2 = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
-        $stmtPart2 = $db->prepare($sqlPart2);
-        $stmtPart2->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $receptor_id]);
+    // Añadir participantes UNO POR UNO para identificar errores
+    error_log('[DEBUG] Insert participante 1: conversacion_id=' . var_export($conversacion_id, true) . ', usuario_id=' . var_export($usuario_id, true));
+    $sqlPart1 = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
+    $stmtPart1 = $db->prepare($sqlPart1);
+    $stmtPart1->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $usuario_id]);
+
+    error_log('[DEBUG] Insert participante 2: conversacion_id=' . var_export($conversacion_id, true) . ', usuario_id=' . var_export($receptor_id, true));
+    $sqlPart2 = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
+    $stmtPart2 = $db->prepare($sqlPart2);
+    $stmtPart2->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $receptor_id]);
         
         // Enviar mensaje inicial
         enviarMensajeInterno($db, $conversacion_id, $usuario_id, $mensaje_inicial);
