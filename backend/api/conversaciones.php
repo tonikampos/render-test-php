@@ -1,8 +1,5 @@
-    // Forzar conversión de $id a entero si es numérico
+    // Forzar conversión de $id a entero si es numérico y log de depuración
     $id = (isset($id) && is_numeric($id)) ? intval($id) : null;
-    // Log solo en error_log
-    error_log('[DEBUG][handleConversacionesRoutes] method=' . var_export($method, true) . ' id=' . var_export($id, true) . ' action=' . var_export($action, true));
-    // Log de depuración para ver los valores que llegan
     error_log('[DEBUG][handleConversacionesRoutes] method=' . var_export($method, true) . ' id=' . var_export($id, true) . ' action=' . var_export($action, true));
 <?php
 /**
