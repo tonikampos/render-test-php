@@ -213,7 +213,9 @@ function crearConversacion($input) {
         }
         
         // Iniciar transacción después de validaciones básicas
-        $db->beginTransaction();
+    error_log('[DEBUG] Iniciando transacción...');
+    $db->beginTransaction();
+    error_log('[DEBUG] Transacción iniciada');
         
         // Verificar si ya existe una conversación entre estos usuarios
         $sqlCheck = "
@@ -257,11 +259,12 @@ function crearConversacion($input) {
         
     // Añadir participantes UNO POR UNO para identificar errores
         // Insert participante 1 con try/catch
-        error_log('[DEBUG] Insert participante 1: conversacion_id=' . var_export($conversacion_id, true) . ', usuario_id=' . var_export($usuario_id, true));
+        error_log('[DEBUG] Antes de insertar participante 1');
         try {
             $sqlPart1 = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
             $stmtPart1 = $db->prepare($sqlPart1);
             $stmtPart1->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $usuario_id]);
+            error_log('[DEBUG] Participante 1 insertado correctamente');
         } catch (Exception $e) {
             error_log('[DEBUG][EXCEPTION][PARTICIPANTE1] ' . $e->getMessage());
             error_log('[DEBUG][EXCEPTION][PARTICIPANTE1] Código: ' . ($e->getCode() ?? 'N/A'));
@@ -272,11 +275,12 @@ function crearConversacion($input) {
         }
 
         // Insert participante 2 con try/catch
-        error_log('[DEBUG] Insert participante 2: conversacion_id=' . var_export($conversacion_id, true) . ', usuario_id=' . var_export($receptor_id, true));
+        error_log('[DEBUG] Antes de insertar participante 2');
         try {
             $sqlPart2 = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
             $stmtPart2 = $db->prepare($sqlPart2);
             $stmtPart2->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $receptor_id]);
+            error_log('[DEBUG] Participante 2 insertado correctamente');
         } catch (Exception $e) {
             error_log('[DEBUG][EXCEPTION][PARTICIPANTE2] ' . $e->getMessage());
             error_log('[DEBUG][EXCEPTION][PARTICIPANTE2] Código: ' . ($e->getCode() ?? 'N/A'));
