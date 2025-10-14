@@ -1,3 +1,5 @@
+    // Log de depuración para ver los valores que llegan
+    error_log('[DEBUG][handleConversacionesRoutes] method=' . var_export($method, true) . ' id=' . var_export($id, true) . ' action=' . var_export($action, true));
 <?php
 /**
  * Endpoints de Conversaciones y Mensajes
