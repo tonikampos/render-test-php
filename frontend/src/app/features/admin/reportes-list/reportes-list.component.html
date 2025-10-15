@@ -1,0 +1,30 @@
+<div class="admin-panel-container">
+  <h1>Panel de Administración - Reportes Pendentes</h1>
+
+  <div *ngIf="reportes.length === 0" class="no-reportes">
+    <p>🎉 Non hai reportes pendentes de revisión.</p>
+  </div>
+
+  <table *ngIf="reportes.length > 0" class="reportes-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Tipo</th>
+        <th>ID Contido</th>
+        <th>Motivo do Reporte</th>
+        <th>Accións</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let reporte of reportes">
+        <td>{{ reporte.id }}</td>
+        <td>{{ reporte.tipo_contenido }}</td>
+        <td>{{ reporte.contenido_id }}</td>
+        <td class="motivo">{{ reporte.motivo }}</td>
+        <td>
+          <button (click)="resolver(reporte.id)" class="btn-resolver">Resolver</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
