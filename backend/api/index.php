@@ -5,16 +5,16 @@
  */
 
 // Headers y configuración inicial
-require_once __DIR__ . '/../config/cors.php';
-setupCORS();
-
-require_once __DIR__ . '/../utils/Response.php';
-require_once __DIR__ . '/../utils/Auth.php';
+//require_once __DIR__ . '/../config/cors.php';
+//setupCORS();
+//
+//require_once __DIR__ . '/../utils/Response.php';
+//require_once __DIR__ . '/../utils/Auth.php';
 
 // Iniciar sesión si no está activa
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+//if (session_status() === PHP_SESSION_NONE) {
+//    session_start();
+//}
 
 // Obtener método HTTP y ruta
 $method = $_SERVER['REQUEST_METHOD'];
