@@ -1,0 +1,17 @@
+<div class="valoraciones-container">
+  <h3>Valoracións Recibidas</h3>
+  <hr>
+
+  <div *ngIf="!valoraciones || valoraciones.length === 0" class="no-valoraciones">
+    <p>Este usuario aínda non recibiu ningunha valoración.</p>
+  </div>
+
+  <div *ngFor="let valoracion of valoraciones" class="valoracion-card">
+    <div class="valoracion-header">
+      <span class="evaluador-nombre">{{ valoracion.evaluador_nombre }}</span>
+      <span class="puntuacion">{{ '★'.repeat(valoracion.puntuacion) }}{{ '☆'.repeat(5 - valoracion.puntuacion) }}</span>
+    </div>
+    <p class="comentario">"{{ valoracion.comentario }}"</p>
+    <small class="fecha">{{ valoracion.fecha_valoracion | date: 'dd/MM/yyyy' }}</small>
+  </div>
+</div>

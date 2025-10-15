@@ -1,0 +1,47 @@
+.valoraciones-container {
+  margin-top: 2rem;
+}
+
+.no-valoraciones {
+  text-align: center;
+  color: #777;
+  padding: 1rem;
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+}
+
+.valoracion-card {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.valoracion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.evaluador-nombre {
+  font-weight: bold;
+}
+
+.puntuacion {
+  color: #ffc107; // Amarelo estrela
+  font-size: 1.2rem;
+}
+
+.comentario {
+  font-style: italic;
+  color: #555;
+}
+
+.fecha {
+  display: block;
+  text-align: right;
+  color: #999;
+  font-size: 0.8rem;
+}

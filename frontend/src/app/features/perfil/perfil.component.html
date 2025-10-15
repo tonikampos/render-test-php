@@ -1,0 +1,25 @@
+<div class="perfil-container">
+  <div *ngIf="usuario; else noUsuario">
+
+    <header class="perfil-header">
+      <div class="perfil-info">
+        <h1>{{ usuario.nombre_usuario }}</h1>
+        <p class="ubicacion">📍 {{ usuario.ubicacion }}</p>
+      </div>
+    </header>
+
+    <section class="perfil-section">
+      <h2>Sobre min</h2>
+      <p>{{ usuario.biografia || 'Este usuario aínda non engadiu unha biografía.' }}</p>
+    </section>
+
+    <section class="perfil-section">
+      <app-valoraciones-list [valoraciones]="valoraciones"></app-valoraciones-list>
+    </section>
+
+  </div>
+
+  <ng-template #noUsuario>
+    <p>Cargando perfil...</p>
+  </ng-template>
+</div>
