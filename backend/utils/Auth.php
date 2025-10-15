@@ -289,13 +289,17 @@ class Auth {
         }
     }
     
-    /**
-     * Middleware: Requiere rol admin
+  /**
+     * Middleware: Require rol admin
      */
     public static function requireAdmin() {
         self::requireAuth();
         
-        if (!self::hasRole('admin')) {
+        // ANTES (incorrecto):
+        // if (!self::hasRole('admin')) {
+
+        // DESPOIS (correcto):
+        if (!self::hasRole('administrador')) {
             http_response_code(403);
             echo json_encode([
                 'success' => false,
