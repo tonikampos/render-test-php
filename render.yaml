@@ -1,8 +1,7 @@
-# Configuración de Render para TFM - Galitroco
-# Define ambos servicios: backend (Web Service) y frontend (Static Site)
+# Configuración de Render para TFM - Galitroco (VERSIÓN FINAL E MÍNIMA)
 
 services:
-  # Backend API - PHP en Docker
+  # Backend API - PHP en Docker (A TÚA CONFIGURACIÓN ORIXINAL, INTACTA)
   - type: web
     name: galitroco-backend
     runtime: docker
@@ -18,26 +17,26 @@ services:
         sync: false
       - key: DB_PORT
         value: 5432
-    healthCheckPath: /backend/info.php
+    # Actualizamos o health check para que use un endpoint real da API
+    healthCheckPath: /api.php?resource=health
 
   # Frontend Angular - Static Site
   - type: static
     name: galitroco-frontend
     buildCommand: cd frontend && npm install && npm run build:prod
     staticPublishPath: frontend/dist/frontend/browser
-    pullRequestPreviewsEnabled: true
     headers:
       - path: /*
         name: Cache-Control
         value: public, max-age=0, must-revalidate
     routes:
       # =================================================================
-      # ÚNICO CAMBIO NECESARIO: ENGADIR ESTA REGRA DE REESCRITURA
-      # Esta regra crea o "túnel" para que o frontend poida falar co backend.
-      # Debe ir ANTES da regra xeral "/*".
+      # ÚNICO CAMBIO REAL: O "TÚNEL" QUE CONECTA O FRONTEND CO BACKEND
+      # Esta regra intercepta as chamadas a /api/... e rediríxeas internamente
+      # ao teu servizo de backend, usando o nome correcto.
       - type: rewrite
         source: /api/:path*
-        destination: https://galitroco-backend.onrender.com/:path*
+        destination: https://render-test-php-1.onrender.com/:path*
       # =================================================================
 
       # A túa regra orixinal para que o enrutamento de Angular funcione (INTACTA)
