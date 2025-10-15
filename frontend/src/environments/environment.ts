@@ -1,4 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://render-test-php-1.onrender.com/api.php'
+  // O enderezo tamén é a nosa "entrada do túnel".
+  apiUrl: '/api/api.php'
 };
