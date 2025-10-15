@@ -14,9 +14,12 @@ export class ApiService {
 
   /**
    * GET request
+   * @param resource Recurso de la API (ej: 'habilidades', 'usuarios')
+   * @param params Query parameters (opcional)
    */
   get<T>(resource: string, params?: any): Observable<T> {
     let httpParams = new HttpParams();
+    
     if (params) {
       Object.keys(params).forEach(key => {
         if (params[key] !== null && params[key] !== undefined) {
@@ -25,62 +28,80 @@ export class ApiService {
       });
     }
 
-    // A URL constrúese como un camiño, compatible co proxy de Render
-    const url = `${this.apiUrl}/${resource}`;
-
+    const url = `${this.apiUrl}?resource=${resource}`;
+    
     return this.http.get<T>(url, { 
       params: httpParams,
-      withCredentials: true
-    }).pipe(catchError(this.handleError));
+      withCredentials: true // Importante para cookies de sesión PHP
+    }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   /**
    * POST request
+   * @param resource Recurso de la API
+   * @param body Datos a enviar
    */
   post<T>(resource: string, body: any): Observable<T> {
-    const url = `${this.apiUrl}/${resource}`;
-
+    const url = `${this.apiUrl}?resource=${resource}`;
+    
     return this.http.post<T>(url, body, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       withCredentials: true
-    }).pipe(catchError(this.handleError));
+    }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   /**
    * PUT request
+   * @param resource Recurso de la API (incluye ID, ej: 'habilidades/5')
+   * @param body Datos a actualizar
    */
   put<T>(resource: string, body: any): Observable<T> {
-    const url = `${this.apiUrl}/${resource}`;
-
+    const url = `${this.apiUrl}?resource=${resource}`;
+    
     return this.http.put<T>(url, body, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       withCredentials: true
-    }).pipe(catchError(this.handleError));
+    }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   /**
    * DELETE request
+   * @param resource Recurso de la API (incluye ID, ej: 'habilidades/5')
    */
   delete<T>(resource: string): Observable<T> {
-    const url = `${this.apiUrl}/${resource}`;
-
+    const url = `${this.apiUrl}?resource=${resource}`;
+    
     return this.http.delete<T>(url, {
       withCredentials: true
-    }).pipe(catchError(this.handleError));
+    }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   /**
    * Error handler
    */
   private handleError(error: any): Observable<never> {
-    let errorMessage = 'Error descoñecido';
-    if (error.error?.message) {
-      errorMessage = error.error.message;
-    } else if (error.status === 401) {
-      errorMessage = 'Non estás autenticado ou a túa sesión expirou.';
+    let errorMessage = 'Error desconocido';
+    
+    if (error.error instanceof ErrorEvent) {
+      // Error del lado del cliente
+      errorMessage = `Error: ${error.error.message}`;
     } else {
-      errorMessage = `Error ${error.status}: ${error.statusText}`;
+      // Error del lado del servidor
+      if (error.error && error.error.message) {
+        errorMessage = error.error.message;
+      } else {
+        errorMessage = `Error ${error.status}: ${error.statusText}`;
+      }
     }
+    
     console.error('API Error:', error);
     return throwError(() => new Error(errorMessage));
   }
