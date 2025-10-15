@@ -15,13 +15,22 @@ export class ApiService {
   /**
    * GET request
    */
-  get<T>(resource: string, params: HttpParams = new HttpParams()): Observable<T> {
-    // CAMBIO: A URL agora constrúese como un camiño (path)
+  get<T>(resource: string, params?: any): Observable<T> {
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.keys(params).forEach(key => {
+        if (params[key] !== null && params[key] !== undefined) {
+          httpParams = httpParams.set(key, params[key].toString());
+        }
+      });
+    }
+
+    // A URL constrúese como un camiño, compatible co proxy de Render
     const url = `${this.apiUrl}/${resource}`;
-    
+
     return this.http.get<T>(url, { 
-      params,
-      withCredentials: true // Importante para as cookies de sesión
+      params: httpParams,
+      withCredentials: true
     }).pipe(catchError(this.handleError));
   }
 
@@ -29,9 +38,8 @@ export class ApiService {
    * POST request
    */
   post<T>(resource: string, body: any): Observable<T> {
-    // CAMBIO: A URL agora constrúese como un camiño (path)
     const url = `${this.apiUrl}/${resource}`;
-    
+
     return this.http.post<T>(url, body, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       withCredentials: true
@@ -42,9 +50,8 @@ export class ApiService {
    * PUT request
    */
   put<T>(resource: string, body: any): Observable<T> {
-    // CAMBIO: A URL agora constrúese como un camiño (path)
     const url = `${this.apiUrl}/${resource}`;
-    
+
     return this.http.put<T>(url, body, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       withCredentials: true
@@ -55,9 +62,8 @@ export class ApiService {
    * DELETE request
    */
   delete<T>(resource: string): Observable<T> {
-    // CAMBIO: A URL agora constrúese como un camiño (path)
     const url = `${this.apiUrl}/${resource}`;
-    
+
     return this.http.delete<T>(url, {
       withCredentials: true
     }).pipe(catchError(this.handleError));
