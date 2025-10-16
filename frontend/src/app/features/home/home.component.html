@@ -1,5 +1,37 @@
+<mat-toolbar color="primary" class="main-header">
+  <a routerLink="/" class="logo">
+    <mat-icon>recycling</mat-icon>
+    <span>GaliTroco</span>
+  </a>
+
+  <span class="spacer"></span>
+
+  <a mat-button routerLink="/habilidades">Explorar Habilidades</a>
+
+  <ng-container *ngIf="!(authService.currentUser$ | async)">
+    <a mat-button routerLink="/login">Iniciar Sesión</a>
+    <a mat-raised-button color="accent" routerLink="/register">Crear Cuenta</a>
+  </ng-container>
+
+  <ng-container *ngIf="authService.currentUser$ | async as user">
+    <a mat-button routerLink="/habilidades/nueva">
+      <mat-icon>add</mat-icon>
+      Ofrecer Habilidad
+    </a>
+    <a mat-button routerLink="/intercambios">
+      <mat-icon>inbox</mat-icon>
+      Mis Intercambios
+    </a>
+    <a mat-button routerLink="/perfil">
+      <mat-icon>account_circle</mat-icon>
+      {{ user.nombre_usuario }}
+    </a>
+    <button mat-icon-button color="warn" (click)="logout()" matTooltip="Cerrar Sesión">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </ng-container>
+</mat-toolbar>
 <div class="home-container">
-  <!-- Hero Section -->
   <section class="hero">
     <div class="hero-content">
       <h1>GaliTroco</h1>
@@ -15,7 +47,6 @@
     </div>
   </section>
 
-  <!-- Features Section -->
   <section class="features">
     <h2>¿Cómo funciona?</h2>
     <div class="features-grid">
@@ -27,7 +58,6 @@
     </div>
   </section>
 
-  <!-- CTA Section -->
   <section class="cta">
     <h2>¿Listo para empezar?</h2>
     <p>Únete a nuestra comunidad y comienza a intercambiar habilidades hoy mismo</p>
