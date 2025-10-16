@@ -14,20 +14,29 @@
   </ng-container>
 
   <ng-container *ngIf="authService.currentUser$ | async as user">
-    <a mat-button routerLink="/habilidades/nueva">
+    <a mat-button routerLink="/habilidades/nueva" class="nav-button-desktop">
       <mat-icon>add</mat-icon>
       Ofrecer Habilidad
     </a>
-    <a mat-button routerLink="/intercambios">
+    <a mat-button routerLink="/intercambios" class="nav-button-desktop">
       <mat-icon>inbox</mat-icon>
       Mis Intercambios
     </a>
-    <a mat-button routerLink="/perfil">
+
+    <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-trigger">
       <mat-icon>account_circle</mat-icon>
-      {{ user.nombre_usuario }}
-    </a>
-    <button mat-icon-button color="warn" (click)="logout()" matTooltip="Cerrar Sesión">
-      <mat-icon>logout</mat-icon>
+      <span>{{ user.nombre_usuario }}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
     </button>
-  </ng-container>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item routerLink="/perfil">
+        <mat-icon>person</mat-icon>
+        <span>Mi Perfil</span>
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Cerrar Sesión</span>
+      </button>
+    </mat-menu>
+    </ng-container>
 </mat-toolbar>
