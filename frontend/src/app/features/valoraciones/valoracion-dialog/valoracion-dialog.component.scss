@@ -1,0 +1,15 @@
+.rating-stars {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+
+  .mat-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.full-width {
+  width: 100%;
+}

@@ -13,6 +13,10 @@ import { IntercambiosService } from '../../../core/services/intercambios.service
 import { AuthService } from '../../../core/services/auth.service';
 import { Intercambio, User } from '../../../shared/models';
 
+// CAMBIO: Engadir imports para o diálogo modal
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ValoracionDialogComponent } from '../../valoraciones/valoracion-dialog/valoracion-dialog.component';
+
 @Component({
   selector: 'app-intercambios-list',
   standalone: true,
@@ -24,7 +28,8 @@ import { Intercambio, User } from '../../../shared/models';
     MatIconModule,
     MatTabsModule,
     MatProgressSpinnerModule,
-    MatChipsModule
+    MatChipsModule,
+    MatDialogModule // CAMBIO: Engadir MatDialogModule aquí
   ],
   templateUrl: './intercambios-list.component.html',
   styleUrls: ['./intercambios-list.component.scss']
@@ -38,7 +43,8 @@ export class IntercambiosListComponent implements OnInit {
   constructor(
     private intercambiosService: IntercambiosService,
     private authService: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog // CAMBIO: Inxectar o servizo MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -74,7 +80,8 @@ export class IntercambiosListComponent implements OnInit {
       }
     });
   }
-completarIntercambio(id: number): void {
+
+  completarIntercambio(id: number): void {
     this.intercambiosService.marcarComoCompletado(id).subscribe({
       next: () => {
         this.snackBar.open('¡Intercambio completado! Ahora puedes valorarlo.', 'OK', { duration: 3500 });
@@ -86,4 +93,20 @@ completarIntercambio(id: number): void {
     });
   }
 
+  // CAMBIO: Engadir o novo método para abrir o diálogo de valoración
+  abrirDialogoValoracion(intercambio: Intercambio): void {
+    const dialogRef = this.dialog.open(ValoracionDialogComponent, {
+      width: '450px',
+      data: { intercambio: intercambio }, // Pasamos os datos do intercambio ao diálogo
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Se a valoración foi exitosa, actualizamos a listaxe.
+        // Nun futuro, poderiamos engadir un estado "valorado" para ocultar o botón.
+        this.loadIntercambios();
+      }
+    });
+  }
 }

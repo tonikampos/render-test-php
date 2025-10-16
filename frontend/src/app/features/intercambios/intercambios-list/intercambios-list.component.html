@@ -51,7 +51,13 @@
                   <mat-icon>cancel</mat-icon> Rechazar
                 </button>
               </div>
-            </mat-card-actions>
+
+              <div *ngIf="i.estado === 'completado'" class="actions-buttons">
+                <button mat-flat-button color="primary" (click)="abrirDialogoValoracion(i)">
+                  <mat-icon>star_rate</mat-icon> Valorar
+                </button>
+              </div>
+              </mat-card-actions>
           </mat-card>
         </div>
         <ng-template #noRecibidos>
@@ -95,6 +101,12 @@
               <div *ngIf="i.estado === 'aceptado'" class="actions-buttons">
                 <button mat-flat-button color="accent" (click)="completarIntercambio(i.id)">
                   <mat-icon>task_alt</mat-icon> Marcar Completado
+                </button>
+              </div>
+
+              <div *ngIf="i.estado === 'completado'" class="actions-buttons">
+                <button mat-flat-button color="primary" (click)="abrirDialogoValoracion(i)">
+                  <mat-icon>star_rate</mat-icon> Valorar
                 </button>
               </div>
               </mat-card-actions>
