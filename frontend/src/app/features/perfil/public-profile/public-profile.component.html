@@ -1,0 +1,32 @@
+<div class="perfil-container">
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Cargando perfil...</p>
+  </div>
+
+  <div *ngIf="!loading && usuario; else noUsuario">
+    <header class="perfil-header">
+      <div class="perfil-info">
+        <h1>{{ usuario.nombre_usuario }}</h1>
+        <p class="ubicacion">
+          <mat-icon>location_on</mat-icon> {{ usuario.ubicacion }}
+        </p>
+      </div>
+    </header>
+
+    <section class="perfil-section" *ngIf="usuario.biografia">
+      <h2>Sobre min</h2>
+      <p>{{ usuario.biografia }}</p>
+    </section>
+
+    <section class="perfil-section">
+      <app-valoraciones-list [usuarioNombre]="usuario.nombre_usuario" [valoraciones]="valoraciones"></app-valoraciones-list>
+    </section>
+  </div>
+
+  <ng-template #noUsuario>
+    <div *ngIf="!loading">
+      <p>Non se puido atopar o usuario.</p>
+    </div>
+  </ng-template>
+</div>

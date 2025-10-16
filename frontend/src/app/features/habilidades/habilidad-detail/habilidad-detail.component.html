@@ -1,13 +1,10 @@
 <div class="detail-container">
-  <!-- Loading -->
   <div *ngIf="loading" class="loading-container">
     <mat-spinner></mat-spinner>
     <p>Cargando habilidad...</p>
   </div>
 
-  <!-- Contenido -->
   <div *ngIf="!loading && habilidad" class="detail-content">
-    <!-- Breadcrumb -->
     <nav class="breadcrumb">
       <a routerLink="/habilidades">
         <mat-icon>arrow_back</mat-icon>
@@ -16,10 +13,8 @@
     </nav>
 
     <div class="detail-grid">
-      <!-- Columna Principal -->
       <div class="main-column">
         <mat-card class="habilidad-card">
-          <!-- Header con Tipo -->
           <div class="card-header">
             <mat-chip-set>
               <mat-chip [class.oferta-chip]="habilidad.tipo === 'oferta'" 
@@ -35,10 +30,8 @@
           </div>
 
           <mat-card-content>
-            <!-- Título -->
             <h1 class="titulo">{{ habilidad.titulo }}</h1>
 
-            <!-- Meta Info -->
             <div class="meta-info">
               <div class="meta-item">
                 <mat-icon>schedule</mat-icon>
@@ -57,7 +50,6 @@
 
             <mat-divider></mat-divider>
 
-            <!-- Descripción -->
             <div class="descripcion-section">
               <h2>Descripción</h2>
               <p class="descripcion">{{ habilidad.descripcion }}</p>
@@ -66,13 +58,14 @@
         </mat-card>
       </div>
 
-      <!-- Columna Lateral -->
       <div class="sidebar-column">
-        <!-- Usuario -->
         <mat-card class="user-card">
           <mat-card-header>
             <mat-icon mat-card-avatar>account_circle</mat-icon>
-            <mat-card-title>{{ habilidad.usuario_nombre }}</mat-card-title>
+            
+            <mat-card-title>
+              <a [routerLink]="['/perfil', habilidad.usuario_id]">{{ habilidad.usuario_nombre }}</a>
+            </mat-card-title>
             <mat-card-subtitle>
               <mat-icon inline="true">location_on</mat-icon>
               {{ habilidad.usuario_ubicacion }}
@@ -108,7 +101,6 @@
           </mat-card-actions>
         </mat-card>
 
-        <!-- Acciones del propietario -->
         <mat-card *ngIf="isOwner" class="owner-actions-card">
           <mat-card-header>
             <mat-card-title>Tus Acciones</mat-card-title>
@@ -128,7 +120,6 @@
     </div>
   </div>
 
-  <!-- Error / No encontrado -->
   <div *ngIf="!loading && !habilidad" class="error-container">
     <mat-icon>error_outline</mat-icon>
     <h2>Habilidad no encontrada</h2>

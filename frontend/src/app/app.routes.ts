@@ -44,6 +44,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/habilidades/habilidad-detail/habilidad-detail.component').then(m => m.HabilidadDetailComponent)
   },
   {
+    path: 'perfil/:id',
+    loadComponent: () => import('./features/perfil/public-profile/public-profile.component').then(m => m.PublicProfileComponent)
+  },
+  {
     path: 'perfil',
     loadComponent: () => import('./features/perfil/perfil.component').then(m => m.PerfilComponent),
     canActivate: [authGuard]
