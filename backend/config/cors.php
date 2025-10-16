@@ -47,4 +47,4 @@ function setupCORS() {
         http_response_code(200);
         exit();
     }
-}//prolemas
+}//prolemas mais
