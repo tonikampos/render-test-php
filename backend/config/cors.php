@@ -22,8 +22,8 @@ function setupCORS() {
         // LÓXICA CONDICIONAL PARA O DOMINIO DA COOKIE
         $cookie_domain = ''; // Valor por defecto para localhost
         if (strpos($origin, '.onrender.com') !== false) {
-            // Se estamos en produción, facemos a cookie válida para todos os subdominios de onrender.com
-            $cookie_domain = '.onrender.com';
+            // $cookie_domain = '.onrender.com';  // <-- NO USAR
+            $cookie_domain = 'render-test-php-1.onrender.com'; // Usa el dominio exacto del backend
         }
 
         // ESTA É A SOLUCIÓN: Establecemos os parámetros da cookie de sesión para que funcione entre dominios
