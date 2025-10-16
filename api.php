@@ -16,3 +16,4 @@ chdir(__DIR__ . '/backend');
 
 // Delegar al router del backend
 require_once __DIR__ . '/backend/api/index.php';
+//problemas

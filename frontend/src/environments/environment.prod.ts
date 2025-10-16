@@ -3,3 +3,4 @@ export const environment = {
   // O enderezo agora é a nosa "entrada do túnel".
    apiUrl: '/api'
 };
+//problemas
