@@ -28,7 +28,7 @@ export class ApiService {
       });
     }
 
-    const url = `${this.apiUrl}/${resource}`;
+    const url = `${this.apiUrl}?resource=${resource}`;
     
     return this.http.get<T>(url, { 
       params: httpParams,
@@ -44,7 +44,7 @@ export class ApiService {
    * @param body Datos a enviar
    */
   post<T>(resource: string, body: any): Observable<T> {
-   const url = `${this.apiUrl}/${resource}`;
+    const url = `${this.apiUrl}?resource=${resource}`;
     
     return this.http.post<T>(url, body, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -60,7 +60,7 @@ export class ApiService {
    * @param body Datos a actualizar
    */
   put<T>(resource: string, body: any): Observable<T> {
-    const url = `${this.apiUrl}/${resource}`;
+    const url = `${this.apiUrl}?resource=${resource}`;
     
     return this.http.put<T>(url, body, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -75,7 +75,7 @@ export class ApiService {
    * @param resource Recurso de la API (incluye ID, ej: 'habilidades/5')
    */
   delete<T>(resource: string): Observable<T> {
-    const url = `${this.apiUrl}/${resource}`;
+    const url = `${this.apiUrl}?resource=${resource}`;
     
     return this.http.delete<T>(url, {
       withCredentials: true
