@@ -90,7 +90,8 @@ export class HabilidadDetailComponent implements OnInit {
   editHabilidad(): void {
     if (this.habilidad) {
       // TODO: Navegar a formulario de edición
-      this.snackBar.open('Función de edición en desarrollo', 'OK', { duration: 2000 });
+      //this.snackBar.open('Función de edición en desarrollo', 'OK', { duration: 2000 });
+      this.router.navigate(['/habilidades', this.habilidad.id, 'editar']);
     }
   }
 

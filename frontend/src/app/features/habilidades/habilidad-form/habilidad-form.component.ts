@@ -1,6 +1,7 @@
+// 1. Importa ActivatedRoute
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router'; // Se añade ActivatedRoute
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -36,15 +37,19 @@ import { Categoria } from '../../../shared/models';
 export class HabilidadFormComponent implements OnInit {
   habilidadForm: FormGroup;
   categorias: Categoria[] = [];
-  loading = false;
   submitting = false;
+
+  // 2. Añade propiedades para el modo edición
+  isEditMode = false;
+  habilidadId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
     private habilidadesService: HabilidadesService,
     private categoriasService: CategoriasService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute // 3. Inyéctalo en el constructor
   ) {
     this.habilidadForm = this.fb.group({
       titulo: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(150)]],
@@ -57,19 +62,44 @@ export class HabilidadFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCategorias();
+
+    // 4. Comprueba si hay un ID en la URL para activar el modo edición
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.isEditMode = true;
+      this.habilidadId = +id;
+      this.loadHabilidadData(this.habilidadId);
+    }
+  }
+
+  // 5. Nuevo método para cargar los datos de la habilidad a editar
+  loadHabilidadData(id: number): void {
+    this.habilidadesService.getById(id).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          // Rellena el formulario con los datos de la habilidad
+          this.habilidadForm.patchValue(response.data);
+        } else {
+           this.snackBar.open('No se pudieron cargar los datos de la habilidad.', 'Cerrar', { duration: 3000 });
+           this.router.navigate(['/habilidades']);
+        }
+      },
+      error: () => {
+        this.snackBar.open('Error al cargar la habilidad para editar.', 'Cerrar', { duration: 3000 });
+        this.router.navigate(['/habilidades']);
+      }
+    });
   }
 
   loadCategorias(): void {
-    this.loading = true;
+    // Este método no cambia
     this.categoriasService.list().subscribe({
       next: (response) => {
-        this.loading = false;
         if (response.success) {
           this.categorias = response.data;
         }
       },
-      error: (error) => {
-        this.loading = false;
+      error: () => {
         this.snackBar.open('Error al cargar categorías', 'Cerrar', { duration: 3000 });
       }
     });
@@ -83,33 +113,42 @@ export class HabilidadFormComponent implements OnInit {
     this.submitting = true;
     const data = this.habilidadForm.value;
 
-    // Convertir duracion_estimada a número o null
     if (data.duracion_estimada) {
       data.duracion_estimada = parseInt(data.duracion_estimada, 10);
     } else {
       data.duracion_estimada = null;
     }
 
-    this.habilidadesService.create(data).subscribe({
-      next: (response) => {
-        this.submitting = false;
-        if (response.success) {
-          this.snackBar.open('¡Habilidad creada exitosamente!', 'Cerrar', { duration: 3000 });
-          this.router.navigate(['/habilidades', response.data.id]);
-        }
-      },
-      error: (error) => {
-        this.submitting = false;
-        this.snackBar.open(
-          error.message || 'Error al crear la habilidad. Intenta de nuevo.',
-          'Cerrar',
-          { duration: 5000 }
-        );
-      }
-    });
+    // 6. Llama a 'update' o 'create' según el modo en el que esté el formulario
+    if (this.isEditMode && this.habilidadId) {
+      this.habilidadesService.update(this.habilidadId, data).subscribe(this.handleResponse);
+    } else {
+      this.habilidadesService.create(data).subscribe(this.handleResponse);
+    }
   }
+  
+  // 7. Refactorización para manejar la respuesta de la API y evitar código duplicado
+  private handleResponse = {
+    next: (response: any) => {
+      this.submitting = false;
+      if (response.success) {
+        const message = this.isEditMode ? '¡Habilidad actualizada con éxito!' : '¡Habilidad creada exitosamente!';
+        this.snackBar.open(message, 'Cerrar', { duration: 3000 });
+        this.router.navigate(['/habilidades', response.data.id]);
+      }
+    },
+    error: (error: any) => {
+      this.submitting = false;
+      const action = this.isEditMode ? 'actualizar' : 'crear';
+      this.snackBar.open(
+        error.message || `Error al ${action} la habilidad. Intenta de nuevo.`,
+        'Cerrar',
+        { duration: 5000 }
+      );
+    }
+  };
 
-  // Helpers para validación
+  // Helpers para validación (no cambian)
   get titulo() { return this.habilidadForm.get('titulo'); }
   get descripcion() { return this.habilidadForm.get('descripcion'); }
   get tipo() { return this.habilidadForm.get('tipo'); }

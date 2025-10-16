@@ -3,17 +3,18 @@
     <mat-card-header>
       <mat-card-title>
         <h1>
-          <mat-icon>add_circle</mat-icon>
-          Nueva Habilidad
+          <mat-icon>{{ isEditMode ? 'edit' : 'add_circle' }}</mat-icon>
+          {{ isEditMode ? 'Editar Habilidad' : 'Nueva Habilidad' }}
         </h1>
       </mat-card-title>
-      <mat-card-subtitle>Comparte tu habilidad con la comunidad</mat-card-subtitle>
+      <mat-card-subtitle>
+        {{ isEditMode ? 'Actualiza los detalles de tu habilidad' : 'Comparte tu habilidad con la comunidad' }}
+      </mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
       <form [formGroup]="habilidadForm" (ngSubmit)="onSubmit()">
         
-        <!-- Título -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Título</mat-label>
           <input 
@@ -33,7 +34,6 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- Tipo -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Tipo</mat-label>
           <mat-select formControlName="tipo">
@@ -52,7 +52,6 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- Categoría -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Categoría</mat-label>
           <mat-select formControlName="categoria_id">
@@ -67,7 +66,6 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- Descripción -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Descripción</mat-label>
           <textarea 
@@ -88,7 +86,6 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- Duración Estimada -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Duración estimada (minutos)</mat-label>
           <input 
@@ -106,12 +103,11 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- Botones -->
         <div class="form-actions">
           <button 
             mat-stroked-button 
             type="button"
-            routerLink="/habilidades"
+            [routerLink]="isEditMode ? ['/habilidades', habilidadId] : '/habilidades'"
             [disabled]="submitting">
             Cancelar
           </button>
@@ -121,8 +117,8 @@
             type="submit"
             [disabled]="habilidadForm.invalid || submitting">
             <mat-spinner *ngIf="submitting" diameter="20"></mat-spinner>
-            <mat-icon *ngIf="!submitting">save</mat-icon>
-            <span *ngIf="!submitting">Crear Habilidad</span>
+            <mat-icon *ngIf="!submitting">{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+            <span *ngIf="!submitting">{{ isEditMode ? 'Guardar Cambios' : 'Crear Habilidad' }}</span>
           </button>
         </div>
       </form>

@@ -1,4 +1,4 @@
-import { adminGuard } from './core/guards/admin.guard'; 
+import { adminGuard } from './core/guards/admin.guard';
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 
@@ -32,6 +32,13 @@ export const routes: Routes = [
     loadComponent: () => import('./features/habilidades/habilidad-form/habilidad-form.component').then(m => m.HabilidadFormComponent),
     canActivate: [authGuard]
   },
+  // --- AÑADIR ESTA RUTA ---
+  {
+    path: 'habilidades/:id/editar',
+    loadComponent: () => import('./features/habilidades/habilidad-form/habilidad-form.component').then(m => m.HabilidadFormComponent),
+    canActivate: [authGuard]
+  },
+  // -------------------------
   {
     path: 'habilidades/:id',
     loadComponent: () => import('./features/habilidades/habilidad-detail/habilidad-detail.component').then(m => m.HabilidadDetailComponent)
@@ -44,7 +51,7 @@ export const routes: Routes = [
   {
     path: 'admin/reportes',
     loadComponent: () => import('./features/admin/reportes-list/reportes-list.component').then(m => m.ReportesListComponent),
-    canActivate: [authGuard, adminGuard] 
+    canActivate: [authGuard, adminGuard]
   },
   {
     path: '**',
