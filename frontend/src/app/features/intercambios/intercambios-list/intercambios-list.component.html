@@ -1,0 +1,111 @@
+<div class="intercambios-container">
+  <div class="page-header">
+    <h1>
+      <mat-icon>inbox</mat-icon>
+      Mis Intercambios
+    </h1>
+    <p class="subtitle">Gestiona aquí tus propuestas enviadas y recibidas</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Cargando tus intercambios...</p>
+  </div>
+
+  <div *ngIf="!loading">
+    <mat-tab-group animationDuration="0ms">
+      
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>call_received</mat-icon>
+          Propuestas Recibidas ({{ intercambiosRecibidos.length }})
+        </ng-template>
+
+        <div class="intercambios-grid" *ngIf="intercambiosRecibidos.length > 0; else noRecibidos">
+          <mat-card *ngFor="let i of intercambiosRecibidos" class="intercambio-card">
+            <mat-card-header>
+              <mat-card-title>
+                Propuesta de: <strong>{{ i.proponente_nombre }}</strong>
+              </mat-card-title>
+              <mat-card-subtitle>
+                {{ i.fecha_propuesta | date:'dd/MM/yyyy HH:mm' }}
+              </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p>
+                ➡️ Te ofrece: <strong>{{ i.habilidad_ofrecida_titulo }}</strong>
+              </p>
+              <p>
+                ⬅️ A cambio de: <strong>{{ i.habilidad_solicitada_titulo }}</strong>
+              </p>
+            </mat-card-content>
+            <mat-card-actions>
+              <mat-chip-listbox>
+                <mat-chip [ngClass]="i.estado">{{ i.estado | uppercase }}</mat-chip>
+              </mat-chip-listbox>
+              <div *ngIf="i.estado === 'propuesto'" class="actions-buttons">
+                <button mat-flat-button color="primary" (click)="responderPropuesta(i.id, 'aceptado')">
+                  <mat-icon>check_circle</mat-icon> Aceptar
+                </button>
+                <button mat-stroked-button color="warn" (click)="responderPropuesta(i.id, 'rechazado')">
+                  <mat-icon>cancel</mat-icon> Rechazar
+                </button>
+              </div>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+        <ng-template #noRecibidos>
+          <div class="no-results">
+            <mat-icon>inbox</mat-icon>
+            <h2>No tienes propuestas recibidas</h2>
+            <p>Cuando alguien te proponga un intercambio, aparecerá aquí.</p>
+          </div>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>call_made</mat-icon>
+          Propuestas Enviadas ({{ intercambiosEnviados.length }})
+        </ng-template>
+
+        <div class="intercambios-grid" *ngIf="intercambiosEnviados.length > 0; else noEnviados">
+          <mat-card *ngFor="let i of intercambiosEnviados" class="intercambio-card">
+            <mat-card-header>
+              <mat-card-title>
+                Propuesta para: <strong>{{ i.receptor_nombre }}</strong>
+              </mat-card-title>
+               <mat-card-subtitle>
+                {{ i.fecha_propuesta | date:'dd/MM/yyyy HH:mm' }}
+              </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p>
+                ⬅️ Ofreces: <strong>{{ i.habilidad_ofrecida_titulo }}</strong>
+              </p>
+              <p>
+                ➡️ Pides: <strong>{{ i.habilidad_solicitada_titulo }}</strong>
+              </p>
+            </mat-card-content>
+            <mat-card-actions>
+              <mat-chip-listbox>
+                <mat-chip [ngClass]="i.estado">{{ i.estado | uppercase }}</mat-chip>
+              </mat-chip-listbox>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+        <ng-template #noEnviados>
+          <div class="no-results">
+            <mat-icon>send</mat-icon>
+            <h2>No has enviado ninguna propuesta</h2>
+            <p>Explora las habilidades y contacta con otros usuarios para empezar.</p>
+             <button mat-stroked-button color="primary" routerLink="/habilidades">
+                Explorar Habilidades
+              </button>
+          </div>
+        </ng-template>
+      </mat-tab>
+
+    </mat-tab-group>
+  </div>
+</div>

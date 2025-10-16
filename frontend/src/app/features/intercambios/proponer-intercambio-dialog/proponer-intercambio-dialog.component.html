@@ -1,0 +1,59 @@
+<h1 mat-dialog-title>
+  <mat-icon>swap_horiz</mat-icon>
+  Proponer Intercambio
+</h1>
+
+<div mat-dialog-content>
+  <p>
+    Estás a punto de proponer un intercambio por la habilidad: 
+    <strong>"{{ data.habilidadDeseada.titulo }}"</strong>.
+  </p>
+  
+  <form [formGroup]="proposalForm" id="proposal-form" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Habilidad que ofreces a cambio</mat-label>
+      <mat-select formControlName="habilidad_ofrecida_id">
+        <mat-option *ngIf="userSkills.length === 0" disabled>
+          No tienes habilidades de "oferta" para intercambiar.
+        </mat-option>
+        <mat-option *ngFor="let skill of userSkills" [value]="skill.id">
+          {{ skill.titulo }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="proposalForm.get('habilidad_ofrecida_id')?.hasError('required')">
+        Debes seleccionar una habilidad para ofrecer.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Mensaje para {{ data.habilidadDeseada.usuario_nombre }}</mat-label>
+      <textarea 
+        matInput 
+        formControlName="mensaje_propuesta" 
+        rows="4"
+        placeholder="Ej: ¡Hola! Vi que necesitas ayuda con esto. ¿Te interesaría un intercambio por mis clases de...?"></textarea>
+      <mat-error *ngIf="proposalForm.get('mensaje_propuesta')?.hasError('required')">
+        El mensaje es obligatorio.
+      </mat-error>
+      <mat-error *ngIf="proposalForm.get('mensaje_propuesta')?.hasError('minlength')">
+        El mensaje debe tener al menos 10 caracteres.
+      </mat-error>
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="onCancel()" [disabled]="submitting">Cancelar</button>
+  <button 
+    mat-raised-button 
+    color="primary" 
+    type="submit" 
+    form="proposal-form"
+    [disabled]="proposalForm.invalid || submitting">
+    <mat-spinner *ngIf="submitting" diameter="20"></mat-spinner>
+    <span *ngIf="!submitting">
+      <mat-icon>send</mat-icon>
+      Enviar Propuesta
+    </span>
+  </button>
+</div>

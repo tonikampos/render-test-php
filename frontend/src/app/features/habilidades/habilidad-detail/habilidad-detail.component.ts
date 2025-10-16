@@ -12,6 +12,11 @@ import { HabilidadesService } from '../../../core/services/habilidades.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Habilidad } from '../../../shared/models';
 
+// CAMBIO: Añadir imports para el diálogo modal
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ProponerIntercambioDialogComponent } from '../../intercambios/proponer-intercambio-dialog/proponer-intercambio-dialog.component';
+
+
 @Component({
   selector: 'app-habilidad-detail',
   standalone: true,
@@ -24,7 +29,8 @@ import { Habilidad } from '../../../shared/models';
     MatChipsModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatDividerModule
+    MatDividerModule,
+    MatDialogModule // CAMBIO: Añadir MatDialogModule aquí
   ],
   templateUrl: './habilidad-detail.component.html',
   styleUrl: './habilidad-detail.component.scss'
@@ -39,7 +45,8 @@ export class HabilidadDetailComponent implements OnInit {
     private router: Router,
     private habilidadesService: HabilidadesService,
     public authService: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog // CAMBIO: Inyectar el servicio MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -89,8 +96,6 @@ export class HabilidadDetailComponent implements OnInit {
 
   editHabilidad(): void {
     if (this.habilidad) {
-      // TODO: Navegar a formulario de edición
-      //this.snackBar.open('Función de edición en desarrollo', 'OK', { duration: 2000 });
       this.router.navigate(['/habilidades', this.habilidad.id, 'editar']);
     }
   }
@@ -111,8 +116,25 @@ export class HabilidadDetailComponent implements OnInit {
     });
   }
 
+  // CAMBIO: Reemplazar el método contactUser con la lógica para abrir el diálogo
   contactUser(): void {
-    // TODO: Implementar sistema de mensajería
-    this.snackBar.open('Sistema de mensajería en desarrollo', 'OK', { duration: 2000 });
+    if (!this.habilidad) {
+      return;
+    }
+
+    const dialogRef = this.dialog.open(ProponerIntercambioDialogComponent, {
+      width: '550px',
+      data: { habilidadDeseada: this.habilidad }, // Pasamos los datos de la habilidad al diálogo
+      disableClose: true // Impide cerrar el diálogo haciendo clic fuera de él
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // El 'result' será 'true' si la propuesta se envió correctamente desde el diálogo
+      if (result) {
+        // En un futuro, redirigiremos a la bandeja de entrada. Por ahora, al perfil.
+        this.snackBar.open('¡Propuesta enviada! Serás notificado con la respuesta.', 'Entendido', { duration: 4000 });
+        this.router.navigate(['/perfil']);
+      }
+    });
   }
 }

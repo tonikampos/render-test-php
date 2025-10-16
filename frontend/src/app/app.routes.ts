@@ -49,6 +49,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'intercambios',
+    loadComponent: () => import('./features/intercambios/intercambios-list/intercambios-list.component').then(m => m.IntercambiosListComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'admin/reportes',
     loadComponent: () => import('./features/admin/reportes-list/reportes-list.component').then(m => m.ReportesListComponent),
     canActivate: [authGuard, adminGuard]
