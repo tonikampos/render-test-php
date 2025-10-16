@@ -1,12 +1,18 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router'; // Importa Router
+import { Router, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar'; // Importa MatToolbarModule
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { AuthService } from '../../core/services/auth.service';
 
-import { AuthService } from '../../core/services/auth.service'; // Importa AuthService
+// Se define la "forma" de los objetos
+interface Feature {
+  icon: string;
+  title: string;
+  description: string;
+}
 
 @Component({
   selector: 'app-home',
@@ -17,20 +23,34 @@ import { AuthService } from '../../core/services/auth.service'; // Importa AuthS
     MatButtonModule,
     MatCardModule,
     MatIconModule,
-    MatToolbarModule // Añade MatToolbarModule
+    MatToolbarModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-  features = [
-    // ... (tu array de features no cambia)
+  // ===== LA CORRECCIÓN ESTÁ EN ESTA LÍNEA =====
+  features: Feature[] = [
+    {
+      icon: 'swap_horiz',
+      title: 'Intercambia Habilidades',
+      description: 'Ofrece lo que sabes hacer y recibe lo que necesitas'
+    },
+    {
+      icon: 'people',
+      title: 'Comunidad',
+      description: 'Conecta con personas de tu zona'
+    },
+    {
+      icon: 'star',
+      title: 'Valoraciones',
+      description: 'Sistema de reputación transparente'
+    }
   ];
+  // ===========================================
 
-  // Inyecta AuthService y Router en el constructor
   constructor(public authService: AuthService, private router: Router) {}
 
-  // Añade el método para cerrar sesión
   logout(): void {
     this.authService.logout().subscribe(() => {
       this.router.navigate(['/login']);
