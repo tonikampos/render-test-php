@@ -67,6 +67,7 @@
 .actions-buttons {
   display: flex;
   gap: 0.5rem;
+  margin-left: auto; // <-- AÑADE ESTA LÍNEA para empujar los botones a la derecha
 }
 
 // Estilos para los chips de estado

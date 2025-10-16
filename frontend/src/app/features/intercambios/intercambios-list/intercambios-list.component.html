@@ -91,7 +91,13 @@
               <mat-chip-listbox>
                 <mat-chip [ngClass]="i.estado">{{ i.estado | uppercase }}</mat-chip>
               </mat-chip-listbox>
-            </mat-card-actions>
+
+              <div *ngIf="i.estado === 'aceptado'" class="actions-buttons">
+                <button mat-flat-button color="accent" (click)="completarIntercambio(i.id)">
+                  <mat-icon>task_alt</mat-icon> Marcar Completado
+                </button>
+              </div>
+              </mat-card-actions>
           </mat-card>
         </div>
         <ng-template #noEnviados>

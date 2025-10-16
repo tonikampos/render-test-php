@@ -74,4 +74,16 @@ export class IntercambiosListComponent implements OnInit {
       }
     });
   }
+completarIntercambio(id: number): void {
+    this.intercambiosService.marcarComoCompletado(id).subscribe({
+      next: () => {
+        this.snackBar.open('¡Intercambio completado! Ahora puedes valorarlo.', 'OK', { duration: 3500 });
+        this.loadIntercambios(); // Recargamos la lista para actualizar el estado
+      },
+      error: (err) => {
+        this.snackBar.open(err.message || 'Error al marcar como completado.', 'Cerrar', { duration: 3000 });
+      }
+    });
+  }
+
 }
