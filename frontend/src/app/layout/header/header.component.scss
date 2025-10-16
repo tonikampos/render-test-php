@@ -1,0 +1,138 @@
+.home-container {
+  min-height: calc(100vh - 64px);
+}
+
+// Hero Section
+.hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 6rem 2rem;
+  text-align: center;
+
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+
+    h1 {
+      font-size: 4rem;
+      margin: 0;
+      font-weight: 700;
+      letter-spacing: -2px;
+    }
+
+    .tagline {
+      font-size: 1.5rem;
+      margin: 1.5rem 0 2rem;
+      opacity: 0.95;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+
+      button {
+        padding: 0 2rem;
+        height: 48px;
+        font-size: 1.1rem;
+      }
+    }
+  }
+}
+
+// Features Section
+.features {
+  padding: 4rem 2rem;
+  background: #f5f5f5;
+
+  h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: #333;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .feature-card {
+    text-align: center;
+    padding: 2rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .feature-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: #667eea;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    p {
+      color: #666;
+      line-height: 1.6;
+    }
+  }
+}
+
+// CTA Section
+.cta {
+  padding: 4rem 2rem;
+  text-align: center;
+  background: white;
+
+  h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 2rem;
+  }
+
+  button {
+    padding: 0 3rem;
+    height: 56px;
+    font-size: 1.1rem;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .hero {
+    padding: 4rem 1rem;
+
+    .hero-content h1 {
+      font-size: 2.5rem;
+    }
+
+    .tagline {
+      font-size: 1.2rem;
+    }
+  }
+
+  .features h2,
+  .cta h2 {
+    font-size: 2rem;
+  }
+}

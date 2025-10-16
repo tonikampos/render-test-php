@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { AuthService } from '../../core/services/auth.service';
 
 // Se define la "forma" de los objetos
 interface Feature {
@@ -19,17 +17,16 @@ interface Feature {
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule,
+    RouterModule, // Se mantiene para que funcione 'routerLink' en el HTML
     MatButtonModule,
     MatCardModule,
-    MatIconModule,
-    MatToolbarModule
+    MatIconModule
+    // Se elimina MatToolbarModule porque ya no se usa aquí
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-  // ===== LA CORRECCIÓN ESTÁ EN ESTA LÍNEA =====
   features: Feature[] = [
     {
       icon: 'swap_horiz',
@@ -47,13 +44,7 @@ export class HomeComponent {
       description: 'Sistema de reputación transparente'
     }
   ];
-  // ===========================================
 
-  constructor(public authService: AuthService, private router: Router) {}
-
-  logout(): void {
-    this.authService.logout().subscribe(() => {
-      this.router.navigate(['/login']);
-    });
-  }
+  // El constructor ahora puede estar vacío
+  constructor() {}
 }
