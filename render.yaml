@@ -1,3 +1,4 @@
+# Configuración de Render (VERSIÓN FINAL E CORRIXIDA)
 services:
   # Backend API - PHP en Docker (A TÚA CONFIGURACIÓN ORIXINAL, INTACTA)
   - type: web
@@ -24,11 +25,10 @@ services:
     staticPublishPath: frontend/dist/frontend/browser
     routes:
       # =================================================================
-      # ÚNICO CAMBIO REAL: O "TÚNEL" QUE CONECTA O FRONTEND CO BACKEND
-      # Esta regra intercepta as chamadas a /api/... e rediríxeas internamente
-      # ao teu servizo de backend, usando o nome correcto e real.
+      # O "TÚNEL" CORRIXIDO. ESTA É A ÚNICA LIÑA QUE REALMENTE CAMBIA.
       - type: rewrite
         source: /api/:path*
+        # O destino é a URL pública do teu backend, seguido do :path*
         destination: https://render-test-php-1.onrender.com/:path*
       # =================================================================
 
