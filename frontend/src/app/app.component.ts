@@ -1,24 +1,16 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, RouterModule } from '@angular/router';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatDividerModule } from '@angular/material/divider';
 import { CommonModule } from '@angular/common';
-import { AuthService } from './core/services/auth.service';
+
+// 1. Importa el nuevo MainLayoutComponent
+import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 
 @Component({
   selector: 'app-root',
+  standalone: true, // Asegúrate de que este componente sea standalone
   imports: [
     CommonModule,
-    RouterOutlet,
-    RouterModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
-    MatDividerModule
+    // 2. Añade MainLayoutComponent a los imports. Se eliminan los demás.
+    MainLayoutComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -26,18 +18,6 @@ import { AuthService } from './core/services/auth.service';
 export class AppComponent {
   title = 'GaliTroco';
 
-  constructor(public authService: AuthService) {}
-
-  logout(): void {
-    this.authService.logout().subscribe({
-      next: () => {
-        // Redirigir a home después del logout se maneja en el interceptor
-      },
-      error: (error) => {
-        console.error('Error al cerrar sesión:', error);
-        // Limpiar sesión local aunque falle en servidor
-        this.authService.clearSession();
-      }
-    });
-  }
+  // 3. El constructor ahora está vacío y se ha eliminado el método logout.
+  constructor() {}
 }
