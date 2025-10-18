@@ -9,8 +9,8 @@
  */
 
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../utils/auth.php'; // Asegúrate de que Auth está incluído
-require_once __DIR__ . '/../utils/response.php'; // Incluir Response
+require_once __DIR__ . '/../utils/Auth.php'; // Asegúrate de que Auth está incluído
+require_once __DIR__ . '/../utils/Response.php'; // Incluir Response
 
 function handleUsuariosRoutes($method, $id, $action, $input) {
 
