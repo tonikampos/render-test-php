@@ -1,7 +1,7 @@
 <?php
 /**
  * Endpoints de Usuarios
- * GET /api/usuarios - Listar usuarios (ADMIN ONLY)
+ * GET /api/usuarios - Listar usuarios (ADMINISTRADOR ONLY)
  * GET /api/usuarios/:id - Ver perfil de usuario
  * GET /api/usuarios/:id/estadisticas - Estadísticas del usuario
  * PUT /api/usuarios/:id - Actualizar perfil
@@ -10,8 +10,7 @@
 
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../utils/auth.php'; // Asegúrate de que Auth está incluído
-// Incluir Response si no está globalmente
-require_once __DIR__ . '/../utils/response.php';
+require_once __DIR__ . '/../utils/response.php'; // Incluir Response
 
 function handleUsuariosRoutes($method, $id, $action, $input) {
 
@@ -46,7 +45,6 @@ function handleUsuariosRoutes($method, $id, $action, $input) {
     }
 
     // Si no coincide ninguna ruta, método no permitido
-    // Considera devolver un 404 si la ruta base /usuarios existe pero la acción no
     Response::methodNotAllowed(['GET', 'PUT']);
 }
 
@@ -54,9 +52,9 @@ function handleUsuariosRoutes($method, $id, $action, $input) {
  * Listar usuarios (Sólo administradores)
  */
 function listarUsuarios() {
-    // ===== LÍNEA CLAVE AÑADIDA =====
-    Auth::requireRole('admin');
-    // ================================
+    // ===== CAMBIO AQUÍ =====
+    Auth::requireRole('administrador');
+    // =======================
 
     try {
         $db = Database::getConnection();
@@ -84,9 +82,7 @@ function listarUsuarios() {
             $params['search'] = '%' . $search . '%';
         }
 
-        // Permitir filtrar por activo/inactivo (opcional para admin)
         if (isset($_GET['activo'])) {
-             // Validar que sea un booleano o 'true'/'false'
              $activoParam = filter_var($_GET['activo'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
              if ($activoParam !== null) {
                  $where[] = 'activo = :activo';
@@ -103,7 +99,7 @@ function listarUsuarios() {
         $stmt->execute($params);
         $total = $stmt->fetchColumn();
 
-        // Obtener usuarios - Incluir campos relevantes para admin
+        // Obtener usuarios
         $sql = "
             SELECT
                 id, nombre_usuario, email, ubicacion, biografia, foto_url,
@@ -122,9 +118,9 @@ function listarUsuarios() {
         // Bind de parámetros
         foreach ($params as $key => &$val) {
              if ($key === 'limit' || $key === 'offset') {
-                $stmt->bindParam(":$key", $val, PDO::PARAM_INT); // Añadir ':' al placeholder
+                $stmt->bindParam(":$key", $val, PDO::PARAM_INT);
             } else {
-                 $stmt->bindParam(":$key", $val); // Añadir ':' al placeholder
+                 $stmt->bindParam(":$key", $val);
              }
         }
         unset($val);
@@ -164,9 +160,11 @@ function obtenerUsuario($id) {
 
         // Verificar si el usuario que hace la petición es el mismo o es admin
         $is_same_user = isset($_SESSION['user_id']) && $_SESSION['user_id'] == $id;
-        $is_admin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+        // ===== CAMBIO AQUÍ =====
+        $is_admin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'administrador';
+        // =======================
 
-        // Si el usuario está inactivo y NO es admin, devolvemos 404 (NotFound, como si no existiera para el público)
+        // Si el usuario está inactivo y NO es admin, devolvemos 404
         if ($usuario['activo'] == false && !$is_admin) {
              Response::notFound('Usuario no encontrado');
         }
@@ -176,10 +174,7 @@ function obtenerUsuario($id) {
             unset($usuario['email']);
             unset($usuario['activo']);
             unset($usuario['rol']);
-            // Considerar si ultima_conexion debe ser visible públicamente
-            // unset($usuario['ultima_conexion']);
         }
-
 
         Response::success($usuario);
 
@@ -195,38 +190,26 @@ function obtenerEstadisticasUsuario($id) {
     try {
         $db = Database::getConnection();
 
-        // Verificar que el usuario existe (aunque esté inactivo, para admin)
         $stmtUser = $db->prepare("SELECT id FROM usuarios WHERE id = :id");
         $stmtUser->execute(['id' => $id]);
         if (!$stmtUser->fetch()) {
              Response::notFound('Usuario no encontrado');
         }
 
-        // Usar la vista estadisticas_usuarios
         $sql = "SELECT * FROM estadisticas_usuarios WHERE id = :id";
         $stmt = $db->prepare($sql);
         $stmt->execute(['id' => $id]);
         $stats = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$stats) {
-            // Devolver estadísticas vacías si no hay datos en la vista
             $stats = [
-                'id' => $id,
-                'total_habilidades' => 0,
-                'ofertas_activas' => 0,
-                'demandas_activas' => 0,
-                'total_intercambios' => 0,
-                'intercambios_completados' => 0,
-                'valoracion_promedio' => null,
-                'total_valoraciones' => 0
+                'id' => $id, 'total_habilidades' => 0, 'ofertas_activas' => 0,
+                'demandas_activas' => 0, 'total_intercambios' => 0, 'intercambios_completados' => 0,
+                'valoracion_promedio' => null, 'total_valoraciones' => 0
             ];
         } else {
-             // Asegurarse de que valoracion_promedio sea null si no hay valoraciones
-             if ($stats['total_valoraciones'] == 0) {
-                 $stats['valoracion_promedio'] = null;
-             }
-             // Convertir a número si es necesario, PDO puede devolver strings
-             $stats['valoracion_promedio'] = $stats['valoracion_promedio'] !== null ? (float)$stats['valoracion_promedio'] : null;
+             if ($stats['total_valoraciones'] == 0) $stats['valoracion_promedio'] = null;
+             else $stats['valoracion_promedio'] = (float)$stats['valoracion_promedio'];
         }
 
         Response::success($stats);
@@ -243,7 +226,6 @@ function obtenerHabilidadesUsuario($id) {
     try {
         $db = Database::getConnection();
 
-        // Verificar que el usuario existe
         $stmtUser = $db->prepare("SELECT id FROM usuarios WHERE id = :id");
         $stmtUser->execute(['id' => $id]);
         if (!$stmtUser->fetch()) {
@@ -251,13 +233,11 @@ function obtenerHabilidadesUsuario($id) {
         }
 
         $sql = "
-            SELECT
-                h.id, h.titulo, h.descripcion, h.tipo, h.duracion_estimada,
-                h.fecha_publicacion, h.estado,
-                c.nombre as categoria, c.icono as categoria_icono
+            SELECT h.id, h.titulo, h.descripcion, h.tipo, h.duracion_estimada,
+                   h.fecha_publicacion, h.estado, c.nombre as categoria, c.icono as categoria_icono
             FROM habilidades h
             INNER JOIN categorias_habilidades c ON h.categoria_id = c.id
-            WHERE h.usuario_id = :usuario_id AND h.estado = 'activa' -- Solo activas
+            WHERE h.usuario_id = :usuario_id AND h.estado = 'activa'
             ORDER BY h.fecha_publicacion DESC
         ";
 
@@ -282,11 +262,12 @@ function actualizarUsuario($id, $data) {
         $user_role = $_SESSION['user_role'] ?? null;
 
         // Verificar permisos (solo el mismo usuario o admin)
-        if ($user_id != $id && $user_role !== 'admin') {
+        // ===== CAMBIO AQUÍ =====
+        if ($user_id != $id && $user_role !== 'administrador') {
             Response::forbidden('No tienes permisos para editar este usuario');
         }
+        // =======================
 
-        // Verificar que el usuario existe
         $stmt = $db->prepare("SELECT id, email FROM usuarios WHERE id = :id");
         $stmt->execute(['id' => $id]);
         $currentUser = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -297,40 +278,40 @@ function actualizarUsuario($id, $data) {
         // Construir UPDATE dinámico
         $fields = [];
         $params = ['id' => $id];
-
-        // Campos permitidos para actualización
         $allowedFieldsUser = ['nombre_usuario', 'ubicacion', 'biografia', 'foto_url'];
         $allowedFieldsAdmin = ['activo', 'rol'];
 
         foreach ($allowedFieldsUser as $field) {
             if (isset($data[$field])) {
-                // Validación básica (mejorar según necesidad)
-                if ($field === 'nombre_usuario' && mb_strlen(trim($data[$field])) < 3) { // Usar mb_strlen para UTF8
+                if ($field === 'nombre_usuario' && mb_strlen(trim($data[$field])) < 3) {
                      Response::badRequest('El nombre de usuario debe tener al menos 3 caracteres.');
                 }
-                // Añadir más validaciones...
-
                 $fields[] = "$field = :$field";
-                $params[$field] = trim($data[$field]); // Limpiar espacios
+                $params[$field] = trim($data[$field]);
             }
         }
 
         // Si es admin, permitir actualizar campos adicionales
-        if ($user_role === 'admin') {
+        // ===== CAMBIO AQUÍ =====
+        if ($user_role === 'administrador') {
             foreach ($allowedFieldsAdmin as $field) {
                  if (isset($data[$field])) {
                      if ($field === 'activo') {
                          $params[$field] = filter_var($data[$field], FILTER_VALIDATE_BOOLEAN);
                      }
-                     elseif ($field === 'rol' && !in_array($data[$field], ['usuario', 'admin'])) {
-                         Response::badRequest('Rol inválido. Debe ser "usuario" o "admin".');
-                     } else {
+                     // ===== CAMBIO AQUÍ (na validación do rol) =====
+                     elseif ($field === 'rol' && !in_array($data[$field], ['usuario', 'administrador'])) {
+                         Response::badRequest('Rol inválido. Debe ser "usuario" o "administrador".');
+                     }
+                     // ===========================================
+                     else {
                          $params[$field] = $data[$field];
                      }
                      $fields[] = "$field = :$field";
                  }
             }
         }
+        // =======================
 
         if (empty($fields)) {
             Response::badRequest('No hay campos válidos para actualizar.');
@@ -347,7 +328,7 @@ function actualizarUsuario($id, $data) {
         $stmt->execute($params);
         $updated = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Si el usuario actualizado es el que está logueado, actualizar sesión
+        // Actualizar sesión si es el mismo usuario
         if ($user_id == $id) {
              $_SESSION['user_name'] = $updated['nombre_usuario'];
              if (isset($updated['rol'])) $_SESSION['user_role'] = $updated['rol'];
@@ -356,9 +337,9 @@ function actualizarUsuario($id, $data) {
         Response::success($updated, 'Perfil actualizado exitosamente');
 
     } catch (PDOException $e) {
-         if ($e->getCode() == 23505) { // Error de unicidad
+         if ($e->getCode() == 23505) {
               if (strpos($e->getMessage(), 'usuarios_nombre_usuario_key') !== false) {
-                   Response::conflict('El nombre de usuario ya está en uso.'); // 409 Conflict
+                   Response::conflict('El nombre de usuario ya está en uso.');
               } else {
                    Response::serverError('Error de base de datos.', $e->getMessage());
               }
@@ -377,7 +358,6 @@ function obtenerValoracionesUsuario($id) {
     try {
         $db = Database::getConnection();
 
-        // Verificar que el usuario existe
         $stmtUser = $db->prepare("SELECT id FROM usuarios WHERE id = :id");
         $stmtUser->execute(['id' => $id]);
         if (!$stmtUser->fetch()) {
@@ -385,14 +365,8 @@ function obtenerValoracionesUsuario($id) {
         }
 
         $sql = "
-            SELECT
-                v.id,
-                v.puntuacion,
-                v.comentario,
-                v.fecha_valoracion,
-                u.id AS evaluador_id,
-                u.nombre_usuario AS evaluador_nombre,
-                u.foto_url AS evaluador_foto
+            SELECT v.id, v.puntuacion, v.comentario, v.fecha_valoracion,
+                   u.id AS evaluador_id, u.nombre_usuario AS evaluador_nombre, u.foto_url AS evaluador_foto
             FROM valoraciones v
             INNER JOIN usuarios u ON v.evaluador_id = u.id
             WHERE v.evaluado_id = :evaluado_id

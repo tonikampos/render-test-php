@@ -246,7 +246,7 @@ function actualizarHabilidad($id, $data) {
             Response::notFound('Habilidad no encontrada');
         }
         
-        if ($habilidad['usuario_id'] != $user_id && $user_role !== 'admin') {
+        if ($habilidad['usuario_id'] != $user_id && $user_role !== 'administrador') {
             Response::forbidden('No tienes permisos para editar esta habilidad');
         }
         
@@ -303,7 +303,7 @@ function eliminarHabilidad($id) {
             Response::notFound('Habilidad no encontrada');
         }
         
-        if ($habilidad['usuario_id'] != $user_id && $user_role !== 'admin') {
+        if ($habilidad['usuario_id'] != $user_id && $user_role !== 'administrador') {
             Response::forbidden('No tienes permisos para eliminar esta habilidad');
         }
         
