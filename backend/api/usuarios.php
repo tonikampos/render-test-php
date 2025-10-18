@@ -53,8 +53,7 @@ function handleUsuariosRoutes($method, $id, $action, $input) {
  */
 function listarUsuarios() {
     // ===== CAMBIO AQUÍ =====
-    Auth::requireRole('admin');
-    // =======================
+Auth::requireAdmin();    // =======================
 
     try {
         $db = Database::getConnection();
