@@ -1,8 +1,8 @@
+// src/app/core/services/reportes.service.ts
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import { ApiResponse } from '../../shared/models';
-import { Reporte } from '../../shared/models/reporte.model'; // Asegúrate de que este import sexa correcto
+import { ApiResponse, Reporte } from '../../shared/models'; // Asegúrate de que Reporte está exportado en models/index.ts
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +10,14 @@ import { Reporte } from '../../shared/models/reporte.model'; // Asegúrate de qu
 export class ReportesService {
 
   constructor(private apiService: ApiService) { }
+
+  /**
+   * Crear un novo reporte (para usuarios autenticados).
+   * Corresponde a: POST /api/reportes
+   */
+  crearReporte(datos: { tipo_contenido: 'habilidad' | 'usuario'; contenido_id: number; motivo: string }): Observable<ApiResponse<Reporte>> {
+    return this.apiService.post<ApiResponse<Reporte>>('reportes', datos);
+  }
 
   /**
    * Obter os reportes pendentes (só para admin).

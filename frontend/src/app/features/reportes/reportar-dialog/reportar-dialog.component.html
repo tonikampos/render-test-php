@@ -1,0 +1,50 @@
+<h1 mat-dialog-title>
+  <mat-icon color="warn">report_problem</mat-icon>
+  Reportar Contido
+</h1>
+
+<div mat-dialog-content>
+  <p>
+    Estás a reportar {{ data.tipoContenido === 'habilidad' ? 'a habilidade' : 'o usuario' }}:
+    <strong>"{{ data.tituloContenido }}"</strong>.
+  </p>
+  <p>Por favor, describe o motivo do teu reporte:</p>
+
+  <form [formGroup]="reportForm" id="report-form" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Motivo do reporte</mat-label>
+      <textarea
+        matInput
+        formControlName="motivo"
+        rows="5"
+        placeholder="Describe por que cres que este contido é inapropiado (spam, ofensivo, etc.). Mínimo 10 caracteres."
+      ></textarea>
+      <mat-error *ngIf="reportForm.get('motivo')?.hasError('required')">
+        O motivo é obrigatorio.
+      </mat-error>
+      <mat-error *ngIf="reportForm.get('motivo')?.hasError('minlength')">
+        Describe un pouco máis o motivo (mín. 10 caracteres).
+      </mat-error>
+      <mat-error *ngIf="reportForm.get('motivo')?.hasError('maxlength')">
+        O motivo non pode superar os 500 caracteres.
+      </mat-error>
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="onCancel()" [disabled]="submitting">Cancelar</button>
+  <button
+    mat-raised-button
+    color="warn"
+    type="submit"
+    form="report-form"
+    [disabled]="reportForm.invalid || submitting"
+  >
+    <mat-spinner *ngIf="submitting" diameter="20"></mat-spinner>
+    <span *ngIf="!submitting">
+      <mat-icon>send</mat-icon>
+      Enviar Reporte
+    </span>
+  </button>
+</div>

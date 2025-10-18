@@ -1,0 +1,13 @@
+.full-width {
+  width: 100%;
+}
+
+mat-dialog-content p strong {
+  font-weight: 600;
+}
+
+// Para que o spinner quede ben no botón
+mat-spinner {
+  display: inline-block;
+  margin-right: 8px;
+}

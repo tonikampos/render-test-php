@@ -17,7 +17,7 @@
         <mat-card class="habilidad-card">
           <div class="card-header">
             <mat-chip-set>
-              <mat-chip [class.oferta-chip]="habilidad.tipo === 'oferta'" 
+              <mat-chip [class.oferta-chip]="habilidad.tipo === 'oferta'"
                         [class.demanda-chip]="habilidad.tipo === 'demanda'">
                 <mat-icon>{{ getTipoIcon() }}</mat-icon>
                 {{ habilidad.tipo | uppercase }}
@@ -116,7 +116,14 @@
             </button>
           </mat-card-actions>
         </mat-card>
-      </div>
+
+        <div *ngIf="authService.isAuthenticated() && !isOwner" class="report-section">
+            <button mat-stroked-button color="warn" (click)="abrirDialogoReporte()">
+                <mat-icon>report_problem</mat-icon>
+                Reportar esta habilidade
+            </button>
+        </div>
+        </div>
     </div>
   </div>
 

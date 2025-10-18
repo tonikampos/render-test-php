@@ -247,3 +247,11 @@
     }
   }
 }
+.report-section {
+  margin-top: 1rem; // Engade un espazo superior
+  text-align: center; // Centra o botón
+
+  button {
+    width: 100%; // Fai que o botón ocupe todo o ancho dispoñible
+  }
+}
