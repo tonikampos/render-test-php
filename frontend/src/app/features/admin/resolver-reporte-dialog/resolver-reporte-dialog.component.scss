@@ -1,0 +1,26 @@
+.full-width {
+  width: 100%;
+  margin-bottom: 1rem; // Espacio entre campos
+}
+
+mat-dialog-content ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 1rem 0;
+  background-color: #f5f5f5;
+  padding: 0.8rem 1.2rem;
+  border-radius: 4px;
+
+  li {
+    margin-bottom: 0.5rem;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Para el spinner en el botón
+mat-spinner {
+  display: inline-block;
+  margin-right: 8px;
+}

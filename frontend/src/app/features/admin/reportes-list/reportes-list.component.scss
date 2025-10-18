@@ -12,7 +12,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    font-size: 2rem; // Ligeramente más pequeño que otros headers
+    font-size: 2rem;
     margin-bottom: 0.5rem;
   }
   p {
@@ -41,20 +41,34 @@
 
 .table-container {
   overflow-x: auto; // Para que la tabla sea responsive en pantallas pequeñas
+  border-radius: 8px; // Bordes redondeados
 }
 
 table {
   width: 100%;
 }
 
+// Estilo para las cabeceras
+th.mat-mdc-header-cell {
+  background-color: #f5f5f5;
+  font-weight: 500;
+}
+
+// Estilo para las celdas
+td.mat-mdc-cell {
+  vertical-align: middle;
+}
+
 .motivo-cell {
-  max-width: 400px; // Limita el ancho para que no se expanda demasiado
-  white-space: normal; // Permite que el texto se divida en varias líneas
-  padding: 10px 16px;
+  max-width: 400px;
+  min-width: 250px;
+  white-space: normal;
+  line-height: 1.4;
+  padding: 12px 16px;
 }
 
 .acciones-cell {
-  white-space: nowrap; // Evita que los botones se separen
+  white-space: nowrap;
 }
 
 // Icono inline para enlace externo

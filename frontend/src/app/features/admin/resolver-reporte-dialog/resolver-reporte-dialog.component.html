@@ -1,0 +1,64 @@
+<h1 mat-dialog-title>
+  <mat-icon>gavel</mat-icon>
+  Resolver Reporte #{{ data.reporte.id }}
+</h1>
+
+<div mat-dialog-content>
+  <p>Estás revisando un reporte para:</p>
+  <ul>
+    <li><strong>Tipo:</strong> {{ data.reporte.tipo_contenido | titlecase }}</li>
+    <li><strong>ID Contenido:</strong> #{{ data.reporte.contenido_id }}</li>
+    <li><strong>Motivo reportado:</strong> {{ data.reporte.motivo }}</li>
+  </ul>
+  <p>Por favor, selecciona una acción y añade notas sobre tu decisión:</p>
+
+  <form [formGroup]="resolveForm" id="resolve-form" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Decisión</mat-label>
+      <mat-select formControlName="decision">
+        <mat-option *ngFor="let state of resolutionStates" [value]="state">
+          {{ state | titlecase }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="resolveForm.get('decision')?.hasError('required')">
+        Debes seleccionar una decisión.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Notas de Revisión</mat-label>
+      <textarea
+        matInput
+        formControlName="notas_revision"
+        rows="4"
+        placeholder="Explica brevemente tu decisión o las acciones tomadas (mín. 10 caracteres)."
+      ></textarea>
+      <mat-error *ngIf="resolveForm.get('notas_revision')?.hasError('required')">
+        Las notas son obligatorias.
+      </mat-error>
+      <mat-error *ngIf="resolveForm.get('notas_revision')?.hasError('minlength')">
+        Describe un poco más (mín. 10 caracteres).
+      </mat-error>
+       <mat-error *ngIf="resolveForm.get('notas_revision')?.hasError('maxlength')">
+        Las notas no pueden superar los 500 caracteres.
+      </mat-error>
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="onCancel()" [disabled]="submitting">Cancelar</button>
+  <button
+    mat-raised-button
+    color="primary"
+    type="submit"
+    form="resolve-form"
+    [disabled]="resolveForm.invalid || submitting"
+  >
+    <mat-spinner *ngIf="submitting" diameter="20"></mat-spinner>
+    <span *ngIf="!submitting">
+      <mat-icon>save</mat-icon>
+      Guardar Resolución
+    </span>
+  </button>
+</div>

@@ -1,46 +1,84 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReportesService } from '../../../core/services/reportes.service';
-import { Reporte } from '../../../shared/models/reporte.model';
 import { RouterModule } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+
+// Imports de Angular Material
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog'; // <-- Importar MatDialog y MatDialogModule
+
+// Nuestros Servicios y Modelos
+import { AdminService } from '../../../core/services/admin.service';
+import { ApiResponse, Reporte } from '../../../shared/models';
+import { ResolverReporteDialogComponent } from '../resolver-reporte-dialog/resolver-reporte-dialog.component'; // <-- Importar el componente del diálogo
 
 @Component({
   selector: 'app-reportes-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatTooltipModule,
+    MatDialogModule // <-- Añadir MatDialogModule aquí
+  ],
   templateUrl: './reportes-list.component.html',
   styleUrls: ['./reportes-list.component.scss']
 })
 export class ReportesListComponent implements OnInit {
+  loading = true;
   reportes: Reporte[] = [];
+  displayedColumns: string[] = ['id', 'tipo_contenido', 'contenido_id', 'motivo', 'fecha_reporte', 'acciones'];
 
-  constructor(private reportesService: ReportesService) {}
+  constructor(
+    private adminService: AdminService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog // <-- Inyectar MatDialog
+  ) { }
 
   ngOnInit(): void {
-    this.cargarReportes();
+    this.loadReportesPendientes();
   }
 
-  cargarReportes(): void {
-    this.reportesService.getReportesPendientes().subscribe(res => {
-      if (res.success && res.data) {
-        this.reportes = res.data;
-      }
-    });
-  }
-
-  resolver(reporteId: number): void {
-    const notas = "O reporte foi revisado e o contido correspondente foi eliminado.";
-    this.reportesService.resolverReporte(reporteId, 'accion_tomada', notas).subscribe({
-      next: (res) => {
-        if (res.success) {
-          // Elimina o reporte da lista para que desapareza da vista
-          this.reportes = this.reportes.filter(r => r.id !== reporteId);
-          alert('Reporte resolto con éxito!');
+  loadReportesPendientes(): void {
+    this.loading = true;
+    this.adminService.getReportes('pendiente').subscribe({
+      next: (response: ApiResponse<Reporte[]>) => {
+        if (response.success) {
+          this.reportes = response.data;
         }
+        this.loading = false;
       },
-      error: (err) => {
-        alert('Erro ao resolver o reporte: ' + err.message);
+      error: (error: HttpErrorResponse) => {
+        this.loading = false;
+        this.snackBar.open('Error al cargar los reportes pendientes.', 'Cerrar', { duration: 3000 });
       }
     });
   }
+
+  // --- MODIFICAR ESTOS MÉTODOS ---
+  abrirDialogoResolver(reporte: Reporte): void {
+    const dialogRef = this.dialog.open(ResolverReporteDialogComponent, {
+      width: '500px',
+      data: { reporte: reporte }, // Pasar el reporte completo al diálogo
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Si el diálogo se cerró con éxito (se resolvió el reporte), recargamos la lista
+        this.loadReportesPendientes();
+      }
+    });
+  }
+  // ------------------------------
 }

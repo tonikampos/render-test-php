@@ -28,9 +28,12 @@
       <ng-container matColumnDef="contenido_id">
         <th mat-header-cell *matHeaderCellDef> Contenido ID </th>
         <td mat-cell *matCellDef="let reporte">
-           <a routerLink="/habilidades/{{reporte.contenido_id}}" target="_blank" matTooltip="Ver habilidad reportada">
+          <a *ngIf="reporte.tipo_contenido === 'habilidad'" [routerLink]="['/habilidades', reporte.contenido_id]" target="_blank" matTooltip="Ver habilidad reportada">
             #{{reporte.contenido_id}} <mat-icon inline>open_in_new</mat-icon>
           </a>
+          <span *ngIf="reporte.tipo_contenido !== 'habilidad'" matTooltip="ID del {{reporte.tipo_contenido}} reportado">
+            #{{reporte.contenido_id}}
+          </span>
         </td>
       </ng-container>
 
@@ -47,15 +50,10 @@
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef> Acciones </th>
         <td mat-cell *matCellDef="let reporte" class="acciones-cell">
-          <button mat-icon-button color="primary" (click)="marcarRevisado(reporte.id)" matTooltip="Marcar como revisado (acción simple)">
-            <mat-icon>check_circle_outline</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="tomarAccion(reporte.id)" matTooltip="Tomar acción (ej: eliminar contenido - pendiente)">
-            <mat-icon>gavel</mat-icon>
-          </button>
+          <button mat-icon-button color="primary" (click)="abrirDialogoResolver(reporte)" matTooltip="Resolver reporte">
+            <mat-icon>gavel</mat-icon> </button>
         </td>
       </ng-container>
-
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
