@@ -161,7 +161,7 @@ function obtenerUsuario($id) {
         // Verificar si el usuario que hace la petición es el mismo o es admin
         $is_same_user = isset($_SESSION['user_id']) && $_SESSION['user_id'] == $id;
         // ===== CAMBIO AQUÍ =====
-        $is_admin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+        $is_admin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'administrador';
         // =======================
 
         // Si el usuario está inactivo y NO es admin, devolvemos 404
