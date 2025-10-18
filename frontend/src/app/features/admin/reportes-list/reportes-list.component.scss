@@ -1,50 +1,67 @@
-.admin-panel-container {
-  max-width: 1000px;
-  margin: 2rem auto;
+.admin-container {
+  max-width: 1400px;
+  margin: 0 auto;
   padding: 2rem;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.no-reportes {
+.page-header {
   text-align: center;
-  font-size: 1.2rem;
-  color: #555;
-  padding: 2rem;
+  margin-bottom: 2rem;
+  h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 2rem; // Ligeramente más pequeño que otros headers
+    margin-bottom: 0.5rem;
+  }
+  p {
+    font-size: 1.1rem;
+    color: #666;
+  }
 }
 
-.reportes-table {
+.loading-container, .no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+  color: #888;
+  mat-icon {
+    font-size: 60px;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1rem;
+  }
+  p { margin: 0.5rem 0 0; }
+  h2 { margin-bottom: 0.5rem; }
+}
+
+.table-container {
+  overflow-x: auto; // Para que la tabla sea responsive en pantallas pequeñas
+}
+
+table {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 1.5rem;
+}
 
-  th, td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
-    vertical-align: middle;
-  }
+.motivo-cell {
+  max-width: 400px; // Limita el ancho para que no se expanda demasiado
+  white-space: normal; // Permite que el texto se divida en varias líneas
+  padding: 10px 16px;
+}
 
-  th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-  }
+.acciones-cell {
+  white-space: nowrap; // Evita que los botones se separen
+}
 
-  .motivo {
-    max-width: 400px;
-  }
-
-  .btn-resolver {
-    padding: 8px 12px;
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    &:hover {
-      background-color: #c82333;
-    }
-  }
+// Icono inline para enlace externo
+a mat-icon[inline] {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  vertical-align: text-bottom;
+  margin-left: 4px;
 }
