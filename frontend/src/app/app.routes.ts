@@ -32,13 +32,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/habilidades/habilidad-form/habilidad-form.component').then(m => m.HabilidadFormComponent),
     canActivate: [authGuard]
   },
-  // --- AÑADIR ESTA RUTA ---
   {
     path: 'habilidades/:id/editar',
     loadComponent: () => import('./features/habilidades/habilidad-form/habilidad-form.component').then(m => m.HabilidadFormComponent),
     canActivate: [authGuard]
   },
-  // -------------------------
   {
     path: 'habilidades/:id',
     loadComponent: () => import('./features/habilidades/habilidad-detail/habilidad-detail.component').then(m => m.HabilidadDetailComponent)
@@ -62,6 +60,13 @@ export const routes: Routes = [
     loadComponent: () => import('./features/admin/reportes-list/reportes-list.component').then(m => m.ReportesListComponent),
     canActivate: [authGuard, adminGuard]
   },
+  // --- NOVA RUTA ENGADIDA ---
+  {
+    path: 'admin/usuarios',
+    loadComponent: () => import('./features/admin/usuarios-list/usuarios-list.component').then(m => m.UsuariosListComponent),
+    canActivate: [authGuard, adminGuard] // Protexida para admins
+  },
+  // --------------------------
   {
     path: '**',
     redirectTo: ''
