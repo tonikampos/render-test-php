@@ -18,13 +18,14 @@
 
 ### Backend (PHP 8.2 + API REST)
 - ✅ API REST completa
-- ✅ Autenticación con JWT
+- ✅ Autenticación con JWT + recuperación de contraseña
 - ✅ CRUD de usuarios, habilidades, intercambios
 - ✅ Sistema de valoraciones
-- ✅ Gestión de conversaciones
+- ✅ Gestión de conversaciones (con transacciones ACID)
 - ✅ Sistema de reportes
 - ✅ Categorías de habilidades
 - ✅ CORS configurado
+- ✅ Código optimizado y libre de debug logs
 
 ### Base de Datos (PostgreSQL - Supabase)
 - ✅ Esquema completo con relaciones
@@ -145,20 +146,12 @@ ng serve
 - **Tipo**: Web Service (Docker)
 - **Auto-deploy**: Activado desde `main` branch
 
-### 🔹 Frontend (Por desplegar)
-- **Guía completa**: Ver `DEPLOY_FRONTEND_RENDER.md`
+### 🔹 Frontend (Static Site)
 - **URL prevista**: https://galitroco-frontend.onrender.com
 - **Tipo**: Static Site
-
-#### Resumen rápido:
-```bash
-# 1. En Render Dashboard: New + → Static Site
-# 2. Configuración:
-#    - Repository: tonikampos/render-test-php
-#    - Build Command: cd frontend && npm install && npm run build:prod
-#    - Publish Directory: frontend/dist/frontend/browser
-# 3. ¡Listo! Deploy automático cada push a main
-```
+- **Build**: `cd frontend && npm install && npm run build:prod`
+- **Publish Directory**: `frontend/dist/frontend/browser`
+- **Auto-deploy**: Activado desde `main` branch
 
 ---
 
@@ -205,11 +198,12 @@ probatfm/
 │   ├── schema_supabase.sql    # Versión para Supabase
 │   └── seeds.sql              # Datos de prueba
 │
-├── Dockerfile                  # Docker para backend
-├── render.yaml                 # Configuración multi-servicio Render
-├── DEPLOY_FRONTEND_RENDER.md   # Guía completa de deploy
-├── DOCUMENTACION_FRONTEND.md   # Documentación técnica frontend
-└── README.md                   # Este archivo
+├── Dockerfile                          # Docker para backend
+├── render.yaml                         # Configuración multi-servicio Render
+├── ARQUITECTURA_DEPLOY.md              # Arquitectura de despliegue
+├── ESTADO_IMPLEMENTACION_FUNCIONALIDADES.md  # Estado del proyecto
+├── INFRAESTRUCTURA_TECNOLOGICA_TFM.md  # Infraestructura técnica
+└── README.md                           # Este archivo
 ```
 
 ---
@@ -229,13 +223,13 @@ probatfm/
 
 ### Backend
 ```bash
-# Test de conexión a base de datos
-curl https://render-test-php-1.onrender.com/backend/test_db.php
-
 # Test de autenticación
 curl -X POST https://render-test-php-1.onrender.com/api.php/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"test@test.com","password":"password"}'
+
+# Test de habilidades
+curl https://render-test-php-1.onrender.com/api.php/habilidades
 ```
 
 ### Frontend
@@ -253,9 +247,10 @@ npm test
 
 ## 📖 Documentación Adicional
 
-- **Frontend**: Ver `DOCUMENTACION_FRONTEND.md` para arquitectura detallada
-- **Deploy**: Ver `DEPLOY_FRONTEND_RENDER.md` para guía paso a paso
-- **API**: Ver endpoints en `backend/api/README.md` (pendiente crear)
+- **Arquitectura**: Ver `ARQUITECTURA_DEPLOY.md` para detalles del despliegue
+- **Infraestructura**: Ver `INFRAESTRUCTURA_TECNOLOGICA_TFM.md` para stack técnico completo
+- **Estado del Proyecto**: Ver `ESTADO_IMPLEMENTACION_FUNCIONALIDADES.md`
+- **API Backend**: Ver `backend/API_DOCUMENTATION.md` para endpoints completos
 
 ---
 
@@ -312,4 +307,15 @@ Repositorio: [render-test-php](https://github.com/tonikampos/render-test-php)
 
 ---
 
-**Última actualización**: 2 de octubre de 2025
+## 🔄 Historial de Cambios Recientes
+
+### Octubre 2025 - Limpieza y Optimización para PEC2
+- ✅ **Eliminados 16 archivos obsoletos** (docs redundantes, tests, diagnósticos)
+- ✅ **Bug crítico corregido**: POST /conversaciones ahora usa transacciones ACID
+- ✅ **Código optimizado**: Eliminados 100+ líneas de logs de debug
+- ✅ **Mejora de seguridad**: Transacciones garantizan consistencia de datos
+- ✅ **Documentación actualizada**: Reflejando el estado actual del proyecto
+
+---
+
+**Última actualización**: 22 de octubre de 2025
