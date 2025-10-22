@@ -38,8 +38,10 @@ if (isset($_GET['resource'])) {
 // Dividir ruta en segmentos
 $segments = explode('/', $path);
 $resource = $segments[0] ?? '';
-$id = $segments[1] ?? null;
-$action = $segments[2] ?? null;
+
+// Obtener ID: primero de los segmentos de URL, luego de query params
+$id = $segments[1] ?? $_GET['id'] ?? null;
+$action = $segments[2] ?? $_GET['action'] ?? null;
 
 // Obtener body de la petición (para POST/PUT)
 $input = json_decode(file_get_contents('php://input'), true) ?? [];
