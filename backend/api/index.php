@@ -44,9 +44,6 @@ $action = $segments[2] ?? null;
 // Obtener body de la petición (para POST/PUT)
 $input = json_decode(file_get_contents('php://input'), true) ?? [];
 
-// Log de la petición (útil para debugging)
-error_log("API Request: $method $path");
-
 /**
  * ROUTING
  */

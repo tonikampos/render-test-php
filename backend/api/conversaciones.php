@@ -179,14 +179,10 @@ function obtenerMensajes($conversacion_id) {
  * Body: { "receptor_id": 5, "mensaje_inicial": "Hola..." }
  */
 function crearConversacion($input) {
+    $db = null;
+    
     try {
         $db = Database::getConnection();
-        
-        // SAFETY: Si hay transacción activa fallida, hacer rollback
-        if ($db->inTransaction()) {
-            $db->rollBack();
-        }
-        
         $usuario_id = $_SESSION['user_id'];
         
         // Validar entrada (aceptar tanto receptor_id como otro_usuario_id)
@@ -204,17 +200,13 @@ function crearConversacion($input) {
             Response::error('No puedes crear una conversación contigo mismo', 400);
         }
         
-        // Verificar que el receptor existe ANTES de iniciar transacción
+        // Verificar que el receptor existe
         $sqlCheckUser = "SELECT id FROM usuarios WHERE id = :receptor_id AND activo = TRUE";
         $stmtCheckUser = $db->prepare($sqlCheckUser);
         $stmtCheckUser->execute(['receptor_id' => $receptor_id]);
         if (!$stmtCheckUser->fetch()) {
             Response::error('El usuario receptor no existe o no está activo', 404);
         }
-        
-        // Iniciar transacción después de validaciones básicas
-    // Probar inserts fuera de la transacción para diagnóstico
-    error_log('[DEBUG] Ejecutando inserts fuera de transacción');
         
         // Verificar si ya existe una conversación entre estos usuarios
         $sqlCheck = "
@@ -241,7 +233,10 @@ function crearConversacion($input) {
             ], 200);
         }
         
-        // Crear conversación
+        // INICIAR TRANSACCIÓN para garantizar atomicidad
+        $db->beginTransaction();
+        
+        // 1. Crear conversación
         $sqlConversacion = "
             INSERT INTO conversaciones (intercambio_id, fecha_creacion, ultima_actualizacion)
             VALUES (NULL, NOW(), NOW())
@@ -250,57 +245,30 @@ function crearConversacion($input) {
         $stmtConversacion = $db->prepare($sqlConversacion);
         $stmtConversacion->execute();
         $conversacion_id = $stmtConversacion->fetchColumn();
-        error_log('[DEBUG] conversacion_id generado: ' . var_export($conversacion_id, true));
+        
         if (!$conversacion_id) {
             throw new Exception("No se pudo obtener el ID de la conversación creada");
         }
         
-    // Añadir participantes UNO POR UNO para identificar errores
-        // Insert participante receptor primero (sin transacción)
-        error_log('[DEBUG] Antes de insertar participante receptor (usuario_id=' . var_export($receptor_id, true) . ')');
-        try {
-            $sqlPartR = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
-            $stmtPartR = $db->prepare($sqlPartR);
-            $stmtPartR->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $receptor_id]);
-            error_log('[DEBUG] Participante receptor insertado correctamente');
-        } catch (Exception $e) {
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_RECEPTOR] ' . $e->getMessage());
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_RECEPTOR] Código: ' . ($e->getCode() ?? 'N/A'));
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_RECEPTOR] Archivo: ' . ($e->getFile() ?? 'N/A'));
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_RECEPTOR] Línea: ' . ($e->getLine() ?? 'N/A'));
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_RECEPTOR] Stack trace: ' . $e->getTraceAsString());
-            throw $e;
-        }
-
-        // Insert participante emisor después (sin transacción)
-        error_log('[DEBUG] Antes de insertar participante emisor (usuario_id=' . var_export($usuario_id, true) . ')');
-        try {
-            $sqlPartE = "INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) VALUES (:conversacion_id, :usuario_id, NOW())";
-            $stmtPartE = $db->prepare($sqlPartE);
-            $stmtPartE->execute(['conversacion_id' => $conversacion_id, 'usuario_id' => $usuario_id]);
-            error_log('[DEBUG] Participante emisor insertado correctamente');
-        } catch (Exception $e) {
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_EMISOR] ' . $e->getMessage());
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_EMISOR] Código: ' . ($e->getCode() ?? 'N/A'));
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_EMISOR] Archivo: ' . ($e->getFile() ?? 'N/A'));
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_EMISOR] Línea: ' . ($e->getLine() ?? 'N/A'));
-            error_log('[DEBUG][EXCEPTION][PARTICIPANTE_EMISOR] Stack trace: ' . $e->getTraceAsString());
-            throw $e;
-        }
-
-        // Enviar mensaje inicial con try/catch
-        try {
-            enviarMensajeInterno($db, $conversacion_id, $usuario_id, $mensaje_inicial);
-        } catch (Exception $e) {
-            error_log('[DEBUG][EXCEPTION][MENSAJE] ' . $e->getMessage());
-            error_log('[DEBUG][EXCEPTION][MENSAJE] Código: ' . ($e->getCode() ?? 'N/A'));
-            error_log('[DEBUG][EXCEPTION][MENSAJE] Archivo: ' . ($e->getFile() ?? 'N/A'));
-            error_log('[DEBUG][EXCEPTION][MENSAJE] Línea: ' . ($e->getLine() ?? 'N/A'));
-            error_log('[DEBUG][EXCEPTION][MENSAJE] Stack trace: ' . $e->getTraceAsString());
-            throw $e;
-        }
+        // 2. Añadir participantes
+        $sqlParticipantes = "
+            INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) 
+            VALUES 
+                (:conversacion_id, :usuario_id, NOW()),
+                (:conversacion_id, :receptor_id, NOW())
+        ";
+        $stmtParticipantes = $db->prepare($sqlParticipantes);
+        $stmtParticipantes->execute([
+            'conversacion_id' => $conversacion_id,
+            'usuario_id' => $usuario_id,
+            'receptor_id' => $receptor_id
+        ]);
         
-    // $db->commit(); // No hay transacción activa, no llamar a commit
+        // 3. Enviar mensaje inicial
+        enviarMensajeInterno($db, $conversacion_id, $usuario_id, $mensaje_inicial);
+        
+        // COMMIT: Todo salió bien
+        $db->commit();
         
         Response::success([
             'conversacion_id' => $conversacion_id,
@@ -308,16 +276,12 @@ function crearConversacion($input) {
         ], 201);
         
     } catch (Exception $e) {
+        // ROLLBACK en caso de error
         if ($db && $db->inTransaction()) {
             $db->rollBack();
         }
-        error_log('[DEBUG][EXCEPTION] Error en crearConversacion: ' . $e->getMessage());
-        error_log('[DEBUG][EXCEPTION] Código: ' . ($e->getCode() ?? 'N/A'));
-        error_log('[DEBUG][EXCEPTION] Archivo: ' . ($e->getFile() ?? 'N/A'));
-        error_log('[DEBUG][EXCEPTION] Línea: ' . ($e->getLine() ?? 'N/A'));
-        error_log('[DEBUG][EXCEPTION] Stack trace: ' . $e->getTraceAsString());
-        // Temporalmente devolver error detallado para debugging
-        Response::error('Error al crear conversación: ' . $e->getMessage(), 500);
+        error_log('Error en crearConversacion: ' . $e->getMessage());
+        Response::error('Error al crear conversación', 500);
     }
 }
 

@@ -13,8 +13,6 @@ function handleAuthRoutes($method, $action, $input) {
     
     // POST /api/auth/register
     if ($method === 'POST' && $action === 'register') {
-            // Log para depuración del input recibido
-            error_log('LOGIN INPUT: ' . print_r($input, true));
         $result = Auth::register($input);
         
         if ($result['success']) {
