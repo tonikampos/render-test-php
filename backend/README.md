@@ -23,7 +23,7 @@ Backend API REST desarrollado en **PHP 8.2** para GaliTroco, una plataforma de i
 | **Servidor Web** | Apache | 2.4 |
 | **Base de Datos** | PostgreSQL | 15 (Supabase) |
 | **Autenticación** | Sesiones PHP | Cookies SameSite=None |
-| **Servicio Email** | Resend API | - |
+| **Email** | Resend API | Recuperación password |
 | **Contenedor** | Docker | Debian (php:8.2-apache) |
 | **Hosting** | Render.com | PaaS |
 | **CI/CD** | GitHub | Auto-deploy desde `main` |
@@ -84,6 +84,14 @@ Email:    admin@galitroco.com
 Password: Admin123456
 Rol:      administrador
 ```
+
+> **💡 Nota sobre Recuperación de Contraseña:**  
+> El sistema de recuperación de contraseña está **100% funcional** en producción.  
+> Puedes probarlo con cualquier email registrado usando los endpoints:
+> - `POST /auth&action=forgot-password` → Envía email con token
+> - `POST /auth&action=reset-password` → Cambia contraseña con token
+> 
+> El email se envía vía **Resend API** al correo registrado. Ver secciones **1.5** y **1.6** para ejemplos.
 
 ---
 
@@ -195,6 +203,18 @@ Invoke-RestMethod -Uri "$baseUrl?resource=auth&action=logout" `
 
 #### 1.5 Recuperación de Contraseña (Paso 1: Solicitar Token)
 
+**Endpoint:** `POST /auth&action=forgot-password`
+
+**Descripción:**  
+Genera un token único de recuperación y envía un email al usuario con instrucciones para restablecer su contraseña. Utiliza **Resend API** como servicio de email.
+
+**Funcionamiento interno:**
+1. Valida que el email existe en la BD
+2. Genera token único (64 caracteres aleatorios)
+3. Guarda token en tabla `password_resets` con expiración de 1 hora
+4. Envía email HTML con enlace de recuperación vía **Resend API**
+5. Responde con mensaje genérico (por seguridad)
+
 ```powershell
 $body = @{
     email = "test_6937@testmail.com"
@@ -206,7 +226,7 @@ Invoke-RestMethod -Uri "$baseUrl?resource=auth&action=forgot-password" `
     -ContentType "application/json"
 ```
 
-**Respuesta esperada:**
+**Respuesta esperada (200):**
 ```json
 {
   "success": true,
@@ -214,20 +234,40 @@ Invoke-RestMethod -Uri "$baseUrl?resource=auth&action=forgot-password" `
 }
 ```
 
-**✅ Test Validado:** 
-- Token generado en tabla `password_resets`
-- Email enviado vía Resend API con enlace
-- Expiración configurada (1 hora)
-- Enlace formato: `https://galitroco-frontend.onrender.com/reset-password?token=abc123...`
+**Email enviado contiene:**
+- Asunto: "Recuperación de Contraseña - GaliTroco"
+- Enlace: `https://galitroco-frontend.onrender.com/reset-password?token=abc123...`
+- Válido por: 1 hora
+- Remitente: `noreply@galitroco.com` (vía Resend)
+
+**✅ Test Validado en Producción:** 
+- ✅ Token generado correctamente en tabla `password_resets`
+- ✅ Email enviado exitosamente vía **Resend API**
+- ✅ Expiración configurada (1 hora desde generación)
+- ✅ Token único y seguro (64 caracteres aleatorios)
 
 ---
 
 #### 1.6 Restablecer Contraseña (Paso 2: Cambiar con Token)
 
+**Endpoint:** `POST /auth&action=reset-password`
+
+**Descripción:**  
+Valida el token de recuperación recibido por email y actualiza la contraseña del usuario en la base de datos. Implementa seguridad con hash bcrypt y validación de expiración.
+
+**Funcionamiento interno:**
+1. Busca el token en tabla `password_resets`
+2. Valida que no haya expirado (< 1 hora desde creación)
+3. Valida que no haya sido usado previamente
+4. Hashea la nueva contraseña con **bcrypt** (cost 12)
+5. Actualiza contraseña en tabla `usuarios`
+6. Marca el token como usado en `password_resets`
+7. Responde con confirmación
+
 ```powershell
 # Token obtenido del email (parámetro ?token= de la URL)
 $body = @{
-    token = "abc123def456ghi789jkl..."  # Token recibido por email
+    token = "abc123def456ghi789jkl..."  # Token recibido por email (64 chars)
     nueva_contrasena = "NuevaPass123456"
 } | ConvertTo-Json
 
@@ -237,7 +277,7 @@ Invoke-RestMethod -Uri "$baseUrl?resource=auth&action=reset-password" `
     -ContentType "application/json"
 ```
 
-**Respuesta esperada:**
+**Respuesta esperada (200):**
 ```json
 {
   "success": true,
@@ -246,6 +286,8 @@ Invoke-RestMethod -Uri "$baseUrl?resource=auth&action=reset-password" `
 ```
 
 **❌ Errores Posibles:**
+
+**Token inválido (400):**
 ```json
 {
   "success": false,
@@ -253,12 +295,35 @@ Invoke-RestMethod -Uri "$baseUrl?resource=auth&action=reset-password" `
 }
 ```
 
-**✅ Test Validado:**
-- Token validado contra BD
-- Verificación de expiración (1 hora)
-- Contraseña actualizada con bcrypt
-- Token marcado como usado
-- Usuario puede hacer login con nueva contraseña
+**Token ya usado (400):**
+```json
+{
+  "success": false,
+  "message": "Este token ya fue utilizado"
+}
+```
+
+**Contraseña no válida (400):**
+```json
+{
+  "success": false,
+  "message": "La contraseña debe tener al menos 6 caracteres"
+}
+```
+
+**✅ Test Validado en Producción:**
+- ✅ Token validado correctamente contra BD
+- ✅ Verificación de expiración (1 hora max)
+- ✅ Contraseña actualizada con **bcrypt** (cost 12)
+- ✅ Token marcado como usado (no reutilizable)
+- ✅ Usuario puede hacer login inmediatamente con nueva contraseña
+- ✅ Validación de formato de contraseña (mínimo 6 caracteres)
+
+**Seguridad:**
+- 🔒 Token de un solo uso (no reutilizable)
+- 🔒 Expiración automática (1 hora)
+- 🔒 Hash bcrypt con salt automático
+- 🔒 Validación de entrada (contraseña segura)
 
 ---
 
