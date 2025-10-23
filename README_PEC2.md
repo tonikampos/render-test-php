@@ -461,6 +461,366 @@ galitroco/
 
 ---
 
+## 🧪 GUÍA DE PRUEBAS PARA EVALUADORES
+
+Esta sección proporciona instrucciones paso a paso para probar todas las funcionalidades de GaliTroco.
+
+### 🚀 Opción 1: Pruebas en Producción (RECOMENDADO - Sin instalación)
+
+**Acceso directo:**
+- **Frontend:** https://galitroco-frontend.onrender.com
+- **Backend API:** https://render-test-php-1.onrender.com/api.php
+
+**Ventajas:**
+- ✅ No requiere instalación local
+- ✅ Base de datos con datos de muestra
+- ✅ Configuración completa y operativa
+- ⏱️ Tiempo de prueba: 15-20 minutos
+
+---
+
+### 👤 Credenciales de Prueba
+
+Utiliza estos usuarios para probar diferentes escenarios:
+
+#### Usuario A (para intercambios)
+```
+Email:    test_6937@testmail.com
+Password: Pass123456
+Rol:      Usuario normal
+```
+
+#### Usuario B (para intercambios)
+```
+Email:    userB_6566@testing.com
+Password: Pass123456
+Rol:      Usuario normal
+```
+
+#### Administrador (panel admin)
+```
+Email:    admin@galitroco.com
+Password: Admin123456
+Rol:      Administrador
+```
+
+---
+
+### 📋 Escenario 1: Registro y Autenticación (3 minutos)
+
+#### 1.1 Probar registro de nuevo usuario
+1. Ir a: `https://galitroco-frontend.onrender.com/registro`
+2. Completar formulario:
+   - Nombre de usuario: `evaluador_test`
+   - Email: `evaluador@test.com`
+   - Contraseña: `Test123456`
+   - Ubicación: `A Coruña`
+3. Click en **"Registrarse"**
+4. **Resultado esperado:** Redirección automática al login
+
+#### 1.2 Probar login
+1. Ir a: `https://galitroco-frontend.onrender.com/login`
+2. Ingresar credenciales:
+   - Email: `test_6937@testmail.com`
+   - Password: `Pass123456`
+3. Click en **"Iniciar sesión"**
+4. **Resultado esperado:** Redirección al dashboard con mensaje de bienvenida
+
+#### 1.3 Verificar persistencia de sesión
+1. Cerrar navegador completamente
+2. Abrir navegador y volver a: `https://galitroco-frontend.onrender.com`
+3. **Resultado esperado:** Usuario sigue autenticado (sesión persiste)
+
+#### 1.4 Probar logout
+1. Click en icono de usuario (esquina superior derecha)
+2. Click en **"Cerrar sesión"**
+3. **Resultado esperado:** Redirección a página de login
+
+---
+
+### 🎯 Escenario 2: Gestión de Habilidades (5 minutos)
+
+#### 2.1 Crear habilidad de tipo "Oferta"
+1. Login como `test_6937@testmail.com`
+2. Ir a: **"Mis Habilidades"** → **"Nueva Habilidad"**
+3. Completar formulario:
+   - Tipo: `Oferta`
+   - Categoría: `Tecnología e Informática`
+   - Título: `Clases de Python para principiantes`
+   - Descripción: `Enseño programación en Python desde cero`
+   - Duración estimada: `60 minutos`
+4. Click en **"Publicar"**
+5. **Resultado esperado:** Habilidad visible en "Mis Habilidades"
+
+#### 2.2 Crear habilidad de tipo "Demanda"
+1. Click en **"Nueva Habilidad"** nuevamente
+2. Completar formulario:
+   - Tipo: `Demanda`
+   - Categoría: `Clases y Formación`
+   - Título: `Busco clases de inglés conversacional`
+   - Descripción: `Necesito mejorar mi inglés hablado`
+   - Duración estimada: `90 minutos`
+3. Click en **"Publicar"**
+4. **Resultado esperado:** Ambas habilidades visibles en el listado
+
+#### 2.3 Editar habilidad
+1. En "Mis Habilidades", click en **icono de editar** (lápiz)
+2. Modificar el título o descripción
+3. Click en **"Guardar cambios"**
+4. **Resultado esperado:** Cambios reflejados inmediatamente
+
+#### 2.4 Pausar/Activar habilidad
+1. Click en botón **"Pausar"** de una habilidad
+2. **Resultado esperado:** Estado cambia a "Pausada" (no visible en búsquedas públicas)
+3. Click en **"Activar"** nuevamente
+4. **Resultado esperado:** Estado vuelve a "Activa"
+
+---
+
+### 🔄 Escenario 3: Sistema de Intercambios Completo (7 minutos)
+
+#### 3.1 Proponer intercambio (Usuario A)
+1. Login como `test_6937@testmail.com`
+2. Ir a **"Explorar Habilidades"**
+3. Buscar habilidades de otros usuarios
+4. Click en una habilidad que te interese
+5. Click en botón **"Proponer Intercambio"**
+6. Seleccionar tu habilidad a ofrecer (de las que creaste)
+7. Escribir mensaje: `Hola, me interesa tu habilidad. ¿Podemos intercambiar?`
+8. Click en **"Enviar Propuesta"**
+9. **Resultado esperado:** 
+   - Mensaje de confirmación
+   - Propuesta visible en "Mis Intercambios" → "Enviados"
+   - Notificación enviada al otro usuario
+
+#### 3.2 Aceptar propuesta (Usuario B)
+1. **Cerrar sesión** de Usuario A
+2. Login como `userB_6566@testing.com`
+3. Ir a **"Mis Intercambios"** → **"Recibidos"**
+4. Ver la propuesta recibida
+5. Click en **"Aceptar"**
+6. **Resultado esperado:**
+   - Estado cambia a "Aceptado"
+   - Se crea conversación automática
+   - Notificación enviada al Usuario A
+
+#### 3.3 Enviar mensajes en conversación
+1. Desde "Intercambios Aceptados", click en **"Ver conversación"**
+2. Escribir mensaje: `Perfecto, ¿cuándo empezamos?`
+3. Enviar mensaje
+4. **Resultado esperado:** Mensaje visible en el chat
+
+#### 3.4 Completar intercambio
+1. Click en botón **"Marcar como Completado"**
+2. Confirmar acción
+3. **Resultado esperado:**
+   - Estado cambia a "Completado"
+   - Aparece opción para valorar
+
+#### 3.5 Valorar usuario
+1. Click en **"Valorar Usuario"**
+2. Seleccionar puntuación (1-5 estrellas): `5 estrellas`
+3. Escribir comentario: `Excelente experiencia, muy profesional`
+4. Click en **"Enviar Valoración"**
+5. **Resultado esperado:**
+   - Valoración registrada
+   - Puntuación promedio del usuario actualizada
+6. **Cambiar a Usuario A** y repetir valoración (ambos deben valorarse)
+
+---
+
+### 🔍 Escenario 4: Búsqueda y Filtros (3 minutos)
+
+#### 4.1 Buscar por categoría
+1. Ir a **"Explorar Habilidades"**
+2. Seleccionar categoría: `Tecnología e Informática`
+3. **Resultado esperado:** Solo habilidades de esa categoría
+
+#### 4.2 Buscar por palabra clave
+1. En el buscador, escribir: `inglés`
+2. **Resultado esperado:** Habilidades que contengan "inglés" en título o descripción
+
+#### 4.3 Filtrar por tipo
+1. Seleccionar filtro: `Solo ofertas`
+2. **Resultado esperado:** Solo habilidades de tipo "Oferta"
+
+#### 4.4 Filtrar por ubicación
+1. Seleccionar: `A Coruña`
+2. **Resultado esperado:** Solo usuarios de A Coruña
+
+---
+
+### 👮 Escenario 5: Panel de Administración (3 minutos)
+
+#### 5.1 Acceso al panel admin
+1. **Cerrar sesión** de usuario normal
+2. Login como `admin@galitroco.com` / `Admin123456`
+3. Ir a **"Panel de Administración"**
+4. **Resultado esperado:** Acceso permitido (solo admins)
+
+#### 5.2 Ver estadísticas
+1. En dashboard admin, verificar widgets:
+   - Total de usuarios registrados
+   - Total de habilidades publicadas
+   - Intercambios completados
+   - Valoración promedio de la plataforma
+2. **Resultado esperado:** Estadísticas en tiempo real
+
+#### 5.3 Gestionar reportes (si hay)
+1. Ir a sección **"Reportes"**
+2. Ver reportes pendientes
+3. Click en un reporte para ver detalles
+4. Marcar como **"Revisado"** o **"Resuelto"**
+5. **Resultado esperado:** Estado del reporte actualizado
+
+#### 5.4 Gestionar usuarios
+1. Ir a sección **"Usuarios"**
+2. Ver listado completo de usuarios
+3. Buscar usuario específico
+4. **Opciones disponibles:**
+   - Ver perfil completo
+   - Desactivar/Activar cuenta
+   - Ver historial de intercambios
+5. **Resultado esperado:** Acciones de moderación funcionan
+
+---
+
+### 🔑 Escenario 6: Recuperación de Contraseña (2 minutos)
+
+#### 6.1 Solicitar recuperación
+1. **Cerrar sesión** de cualquier usuario
+2. En página de login, click en **"¿Olvidaste tu contraseña?"**
+3. Ingresar email: `test_6937@testmail.com`
+4. Click en **"Enviar enlace de recuperación"**
+5. **Resultado esperado:** 
+   - Mensaje de confirmación
+   - Email enviado con token de recuperación (via Resend API)
+
+#### 6.2 Verificar token (opcional)
+1. Revisar consola de Resend (si tienes acceso)
+2. **Resultado esperado:** Email entregado exitosamente
+
+---
+
+### ✅ Checklist de Verificación Final
+
+Marca cada funcionalidad después de probarla:
+
+**Autenticación:**
+- [ ] Registro de nuevo usuario funciona
+- [ ] Login con credenciales correctas
+- [ ] Sesión persiste después de cerrar navegador
+- [ ] Logout funciona correctamente
+- [ ] Recuperación de contraseña envía email
+
+**Habilidades:**
+- [ ] Crear habilidad tipo "Oferta"
+- [ ] Crear habilidad tipo "Demanda"
+- [ ] Editar habilidad existente
+- [ ] Pausar/Activar habilidad
+- [ ] Eliminar habilidad
+- [ ] Ver habilidades propias
+- [ ] Explorar habilidades de otros usuarios
+
+**Intercambios:**
+- [ ] Proponer intercambio funciona
+- [ ] Receptor recibe notificación
+- [ ] Aceptar propuesta cambia estado
+- [ ] Rechazar propuesta funciona
+- [ ] Marcar como completado funciona
+- [ ] Ver historial de intercambios
+
+**Valoraciones:**
+- [ ] Sistema de estrellas (1-5) funciona
+- [ ] Comentario se guarda correctamente
+- [ ] Valoración promedio se calcula
+- [ ] Valoraciones visibles en perfil
+
+**Mensajería:**
+- [ ] Conversación se crea automáticamente
+- [ ] Enviar mensaje funciona
+- [ ] Mensajes se muestran en orden cronológico
+- [ ] Notificación de nuevo mensaje
+
+**Búsqueda:**
+- [ ] Filtrar por categoría funciona
+- [ ] Buscar por palabra clave
+- [ ] Filtrar por tipo (oferta/demanda)
+- [ ] Filtrar por ubicación
+
+**Panel Admin:**
+- [ ] Solo admins acceden al panel
+- [ ] Estadísticas se muestran correctamente
+- [ ] Gestión de reportes funciona
+- [ ] Gestión de usuarios funciona
+
+---
+
+### 🔧 Troubleshooting Común
+
+#### Problema: "No se puede conectar al servidor"
+**Solución:** 
+- Verificar que la URL sea correcta: `https://galitroco-frontend.onrender.com`
+- Render puede tardar 30-60 segundos en "despertar" el servicio si estuvo inactivo
+
+#### Problema: "Error al crear habilidad"
+**Solución:**
+- Verificar que todos los campos obligatorios estén completos
+- El título debe tener al menos 10 caracteres
+- La descripción debe tener al menos 20 caracteres
+
+#### Problema: "No puedo proponer intercambio"
+**Solución:**
+- Asegúrate de tener al menos 1 habilidad propia publicada
+- No puedes proponer intercambio con tus propias habilidades
+- La habilidad del otro usuario debe estar "Activa"
+
+#### Problema: "No recibo email de recuperación"
+**Solución:**
+- Revisar carpeta de spam
+- El email puede tardar 1-2 minutos en llegar
+- Verificar que el email esté registrado en la base de datos
+
+---
+
+### 📊 Endpoints API para Testing Avanzado
+
+Si deseas probar la API directamente (con Postman, curl, etc.):
+
+**Base URL:** `https://render-test-php-1.onrender.com/api.php`
+
+#### Autenticación
+```bash
+POST /api.php?resource=auth&action=login
+Body: {"email": "test_6937@testmail.com", "password": "Pass123456"}
+```
+
+#### Habilidades
+```bash
+GET /api.php?resource=habilidades
+GET /api.php?resource=habilidades&id=1
+POST /api.php?resource=habilidades
+```
+
+#### Intercambios
+```bash
+GET /api.php?resource=intercambios
+POST /api.php?resource=intercambios
+PUT /api.php?resource=intercambios&id=1&action=aceptar
+```
+
+**📝 Documentación completa de API:** Ver archivo `TESTING_Y_ENDPOINTS_TFM.md`
+
+---
+
+### ⏱️ Tiempo Total de Pruebas
+
+- **Prueba rápida (funcionalidades básicas):** 10-15 minutos
+- **Prueba completa (todos los escenarios):** 25-30 minutos
+- **Prueba exhaustiva (+ testing API):** 45-60 minutos
+
+---
+
 ## 📚 REFERENCIAS Y DOCUMENTACIÓN ADICIONAL
 
 ### Documentación técnica incluida:
