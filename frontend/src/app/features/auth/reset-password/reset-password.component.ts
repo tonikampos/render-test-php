@@ -44,32 +44,19 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    try {
-      // TEST: Verificar que el componente se está inicializando
-      console.log('=== RESET PASSWORD COMPONENT INIT ===');
-      console.log('Component loaded successfully');
-      console.log('Route:', this.route);
-      console.log('Router:', this.router);
-      
-      // Obtener token de la URL
-      this.route.queryParams.subscribe({
-        next: (params) => {
-          this.token = params['token'];
-          console.log('Token from URL:', this.token);
-          if (!this.token) {
-            this.errorMessage = 'Token inválido o no proporcionado';
-            console.warn('No token provided in URL');
-          }
-        },
-        error: (error) => {
-          console.error('Error getting query params:', error);
-          this.errorMessage = 'Error al obtener el token';
+    // Obtener token de la URL
+    this.route.queryParams.subscribe({
+      next: (params) => {
+        this.token = params['token'];
+        if (!this.token) {
+          this.errorMessage = 'Token inválido o no proporcionado';
         }
-      });
-    } catch (error) {
-      console.error('Error in ngOnInit:', error);
-      this.errorMessage = 'Error al inicializar el componente';
-    }
+      },
+      error: (error) => {
+        console.error('Error getting query params:', error);
+        this.errorMessage = 'Error al obtener el token';
+      }
+    });
   }
 
   get newPassword() {

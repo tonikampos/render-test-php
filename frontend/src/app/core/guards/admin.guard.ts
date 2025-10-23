@@ -11,13 +11,9 @@ export const adminGuard: CanActivateFn = (route, state): Observable<boolean> => 
   return authService.currentUser$.pipe(
     take(1),
     map(user => {
-      console.log('AdminGuard executado. Usuario actual:', user);
       if (user && user.rol === 'administrador') {
-        console.log('AdminGuard: Acceso permitido.');
-        return true; // Se hai usuario E é administrador, deixámolo pasar
+        return true;
       } else {
-        // Se non é administrador, rediriximos á páxina de inicio
-        console.log('AdminGuard: Acceso denegado. Redirixindo á páxina de inicio...');
         router.navigate(['/']);
         return false;
       }
