@@ -193,6 +193,75 @@ Invoke-RestMethod -Uri "$baseUrl?resource=auth&action=logout" `
 
 ---
 
+#### 1.5 Recuperación de Contraseña (Paso 1: Solicitar Token)
+
+```powershell
+$body = @{
+    email = "test_6937@testmail.com"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "$baseUrl?resource=auth&action=forgot-password" `
+    -Method POST `
+    -Body $body `
+    -ContentType "application/json"
+```
+
+**Respuesta esperada:**
+```json
+{
+  "success": true,
+  "message": "Si el email está registrado, recibirás instrucciones"
+}
+```
+
+**✅ Test Validado:** 
+- Token generado en tabla `password_resets`
+- Email enviado vía Resend API con enlace
+- Expiración configurada (1 hora)
+- Enlace formato: `https://galitroco-frontend.onrender.com/reset-password?token=abc123...`
+
+---
+
+#### 1.6 Restablecer Contraseña (Paso 2: Cambiar con Token)
+
+```powershell
+# Token obtenido del email (parámetro ?token= de la URL)
+$body = @{
+    token = "abc123def456ghi789jkl..."  # Token recibido por email
+    nueva_contrasena = "NuevaPass123456"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "$baseUrl?resource=auth&action=reset-password" `
+    -Method POST `
+    -Body $body `
+    -ContentType "application/json"
+```
+
+**Respuesta esperada:**
+```json
+{
+  "success": true,
+  "message": "Contraseña actualizada exitosamente"
+}
+```
+
+**❌ Errores Posibles:**
+```json
+{
+  "success": false,
+  "message": "Token inválido o expirado"
+}
+```
+
+**✅ Test Validado:**
+- Token validado contra BD
+- Verificación de expiración (1 hora)
+- Contraseña actualizada con bcrypt
+- Token marcado como usado
+- Usuario puede hacer login con nueva contraseña
+
+---
+
 ### 📚 2. HABILIDADES (CRUD Completo)
 
 #### 2.1 Listar Todas las Habilidades
@@ -566,7 +635,8 @@ Invoke-RestMethod -Uri "$baseUrl?resource=categorias" `
 | Login | `/auth&action=login` | POST | No | - |
 | Logout | `/auth&action=logout` | POST | Sí | - |
 | Usuario Actual | `/auth&action=me` | GET | Sí | - |
-| Recuperar Password | `/auth&action=forgot-password` | POST | No | - |
+| Solicitar Reset Password | `/auth&action=forgot-password` | POST | No | - |
+| Restablecer Password | `/auth&action=reset-password` | POST | No | - |
 | **Habilidades** |
 | Listar | `/habilidades` | GET | No | - |
 | Ver por ID | `/habilidades&id={id}` | GET | No | - |
@@ -603,7 +673,7 @@ Invoke-RestMethod -Uri "$baseUrl?resource=categorias" `
 | Listar Usuarios | `/usuarios` | GET | Sí | Admin |
 | Estadísticas | `/estadisticas` | GET | Sí | Admin |
 
-**Total:** 25 endpoints operativos ✅
+**Total:** 26 endpoints operativos ✅
 
 ---
 
