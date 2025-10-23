@@ -130,7 +130,7 @@ Utiliza estos usuarios para probar la aplicación:
 
 ```
 
-Email:    test_6937@testmail.com- ✅ **Diseño responsive** (Mobile, Tablet, Desktop)ng build
+Email:    demo@galitroco.com- ✅ **Diseño responsive** (Mobile, Tablet, Desktop)ng build
 
 Password: Pass123456
 
@@ -146,7 +146,7 @@ Rol:      usuario
 
 ```
 
-Email:    userB_6566@testing.com- ✅ **Reactive Forms** con validación en tiempo real
+Email:    test@galitroco.com- ✅ **Reactive Forms** con validación en tiempo real
 
 Password: Pass123456
 
@@ -226,7 +226,7 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 
 2. Ingresar credenciales:
 
-   - Email: `test_6937@testmail.com`---
+   - Email: `demo@galitroco.com`---
 
    - Password: `Pass123456`
 
@@ -246,7 +246,7 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 
    - Email: `evaluador@test.com````
 
-   - Contraseña: `Test123456`Email:    test_6937@testmail.com
+   - Contraseña: `Test123456`Email:    demo@galitroco.com
 
    - Confirmar contraseña: `Test123456`Password: Pass123456
 
@@ -262,7 +262,7 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 
 1. Cerrar navegador completamente```
 
-2. Abrir navegador y volver a: `https://galitroco-frontend.onrender.com`Email:    userB_6566@testing.com
+2. Abrir navegador y volver a: `https://galitroco-frontend.onrender.com`Email:    test@galitroco.com
 
 3. **Resultado esperado:** Usuario sigue autenticado (sesión persiste)Password: Pass123456
 
@@ -298,7 +298,7 @@ Password: Admin123456
 
 3. En la página de recuperación, ingresar email:### ⚡ Opción 1: Acceso Directo a Producción - **MÁS RÁPIDO**
 
-   - Email: `test_6937@testmail.com`
+   - Email: `demo@galitroco.com`
 
 4. Click en **"Enviar instrucciones"****No requiere instalación local.** Simplemente abre el navegador:
 
@@ -342,7 +342,7 @@ Password: Admin123456
 
    - Mensaje de éxito: "Contraseña actualizada correctamente"2. Ingresar credenciales:
 
-   - Redirección automática al login   - Email: `test_6937@testmail.com`
+   - Redirección automática al login   - Email: `demo@galitroco.com`
 
    - Password: `Pass123456`
 
@@ -350,7 +350,7 @@ Password: Admin123456
 
 1. En la página de login, ingresar:4. **Resultado esperado:** Redirección al dashboard
 
-   - Email: `test_6937@testmail.com`
+   - Email: `demo@galitroco.com`
 
    - Password: `NuevaPass123456` (la nueva)#### 1.2 Probar Registro
 
@@ -390,7 +390,7 @@ Password: Admin123456
 
 #### 3.1 Ver Catálogo Público2. Click en **"Cerrar sesión"**
 
-1. Login como `test_6937@testmail.com`3. **Resultado esperado:** Redirección a login + sesión cerrada
+1. Login como `demo@galitroco.com`3. **Resultado esperado:** Redirección a login + sesión cerrada
 
 2. Ir a: **"Explorar Habilidades"** (menú lateral o navbar)
 
@@ -404,7 +404,7 @@ Password: Admin123456
 
    - Tarjetas con información (título, categoría, usuario, ubicación)#### 2.1 Ver Catálogo Público
 
-1. Login como `test_6937@testmail.com`
+1. Login como `demo@galitroco.com`
 
 #### 3.2 Filtrar por Categoría2. Ir a: **"Explorar Habilidades"** (menú lateral o navbar)
 
@@ -506,7 +506,7 @@ Password: Admin123456
 
 #### 4.1 Proponer Intercambio (Usuario A)3. Click en **"Activar"** nuevamente
 
-1. Login como `test_6937@testmail.com`4. **Resultado esperado:** Estado vuelve a `Activa`
+1. Login como `demo@galitroco.com`4. **Resultado esperado:** Estado vuelve a `Activa`
 
 2. Ir a **"Explorar Habilidades"**
 
@@ -520,7 +520,7 @@ Password: Admin123456
 
    - Escribir mensaje: `Hola, me interesa tu habilidad. ¿Podemos intercambiar?`#### 3.1 Proponer Intercambio (Usuario A)
 
-6. Click en **"Enviar Propuesta"**1. Login como `test_6937@testmail.com`
+6. Click en **"Enviar Propuesta"**1. Login como `demo@galitroco.com`
 
 7. **Resultado esperado:**2. Ir a **"Explorar Habilidades"**
 
@@ -536,7 +536,7 @@ Password: Admin123456
 
 1. **Cerrar sesión** de Usuario A6. Click en **"Enviar Propuesta"**
 
-2. Login como `userB_6566@testing.com`7. **Resultado esperado:**
+2. Login como `test@galitroco.com`7. **Resultado esperado:**
 
 3. Ir a **"Mis Intercambios"** → Pestaña **"Recibidos"**   - Mensaje de confirmación
 
@@ -550,7 +550,7 @@ Password: Admin123456
 
 1. **Cerrar sesión** de Usuario A
 
-#### 4.3 Aceptar Propuesta2. Login como `userB_6566@testing.com`
+#### 4.3 Aceptar Propuesta2. Login como `test@galitroco.com`
 
 1. Click en **"Aceptar"** en la propuesta recibida3. Ir a **"Mis Intercambios"** → Pestaña **"Recibidos"**
 

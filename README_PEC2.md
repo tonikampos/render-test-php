@@ -274,20 +274,20 @@ Se ha realizado testing exhaustivo de 25 endpoints en producción (Render.com) c
 
 #### Credenciales de prueba:
 
-**Usuario normal A:**
-- Email: `test_6937@testmail.com`
-- Password: `Pass123456`
-- Rol: `usuario`
-
-**Usuario normal B:**
-- Email: `userB_6566@testing.com`
-- Password: `Pass123456`
-- Rol: `usuario`
-
 **Administrador:**
 - Email: `admin@galitroco.com`
-- Password: `Admin123456`
+- Password: `Pass123456`
 - Rol: `administrador`
+
+**Usuario Demo:**
+- Email: `demo@galitroco.com`
+- Password: `Pass123456`
+- Rol: `usuario`
+
+**Usuario Test:**
+- Email: `test@galitroco.com`
+- Password: `Pass123456`
+- Rol: `usuario`
 
 ### Testing del Frontend
 
@@ -483,25 +483,25 @@ Esta sección proporciona instrucciones paso a paso para probar todas las funcio
 
 Utiliza estos usuarios para probar diferentes escenarios:
 
-#### Usuario A (para intercambios)
-```
-Email:    test_6937@testmail.com
-Password: Pass123456
-Rol:      Usuario normal
-```
-
-#### Usuario B (para intercambios)
-```
-Email:    userB_6566@testing.com
-Password: Pass123456
-Rol:      Usuario normal
-```
-
 #### Administrador (panel admin)
 ```
 Email:    admin@galitroco.com
-Password: Admin123456
+Password: Pass123456
 Rol:      Administrador
+```
+
+#### Usuario Demo (para intercambios)
+```
+Email:    demo@galitroco.com
+Password: Pass123456
+Rol:      Usuario normal
+```
+
+#### Usuario Test (para intercambios)
+```
+Email:    test@galitroco.com
+Password: Pass123456
+Rol:      Usuario normal
 ```
 
 ---
@@ -511,8 +511,8 @@ Rol:      Administrador
 #### 1.1 Probar registro de nuevo usuario
 1. Ir a: `https://galitroco-frontend.onrender.com/registro`
 2. Completar formulario:
-   - Nombre de usuario: `evaluador_test`
-   - Email: `evaluador@test.com`
+   - Nombre de usuario: `nuevo_usuario`
+   - Email: `nuevo@test.com`
    - Contraseña: `Test123456`
    - Ubicación: `A Coruña`
 3. Click en **"Registrarse"**
@@ -521,7 +521,7 @@ Rol:      Administrador
 #### 1.2 Probar login
 1. Ir a: `https://galitroco-frontend.onrender.com/login`
 2. Ingresar credenciales:
-   - Email: `test_6937@testmail.com`
+   - Email: `demo@galitroco.com`
    - Password: `Pass123456`
 3. Click en **"Iniciar sesión"**
 4. **Resultado esperado:** Redirección al dashboard con mensaje de bienvenida
@@ -541,7 +541,7 @@ Rol:      Administrador
 ### 🎯 Escenario 2: Gestión de Habilidades (5 minutos)
 
 #### 2.1 Crear habilidad de tipo "Oferta"
-1. Login como `test_6937@testmail.com`
+1. Login como `demo@galitroco.com`
 2. Ir a: **"Mis Habilidades"** → **"Nueva Habilidad"**
 3. Completar formulario:
    - Tipo: `Oferta`
@@ -579,8 +579,8 @@ Rol:      Administrador
 
 ### 🔄 Escenario 3: Sistema de Intercambios Completo (7 minutos)
 
-#### 3.1 Proponer intercambio (Usuario A)
-1. Login como `test_6937@testmail.com`
+#### 3.1 Proponer intercambio (Usuario Demo)
+1. Login como `demo@galitroco.com`
 2. Ir a **"Explorar Habilidades"**
 3. Buscar habilidades de otros usuarios
 4. Click en una habilidad que te interese
@@ -593,16 +593,16 @@ Rol:      Administrador
    - Propuesta visible en "Mis Intercambios" → "Enviados"
    - Notificación enviada al otro usuario
 
-#### 3.2 Aceptar propuesta (Usuario B)
-1. **Cerrar sesión** de Usuario A
-2. Login como `userB_6566@testing.com`
+#### 3.2 Aceptar propuesta (Usuario Test)
+1. **Cerrar sesión** de Usuario Demo
+2. Login como `test@galitroco.com`
 3. Ir a **"Mis Intercambios"** → **"Recibidos"**
 4. Ver la propuesta recibida
 5. Click en **"Aceptar"**
-6. **Resultado esperado:**
+5. **Resultado esperado:**
    - Estado cambia a "Aceptado"
    - Se crea conversación automática
-   - Notificación enviada al Usuario A
+   - Notificación enviada al Usuario Demo
 
 #### 3.3 Enviar mensajes en conversación
 1. Desde "Intercambios Aceptados", click en **"Ver conversación"**
@@ -625,7 +625,7 @@ Rol:      Administrador
 5. **Resultado esperado:**
    - Valoración registrada
    - Puntuación promedio del usuario actualizada
-6. **Cambiar a Usuario A** y repetir valoración (ambos deben valorarse)
+6. **Cambiar a Usuario Demo** y repetir valoración (ambos deben valorarse)
 
 ---
 
@@ -654,7 +654,7 @@ Rol:      Administrador
 
 #### 5.1 Acceso al panel admin
 1. **Cerrar sesión** de usuario normal
-2. Login como `admin@galitroco.com` / `Admin123456`
+2. Login como `admin@galitroco.com` / `Pass123456`
 3. Ir a **"Panel de Administración"**
 4. **Resultado esperado:** Acceso permitido (solo admins)
 
@@ -690,7 +690,7 @@ Rol:      Administrador
 #### 6.1 Solicitar recuperación
 1. **Cerrar sesión** de cualquier usuario
 2. En página de login, click en **"¿Olvidaste tu contraseña?"**
-3. Ingresar email: `test_6937@testmail.com`
+3. Ingresar email: `demo@galitroco.com`
 4. Click en **"Enviar enlace de recuperación"**
 5. **Resultado esperado:** 
    - Mensaje de confirmación
@@ -792,7 +792,7 @@ Si deseas probar la API directamente (con Postman, curl, etc.):
 #### Autenticación
 ```bash
 POST /api.php?resource=auth&action=login
-Body: {"email": "test_6937@testmail.com", "password": "Pass123456"}
+Body: {"email": "demo@galitroco.com", "password": "Pass123456"}
 ```
 
 #### Habilidades

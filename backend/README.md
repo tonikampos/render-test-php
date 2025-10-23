@@ -62,27 +62,25 @@ https://galitroco-frontend.onrender.com
 
 Utiliza estos usuarios para probar la API:
 
-### Usuario A (Intercambios)
-```
-Email:    test_6937@testmail.com
-Password: Pass123456
-ID:       21
-Rol:      usuario
-```
-
-### Usuario B (Intercambios)
-```
-Email:    userB_6566@testing.com
-Password: Pass123456
-ID:       23
-Rol:      usuario
-```
-
 ### Administrador (Gestión)
 ```
 Email:    admin@galitroco.com
-Password: Admin123456
+Password: Pass123456
 Rol:      administrador
+```
+
+### Usuario Demo (Intercambios)
+```
+Email:    demo@galitroco.com
+Password: Pass123456
+Rol:      usuario
+```
+
+### Usuario Test (Intercambios)
+```
+Email:    test@galitroco.com
+Password: Pass123456
+Rol:      usuario
 ```
 
 > **💡 Nota sobre Recuperación de Contraseña:**  
@@ -149,7 +147,7 @@ Invoke-RestMethod -Uri "$baseUrl?resource=auth&action=register" `
 
 ```powershell
 $body = @{
-    email = "test_6937@testmail.com"
+    email = "demo@galitroco.com"
     password = "Pass123456"
 } | ConvertTo-Json
 
@@ -169,9 +167,9 @@ $response | ConvertTo-Json -Depth 10
   "success": true,
   "message": "Login exitoso",
   "data": {
-    "id": 21,
-    "nombre_usuario": "test_6937",
-    "email": "test_6937@testmail.com",
+    "id": 2,
+    "nombre_usuario": "usuario_demo",
+    "email": "demo@galitroco.com",
     "rol": "usuario"
   }
 }
@@ -217,7 +215,7 @@ Genera un token único de recuperación y envía un email al usuario con instruc
 
 ```powershell
 $body = @{
-    email = "test_6937@testmail.com"
+    email = "demo@galitroco.com"
 } | ConvertTo-Json
 
 Invoke-RestMethod -Uri "$baseUrl?resource=auth&action=forgot-password" `
@@ -444,9 +442,9 @@ Write-Host "✅ Intercambio propuesto con ID: $intercambioId" -ForegroundColor G
 # Primero logout del Usuario A
 Invoke-RestMethod -Uri "$baseUrl?resource=auth&action=logout" -Method POST -WebSession $session
 
-# Login como Usuario B
+# Login como Usuario Test
 $body = @{
-    email = "userB_6566@testing.com"
+    email = "test@galitroco.com"
     password = "Pass123456"
 } | ConvertTo-Json
 
@@ -599,7 +597,7 @@ Invoke-RestMethod -Uri "$baseUrl?resource=reportes" `
 # Login como admin
 $body = @{
     email = "admin@galitroco.com"
-    password = "Admin123456"
+    password = "Pass123456"
 } | ConvertTo-Json
 
 Invoke-RestMethod -Uri "$baseUrl?resource=auth&action=login" `
@@ -758,7 +756,7 @@ POST https://render-test-php-1.onrender.com/api.php?resource=auth&action=login
 Content-Type: application/json
 
 {
-  "email": "test_6937@testmail.com",
+  "email": "demo@galitroco.com",
   "password": "Pass123456"
 }
 ```
@@ -772,7 +770,7 @@ Content-Type: application/json
 curl -c cookies.txt \
   -X POST \
   -H "Content-Type: application/json" \
-  -d '{"email":"test_6937@testmail.com","password":"Pass123456"}' \
+  -d '{"email":"demo@galitroco.com","password":"Pass123456"}' \
   "https://render-test-php-1.onrender.com/api.php?resource=auth&action=login"
 
 # Usar cookies en siguientes peticiones
@@ -793,11 +791,11 @@ https://galitroco-frontend.onrender.com
 
 ### Flujo de Prueba (5 minutos):
 
-1. **Login:** `test_6937@testmail.com` / `Pass123456`
+1. **Login:** `demo@galitroco.com` / `Pass123456`
 2. **Crear habilidad:** Ir a "Mis Habilidades" → "Nueva"
 3. **Explorar habilidades:** Ver catálogo público
 4. **Proponer intercambio:** Seleccionar habilidad → "Proponer"
-5. **Cambiar usuario:** Login como `userB_6566@testing.com`
+5. **Cambiar usuario:** Login como `test@galitroco.com`
 6. **Aceptar propuesta:** "Mis Intercambios" → "Aceptar"
 7. **Completar:** Marcar como completado
 8. **Valorar:** Dar puntuación 1-5 estrellas

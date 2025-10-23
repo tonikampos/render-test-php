@@ -1156,7 +1156,7 @@ Invoke-WebRequest -Uri "URL" -Headers $headers
   "data": {
     "id": 21,
     "nombre_usuario": "testuser_9712",
-    "email": "test_6937@testmail.com",
+    "email": "demo@galitroco.com",
     "ubicacion": "Test Location",
     "rol": "usuario"
   }
@@ -1174,7 +1174,7 @@ Invoke-WebRequest -Uri "URL" -Headers $headers
     "user": {
       "id": 21,
       "nombre_usuario": "testuser_9712",
-      "email": "test_6937@testmail.com",
+      "email": "demo@galitroco.com",
       "rol": "usuario"
     },
     "token": "46086adb4d16652d8c439acfa6dabb..."
@@ -1205,8 +1205,8 @@ Invoke-WebRequest -Uri "URL" -Headers $headers
 **Escenario:** Dos usuarios intercambian habilidades y se valoran mutuamente
 
 #### Datos del Test:
-- **Usuario A:** ID 21 (test_6937@testmail.com)
-- **Usuario B:** ID 23 (userB_6566@testing.com)
+- **Usuario A:** ID 21 (demo@galitroco.com)
+- **Usuario B:** ID 23 (test@galitroco.com)
 - **Habilidad A:** ID 26 - "Testing completo de API REST"
 - **Habilidad B:** ID 28 - "Clases de Gallego para principiantes"
 - **Intercambio:** ID 17
