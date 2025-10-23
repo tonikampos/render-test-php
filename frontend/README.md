@@ -366,7 +366,7 @@ Password: Admin123456
 
 **✅ Funcionalidad Validada:**   - Confirmar contraseña: `Test123456`
 
-- ✅ Email enviado correctamente (vía Resend API)   - Ubicación: `A Coruña`
+- ✅ Email enviado correctamente (vía Brevo API)   - Ubicación: `A Coruña`
 
 - ✅ Token único y seguro3. Click en **"Registrarse"**
 

@@ -76,16 +76,17 @@ Se especifica para cada recurso:
 
 ---
 
-### 5. Resend API
-**Nombre:** Resend - Email API for Developers  
-**Versión:** API v1  
-**Autor:** Resend Inc.  
+### 5. Brevo API (ex-Sendinblue)
+**Nombre:** Brevo - Email Marketing & Automation Platform  
+**Versión:** API v3  
+**Autor:** Brevo (anteriormente Sendinblue)  
 **Licencia:** Servicio comercial (API key requerida)  
-**URL:** https://resend.com  
+**URL:** https://www.brevo.com  
 **Uso en el proyecto:** Envío de emails de recuperación de contraseña  
-**Plan utilizado:** Free Tier (100 emails/mes gratuitos)  
+**Plan utilizado:** Free Tier (300 emails/día, 9,000 emails/mes gratuitos)  
 **Estado legal:** ✅ Uso permitido bajo plan gratuito  
-**API Key:** Incluida en variables de entorno (no expuesta públicamente)
+**API Key:** Incluida en variables de entorno (no expuesta públicamente)  
+**Ventaja:** Permite enviar a cualquier email sin verificar dominio
 
 ---
 
@@ -320,7 +321,7 @@ Todo el código TypeScript, PHP, HTML, CSS/SCSS y SQL **es de autoría propia** 
 Los datos de prueba en `database/seeds.sql` (usuarios, habilidades, intercambios) son **ficticios** y creados exclusivamente para testing del proyecto. No contienen información real de personas.
 
 ### APIs y Keys
-- **Resend API Key:** Configurada en variables de entorno, no expuesta públicamente en el código fuente.
+- **Brevo API Key:** Configurada en variables de entorno, no expuesta públicamente en el código fuente.
 - **Supabase Database URL:** Configurada en `backend/config/database.php`, credenciales privadas.
 - **JWT Secret:** Generada aleatoriamente para el proyecto, no reutilizada de terceros.
 
@@ -340,7 +341,7 @@ Este proyecto no recopila datos personales reales de usuarios fuera del entorno 
 | TypeScript | Apache 2.0 | ✅ Sí | ❌ No | ✅ Cumple |
 | RxJS | Apache 2.0 | ✅ Sí | ❌ No | ✅ Cumple |
 | Material Icons | Apache 2.0 | ✅ Sí | ✅ Sí (incluida) | ✅ Cumple |
-| Resend API | Comercial | ✅ Sí (plan free) | ❌ No | ✅ Cumple |
+| Brevo API | Comercial | ✅ Sí (plan free) | ❌ No | ✅ Cumple |
 | Supabase | Apache 2.0 + Comercial | ✅ Sí | ❌ No | ✅ Cumple |
 | Render.com | Comercial | ✅ Sí (plan free) | ❌ No | ✅ Cumple |
 

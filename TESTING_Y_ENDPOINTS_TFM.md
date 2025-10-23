@@ -200,7 +200,7 @@ Content-Type: application/json
 
 **✅ Test Validado:** 
 - Token generado en tabla `password_resets`
-- Email enviado vía Resend API
+- Email enviado vía Brevo API (ex-Sendinblue)
 - Expiración configurada (1 hora)
 
 ---

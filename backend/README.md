@@ -23,7 +23,7 @@ Backend API REST desarrollado en **PHP 8.2** para GaliTroco, una plataforma de i
 | **Servidor Web** | Apache | 2.4 |
 | **Base de Datos** | PostgreSQL | 15 (Supabase) |
 | **Autenticación** | Sesiones PHP | Cookies SameSite=None |
-| **Email** | Resend API | Recuperación password |
+| **Email** | Brevo API | Recuperación password |
 | **Contenedor** | Docker | Debian (php:8.2-apache) |
 | **Hosting** | Render.com | PaaS |
 | **CI/CD** | GitHub | Auto-deploy desde `main` |
@@ -91,7 +91,7 @@ Rol:      administrador
 > - `POST /auth&action=forgot-password` → Envía email con token
 > - `POST /auth&action=reset-password` → Cambia contraseña con token
 > 
-> El email se envía vía **Resend API** al correo registrado. Ver secciones **1.5** y **1.6** para ejemplos.
+> El email se envía vía **Brevo API** (ex-Sendinblue) al correo registrado. Ver secciones **1.5** y **1.6** para ejemplos.
 
 ---
 
@@ -206,13 +206,13 @@ Invoke-RestMethod -Uri "$baseUrl?resource=auth&action=logout" `
 **Endpoint:** `POST /auth&action=forgot-password`
 
 **Descripción:**  
-Genera un token único de recuperación y envía un email al usuario con instrucciones para restablecer su contraseña. Utiliza **Resend API** como servicio de email.
+Genera un token único de recuperación y envía un email al usuario con instrucciones para restablecer su contraseña. Utiliza **Brevo API** (ex-Sendinblue) como servicio de email.
 
 **Funcionamiento interno:**
 1. Valida que el email existe en la BD
 2. Genera token único (64 caracteres aleatorios)
 3. Guarda token en tabla `password_resets` con expiración de 1 hora
-4. Envía email HTML con enlace de recuperación vía **Resend API**
+4. Envía email HTML con enlace de recuperación vía **Brevo API**
 5. Responde con mensaje genérico (por seguridad)
 
 ```powershell
@@ -238,11 +238,11 @@ Invoke-RestMethod -Uri "$baseUrl?resource=auth&action=forgot-password" `
 - Asunto: "Recuperación de Contraseña - GaliTroco"
 - Enlace: `https://galitroco-frontend.onrender.com/reset-password?token=abc123...`
 - Válido por: 1 hora
-- Remitente: `noreply@galitroco.com` (vía Resend)
+- Remitente: `noreply@galitroco.com` (vía Brevo)
 
 **✅ Test Validado en Producción:** 
 - ✅ Token generado correctamente en tabla `password_resets`
-- ✅ Email enviado exitosamente vía **Resend API**
+- ✅ Email enviado exitosamente vía **Brevo API**
 - ✅ Expiración configurada (1 hora desde generación)
 - ✅ Token único y seguro (64 caracteres aleatorios)
 
@@ -1102,7 +1102,7 @@ $allowed_origins = [
 - ✅ **Reportes** (crear, listar admin, resolver)
 - ✅ **Notificaciones** (crear, listar, marcar leídas)
 - ✅ **Panel admin** (usuarios, estadísticas, reportes)
-- ✅ **Recuperación de contraseña** (email con Resend API)
+- ✅ **Recuperación de contraseña** (email con Brevo API)
 - ✅ **Testing en producción** (validado con 25 tests)
 - ✅ **Documentación técnica completa**
 - ✅ **Despliegue en Render** (auto-deploy desde GitHub)

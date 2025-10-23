@@ -31,7 +31,7 @@
 - **Servidor Web:** Apache 2.4
 - **Base de Datos:** PostgreSQL 15 (Supabase)
 - **Autenticación:** JWT + Sesiones PHP
-- **Email:** Resend API
+- **Email:** Brevo API (ex-Sendinblue)
 - **Deploy:** Render.com (Docker)
 
 ### Frontend
@@ -170,7 +170,7 @@ DB_NAME=galitroco_tfm
 DB_USER=postgres
 DB_PASSWORD=tu_password
 
-RESEND_API_KEY=tu_api_key_de_resend
+BREVO_API_KEY=tu_api_key_de_brevo
 FRONTEND_URL=http://localhost:4200
 ```
 
@@ -321,7 +321,7 @@ Si prefieres probar localmente:
 - ✅ 2 bugs críticos corregidos (transacciones ACID, router)
 - ✅ 0 bugs pendientes críticos
 - ✅ Autenticación JWT + Sesiones PHP
-- ✅ Sistema de email funcional (Resend)
+- ✅ Sistema de email funcional (Brevo)
 - ✅ Desplegado en Render.com con auto-deploy
 - ✅ Documentación técnica completa
 
@@ -417,7 +417,7 @@ galitroco/
 ### Backend
 - **PHP:** Licencia PHP License 3.01
 - **PostgreSQL:** Licencia PostgreSQL License (similar a MIT)
-- **Resend:** API comercial (cuenta de prueba gratuita)
+- **Brevo:** API comercial (plan gratuito: 300 emails/día)
 
 ### Frontend
 - **Angular:** Licencia MIT
@@ -694,10 +694,10 @@ Rol:      Administrador
 4. Click en **"Enviar enlace de recuperación"**
 5. **Resultado esperado:** 
    - Mensaje de confirmación
-   - Email enviado con token de recuperación (via Resend API)
+   - Email enviado con token de recuperación (vía Brevo API)
 
 #### 6.2 Verificar token (opcional)
-1. Revisar consola de Resend (si tienes acceso)
+1. Revisar consola de Brevo (si tienes acceso)
 2. **Resultado esperado:** Email entregado exitosamente
 
 ---
