@@ -24,9 +24,9 @@ Backend API REST desarrollado en **PHP 8.2** para GaliTroco, una plataforma de i
 | **Base de Datos** | PostgreSQL | 15 (Supabase) |
 | **Autenticación** | Sesiones PHP | Cookies SameSite=None |
 | **Servicio Email** | Resend API | - |
-| **Contenedor** | Docker | Alpine Linux |
+| **Contenedor** | Docker | Debian (php:8.2-apache) |
 | **Hosting** | Render.com | PaaS |
-| **CI/CD** | GitHub Actions | Auto-deploy desde `main` |
+| **CI/CD** | GitHub | Auto-deploy desde `main` |
 
 ### Características de Seguridad:
 - ✅ **Sesiones PHP con cookies** (`httpOnly`, `secure`, `SameSite=None`)
@@ -34,7 +34,6 @@ Backend API REST desarrollado en **PHP 8.2** para GaliTroco, una plataforma de i
 - ✅ **Bcrypt** para hash de contraseñas (cost 12)
 - ✅ **Prepared Statements** (protección SQL injection)
 - ✅ **Validación de roles** (usuario/administrador)
-- ✅ **Rate limiting** en endpoints sensibles
 
 ---
 
@@ -842,15 +841,19 @@ psql -U postgres -d galitrocodb -f database/install_complete.sql
 ```apache
 <VirtualHost *:80>
     ServerName galitroco.local
-    DocumentRoot "C:/ruta/render-test-php"
+    DocumentRoot "/var/www/galitroco"
     
-    <Directory "C:/ruta/render-test-php">
+    <Directory "/var/www/galitroco">
         Options Indexes FollowSymLinks
         AllowOverride All
         Require all granted
     </Directory>
 </VirtualHost>
 ```
+
+> **Nota:** Ajusta la ruta según tu sistema operativo:
+> - Linux/Mac: `/var/www/galitroco` o `/home/usuario/galitroco`
+> - Windows: `C:/xampp/htdocs/galitroco`
 
 4. **Configurar credenciales:**
 ```bash
@@ -873,7 +876,11 @@ sudo systemctl start apache2
 
 6. **Probar instalación:**
 ```bash
+# Linux/Mac
 curl http://galitroco.local/backend/api/api.php?resource=categorias
+
+# Windows PowerShell
+Invoke-RestMethod -Uri "http://galitroco.local/backend/api/api.php?resource=categorias"
 ```
 
 ---
@@ -966,12 +973,13 @@ $allowed_origins = [
 - ✅ **Despliegue en Render** (auto-deploy desde GitHub)
 - ✅ **Base de datos Supabase** (PostgreSQL 15 cloud)
 
-### Próximas mejoras (post-PEC2):
-- ⚠️ Implementar rate limiting avanzado
-- ⚠️ Añadir paginación a endpoints de listado
-- ⚠️ Implementar búsqueda full-text en habilidades
-- ⚠️ Sistema de caché con Redis
-- ⚠️ Logs estructurados (formato JSON)
+### Mejoras planificadas (post-PEC2):
+- 📋 Implementar rate limiting en endpoints de autenticación
+- 📋 Añadir paginación a endpoints de listado
+- 📋 Implementar búsqueda full-text en habilidades
+- 📋 Sistema de caché con Redis
+- 📋 Logs estructurados (formato JSON)
+- 📋 Implementación de JWT como alternativa a sesiones
 
 ---
 
