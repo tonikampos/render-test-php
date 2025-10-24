@@ -1,7 +1,14 @@
 -- =========================================================================
 -- ESQUEMA COMPLETO DE BASE DE DATOS - GaliTroco
--- Generado automáticamente desde Supabase (Producción)
--- Fecha: 2025-10-24 00:10:04
+-- Generado desde Supabase (Producción)
+-- Fecha: 2025-10-24 (actualizado)
+-- 
+-- Incluye:
+--   - 7 tipos ENUM
+--   - 12 tablas principales
+--   - 18 foreign keys
+--   - 27 índices
+--   - 1 vista (estadisticas_usuarios)
 -- =========================================================================
 
 -- =========================================================================
@@ -205,3 +212,27 @@ CREATE UNIQUE INDEX usuarios_email_key ON public.usuarios USING btree (email);
 CREATE UNIQUE INDEX usuarios_nombre_usuario_key ON public.usuarios USING btree (nombre_usuario);
 CREATE UNIQUE INDEX idx_valoracion_unica ON public.valoraciones USING btree (evaluador_id, evaluado_id, intercambio_id);
 CREATE INDEX idx_valoraciones_evaluado ON public.valoraciones USING btree (evaluado_id);
+
+-- =========================================================================
+-- VISTAS (VIEWS)
+-- =========================================================================
+
+-- Vista: estadisticas_usuarios
+-- Calcula estadísticas agregadas para cada usuario (habilidades, intercambios, valoraciones)
+CREATE VIEW estadisticas_usuarios AS
+SELECT 
+    u.id,
+    u.nombre_usuario,
+    u.ubicacion,
+    COUNT(DISTINCT h.id) AS total_habilidades,
+    COUNT(DISTINCT CASE WHEN h.tipo = 'oferta'::tipo_habilidad THEN h.id ELSE NULL::integer END) AS ofertas_activas,
+    COUNT(DISTINCT CASE WHEN h.tipo = 'demanda'::tipo_habilidad THEN h.id ELSE NULL::integer END) AS demandas_activas,
+    COUNT(DISTINCT i.id) AS total_intercambios,
+    COUNT(DISTINCT CASE WHEN i.estado = 'completado'::estado_intercambio THEN i.id ELSE NULL::integer END) AS intercambios_completados,
+    COALESCE(AVG(v.puntuacion), 0::numeric) AS valoracion_promedio,
+    COUNT(v.id) AS total_valoraciones
+FROM usuarios u
+LEFT JOIN habilidades h ON u.id = h.usuario_id AND h.estado = 'activa'::estado_habilidad
+LEFT JOIN intercambios i ON u.id = i.proponente_id OR u.id = i.receptor_id
+LEFT JOIN valoraciones v ON u.id = v.evaluado_id
+GROUP BY u.id, u.nombre_usuario, u.ubicacion;
