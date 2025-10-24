@@ -31,7 +31,7 @@ CREATE TABLE conversaciones (id INTEGER NOT NULL DEFAULT nextval('conversaciones
 ALTER TABLE conversaciones ADD PRIMARY KEY (id);
 
 -- Tabla: habilidades
-CREATE TABLE habilidades (id INTEGER NOT NULL DEFAULT nextval('habilidades_id_seq'::regclass), usuario_id INTEGER NOT NULL, categoria_id INTEGER NOT NULL, tipo tipo_habilidad NOT NULL, titulo VARCHAR(150) NOT NULL, descripcion TEXT NOT NULL, estado estado_habilidad NOT NULL DEFAULT 'activa'::estado_habilidad, duracion_estimada INTEGER, fecha_publicacion TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, fecha_actualizacion TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE habilidades (id INTEGER NOT NULL DEFAULT nextval('habilidades_id_seq'::regclass), usuario_id INTEGER NOT NULL, categoria_id INTEGER NOT NULL, tipo tipo_habilidad NOT NULL, titulo VARCHAR(150) NOT NULL, descripcion TEXT NOT NULL, estado estado_habilidad NOT NULL DEFAULT 'activa'::estado_habilidad, duracion_estimada INTEGER, fecha_publicacion TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, ultima_actualizacion TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP);
 
 ALTER TABLE habilidades ADD PRIMARY KEY (id);
 
