@@ -60,13 +60,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/admin/reportes-list/reportes-list.component').then(m => m.ReportesListComponent),
     canActivate: [authGuard, adminGuard]
   },
-  // --- NOVA RUTA ENGADIDA ---
   {
     path: 'admin/usuarios',
     loadComponent: () => import('./features/admin/usuarios-list/usuarios-list.component').then(m => m.UsuariosListComponent),
-    canActivate: [authGuard, adminGuard] // Protexida para admins
+    canActivate: [authGuard, adminGuard] 
   },
-  // --------------------------
   {
     path: '**',
     redirectTo: ''

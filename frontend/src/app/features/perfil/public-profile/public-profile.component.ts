@@ -20,7 +20,7 @@ import { ValoracionesListComponent } from '../../../shared/components/valoracion
     MatCardModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    ValoracionesListComponent // Reutilizamos o compoñente que xa tiñas
+    ValoracionesListComponent 
   ],
   templateUrl: './public-profile.component.html',
   styleUrls: ['./public-profile.component.scss']

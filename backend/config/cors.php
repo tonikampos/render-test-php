@@ -19,21 +19,19 @@ function setupCORS() {
         // Isto é OBRIGATORIO para que `withCredentials: true` no frontend funcione.
         header("Access-Control-Allow-Origin: $origin");
 
-        // LÓXICA CONDICIONAL PARA O DOMINIO DA COOKIE
+     
         $cookie_domain = ''; // Valor por defecto para localhost
         if (strpos($origin, '.onrender.com') !== false) {
-            // $cookie_domain = '.onrender.com';  // <-- NO USAR
             $cookie_domain = 'render-test-php-1.onrender.com'; // Usa el dominio exacto del backend
         }
 
-        // ESTA É A SOLUCIÓN: Establecemos os parámetros da cookie de sesión para que funcione entre dominios
         session_set_cookie_params([
             'lifetime' => 86400, // 1 día
             'path' => '/',
-            'domain' => $cookie_domain, // A CLAVE ESTÁ AQUÍ
-            'secure' => true,    // Requirido para SameSite=None
+            'domain' => $cookie_domain, 
+            'secure' => true,    
             'httponly' => true,
-            'samesite' => 'None'  // A clave para permitir cookies entre dominios
+            'samesite' => 'None'  
         ]);
     }
 
@@ -47,4 +45,4 @@ function setupCORS() {
         http_response_code(200);
         exit();
     }
-}//prolemas mais
+}

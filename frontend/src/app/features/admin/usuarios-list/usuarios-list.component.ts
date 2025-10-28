@@ -17,7 +17,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatCardModule } from '@angular/material/card'; // <-- Engadir este import
+import { MatCardModule } from '@angular/material/card'; 
 
 // Servizos e Modelos
 import { AdminService } from '../../../core/services/admin.service';
@@ -41,7 +41,7 @@ import { ApiResponse, User, PaginatedResponse } from '../../../shared/models';
     MatSnackBarModule,
     MatTooltipModule,
     MatSlideToggleModule,
-    MatCardModule // <-- E engadilo aquí no array de imports
+    MatCardModule 
   ],
   templateUrl: './usuarios-list.component.html',
   styleUrls: ['./usuarios-list.component.scss']
@@ -71,7 +71,6 @@ export class UsuariosListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    // A lóxica non cambia...
     this.loadUsuarios();
     this.filterForm.valueChanges.pipe(
       debounceTime(500),
@@ -83,7 +82,6 @@ export class UsuariosListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // A lóxica non cambia...
     if (this.paginator) {
         this.dataSource.paginator = this.paginator;
         this.paginator.page.subscribe(() => this.loadUsuarios());
@@ -92,7 +90,6 @@ export class UsuariosListComponent implements OnInit, AfterViewInit {
   }
 
   loadUsuarios(): void {
-    // A lóxica non cambia...
     this.loading = true;
     const pageIndex = this.paginator ? this.paginator.pageIndex : 0;
     const pageSize = this.paginator ? this.paginator.pageSize : this.pageSize;
@@ -124,12 +121,10 @@ export class UsuariosListComponent implements OnInit, AfterViewInit {
   }
 
   editarUsuario(id: number): void {
-    // A lóxica non cambia...
     this.snackBar.open(`Funcionalidad Editar Usuario #${id} pendiente.`, 'OK', { duration: 2000 });
   }
 
   toggleActivo(usuario: User): void {
-    // A lóxica non cambia...
     this.snackBar.open(`Funcionalidad Activar/Desactivar Usuario #${usuario.id} pendiente.`, 'OK', { duration: 2000 });
      // É importante reverter o estado visual ata que a API confirme
      // ou implementar un estado de 'cargando' no toggle.

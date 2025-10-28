@@ -148,8 +148,7 @@ class Auth {
             
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            // TODO: Enviar email de verificación con Resend
-            
+           
             return [
                 'success' => true,
                 'message' => 'Usuario registrado exitosamente',
@@ -295,10 +294,7 @@ class Auth {
     public static function requireAdmin() {
         self::requireAuth();
         
-        // ANTES (incorrecto):
-        // if (!self::hasRole('admin')) {
 
-        // DESPOIS (correcto):
         if (!self::hasRole('administrador')) {
             http_response_code(403);
             echo json_encode([
@@ -337,11 +333,9 @@ class Auth {
             $stmt->execute(['email' => $email]);
             $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            // IMPORTANTE: Por seguridad, NO revelar si el email existe o no
-            // Siempre responder con el mismo mensaje
+  
             if (!$usuario) {
-                // Esperar un poco para evitar timing attacks
-                usleep(500000); // 0.5 segundos
+                usleep(500000); 
                 
                 return [
                     'success' => true,

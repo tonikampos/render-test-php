@@ -9,8 +9,8 @@
  */
 
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../utils/Auth.php'; // Asegúrate de que Auth está incluído
-require_once __DIR__ . '/../utils/Response.php'; // Incluir Response
+require_once __DIR__ . '/../utils/Auth.php'; 
+require_once __DIR__ . '/../utils/Response.php'; 
 
 function handleUsuariosRoutes($method, $id, $action, $input) {
 
@@ -52,7 +52,7 @@ function handleUsuariosRoutes($method, $id, $action, $input) {
  * Listar usuarios (Sólo administradores)
  */
 function listarUsuarios() {
-    // ===== CAMBIO AQUÍ =====
+    
 Auth::requireAdmin();    // =======================
 
     try {
@@ -159,9 +159,8 @@ function obtenerUsuario($id) {
 
         // Verificar si el usuario que hace la petición es el mismo o es admin
         $is_same_user = isset($_SESSION['user_id']) && $_SESSION['user_id'] == $id;
-        // ===== CAMBIO AQUÍ =====
         $is_admin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'administrador';
-        // =======================
+    
 
         // Si el usuario está inactivo y NO es admin, devolvemos 404
         if ($usuario['activo'] == false && !$is_admin) {
@@ -261,11 +260,11 @@ function actualizarUsuario($id, $data) {
         $user_role = $_SESSION['user_role'] ?? null;
 
         // Verificar permisos (solo el mismo usuario o admin)
-        // ===== CAMBIO AQUÍ =====
+
         if ($user_id != $id && $user_role !== 'admin') {
             Response::forbidden('No tienes permisos para editar este usuario');
         }
-        // =======================
+   
 
         $stmt = $db->prepare("SELECT id, email FROM usuarios WHERE id = :id");
         $stmt->execute(['id' => $id]);
@@ -274,7 +273,7 @@ function actualizarUsuario($id, $data) {
             Response::notFound('Usuario no encontrado');
         }
 
-        // Construir UPDATE dinámico
+  
         $fields = [];
         $params = ['id' => $id];
         $allowedFieldsUser = ['nombre_usuario', 'ubicacion', 'biografia', 'foto_url'];
@@ -291,14 +290,13 @@ function actualizarUsuario($id, $data) {
         }
 
         // Si es admin, permitir actualizar campos adicionales
-        // ===== CAMBIO AQUÍ =====
+    
         if ($user_role === 'admin') {
             foreach ($allowedFieldsAdmin as $field) {
                  if (isset($data[$field])) {
                      if ($field === 'activo') {
                          $params[$field] = filter_var($data[$field], FILTER_VALIDATE_BOOLEAN);
                      }
-                     // ===== CAMBIO AQUÍ (na validación do rol) =====
                      elseif ($field === 'rol' && !in_array($data[$field], ['usuario', 'admin'])) {
                          Response::badRequest('Rol inválido. Debe ser "usuario" o "admin".');
                      }

@@ -10,12 +10,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog'; // <-- Importar MatDialog y MatDialogModule
+import { MatDialog, MatDialogModule } from '@angular/material/dialog'; 
 
 // Nuestros Servicios y Modelos
 import { AdminService } from '../../../core/services/admin.service';
 import { ApiResponse, Reporte } from '../../../shared/models';
-import { ResolverReporteDialogComponent } from '../resolver-reporte-dialog/resolver-reporte-dialog.component'; // <-- Importar el componente del diálogo
+import { ResolverReporteDialogComponent } from '../resolver-reporte-dialog/resolver-reporte-dialog.component'; 
 
 @Component({
   selector: 'app-reportes-list',
@@ -29,7 +29,7 @@ import { ResolverReporteDialogComponent } from '../resolver-reporte-dialog/resol
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatTooltipModule,
-    MatDialogModule // <-- Añadir MatDialogModule aquí
+    MatDialogModule 
   ],
   templateUrl: './reportes-list.component.html',
   styleUrls: ['./reportes-list.component.scss']
@@ -65,11 +65,10 @@ export class ReportesListComponent implements OnInit {
     });
   }
 
-  // --- MODIFICAR ESTOS MÉTODOS ---
   abrirDialogoResolver(reporte: Reporte): void {
     const dialogRef = this.dialog.open(ResolverReporteDialogComponent, {
       width: '500px',
-      data: { reporte: reporte }, // Pasar el reporte completo al diálogo
+      data: { reporte: reporte }, 
       disableClose: true
     });
 
@@ -80,5 +79,4 @@ export class ReportesListComponent implements OnInit {
       }
     });
   }
-  // ------------------------------
 }

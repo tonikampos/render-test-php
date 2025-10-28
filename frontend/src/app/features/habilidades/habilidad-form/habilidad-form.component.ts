@@ -1,4 +1,3 @@
-// 1. Importa ActivatedRoute
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router'; // Se añade ActivatedRoute
@@ -49,7 +48,7 @@ export class HabilidadFormComponent implements OnInit {
     private categoriasService: CategoriasService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute // 3. Inyéctalo en el constructor
+    private route: ActivatedRoute // 3. Inyéctarlo en el constructor
   ) {
     this.habilidadForm = this.fb.group({
       titulo: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(150)]],

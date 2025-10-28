@@ -29,7 +29,7 @@ import { ValoracionDialogComponent } from '../../valoraciones/valoracion-dialog/
     MatTabsModule,
     MatProgressSpinnerModule,
     MatChipsModule,
-    MatDialogModule // CAMBIO: Engadir MatDialogModule aquí
+    MatDialogModule 
   ],
   templateUrl: './intercambios-list.component.html',
   styleUrls: ['./intercambios-list.component.scss']
@@ -44,7 +44,7 @@ export class IntercambiosListComponent implements OnInit {
     private intercambiosService: IntercambiosService,
     private authService: AuthService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog // CAMBIO: Inxectar o servizo MatDialog
+    private dialog: MatDialog 
   ) { }
 
   ngOnInit(): void {
@@ -93,18 +93,16 @@ export class IntercambiosListComponent implements OnInit {
     });
   }
 
-  // CAMBIO: Engadir o novo método para abrir o diálogo de valoración
   abrirDialogoValoracion(intercambio: Intercambio): void {
     const dialogRef = this.dialog.open(ValoracionDialogComponent, {
       width: '450px',
-      data: { intercambio: intercambio }, // Pasamos os datos do intercambio ao diálogo
+      data: { intercambio: intercambio }, 
       disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         // Se a valoración foi exitosa, actualizamos a listaxe.
-        // Nun futuro, poderiamos engadir un estado "valorado" para ocultar o botón.
         this.loadIntercambios();
       }
     });

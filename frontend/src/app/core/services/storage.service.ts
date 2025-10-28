@@ -7,7 +7,7 @@ export class StorageService {
   private readonly TOKEN_KEY = 'galitroco_token';
   private readonly USER_KEY = 'galitroco_user';
 
-  // Token management
+  // Token 
   setToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
   }
@@ -24,7 +24,7 @@ export class StorageService {
     localStorage.removeItem(this.TOKEN_KEY);
   }
 
-  // User management
+  // User 
   setUser(user: any): void {
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
   }
@@ -38,7 +38,7 @@ export class StorageService {
       return JSON.parse(user);
     } catch (error) {
       console.error('Error parsing user from localStorage:', error);
-      this.removeUser(); // Limpiar dato corrupto
+      this.removeUser(); 
       return null;
     }
   }

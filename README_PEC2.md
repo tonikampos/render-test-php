@@ -3,8 +3,8 @@
 **Autor:** Antonio Campos  
 **Universidad:** Universitat Oberta de Catalunya (UOC)  
 **Asignatura:** Trabajo Final de Máster  
-**Fecha:** Octubre-Noviembre 2025  
-**Versión:** 1.0 (PEC2)
+**Fecha:** Octubre 2025  
+**Versión:** (PEC2)
 
 ---
 
@@ -24,15 +24,15 @@
 
 ---
 
-## 🛠️ TECNOLOGÍAS UTILIZADAS
+## 🛠️ RESUMEN DE TECNOLOGÍAS UTILIZADAS
 
 ### Backend
 - **Lenguaje:** PHP 8.2
-- **Servidor Web:** Apache 2.4
+- **Servidor Web:** Apache 2.4 (integrado en Docker php:8.2-apache)
 - **Base de Datos:** PostgreSQL 15 (Supabase)
-- **Autenticación:** JWT + Sesiones PHP
-- **Email:** Brevo API (ex-Sendinblue)
-- **Deploy:** Render.com (Docker)
+- **Autenticación:** Sesiones PHP con tokens hexadecimales SHA-256
+- **Email:** Brevo API (ex-Sendinblue) - 300 emails/día gratuitos
+- **Deploy:** Render.com (Docker container)
 
 ### Frontend
 - **Framework:** Angular 19.2.0
@@ -52,10 +52,71 @@
 
 ### Producción (Render.com) ✅ OPERATIVO
 - **Backend API:** https://render-test-php-1.onrender.com/api.php
-- **Frontend Angular:** https://galitroco-frontend.onrender.com _(desplegar según instrucciones)_
+- **Frontend Angular:** https://galitroco-frontend.onrender.com
 - **Base de Datos:** Supabase PostgreSQL 15 (cloud)
 
 **Estado:** Ambos servicios desplegados en Render.com con auto-deploy desde GitHub.
+
+---
+
+## 🚨 IMPORTANTE ANTES DE EMPEZAR - LEER PRIMERO
+
+### ⏱️ Limitación de Render Free Tier
+
+**ATENCIÓN EVALUADORES:** El backend en Render.com (plan gratuito) entra en "modo sleep" después de 15 minutos de inactividad. 
+La **primera petición** después del sleep puede tardar **30-90 segundos** en responder.
+
+**Síntomas:**
+- Al abrir el frontend, aparece "Error al conectar con el servidor"
+- Timeout o pantalla de carga infinita
+- Error 502 Bad Gateway
+
+**✅ SOLUCIÓN (IMPORTANTE):**
+
+1. **Antes de probar el frontend**, abrir esta URL en una pestaña nueva:
+   ```
+   https://render-test-php-1.onrender.com/api.php?resource=health
+   ```
+
+2. **Esperar 30-90 segundos** hasta ver esta respuesta JSON:
+   ```json
+   {
+     "success": true,
+     "data": {
+       "status": "healthy",
+       "timestamp": "2025-10-28...",
+       "database": "connected"
+     },
+     "message": "API funcionando correctamente"
+   }
+   ```
+
+3. **Ahora sí**, abrir el frontend:
+   ```
+   https://galitroco-frontend.onrender.com
+   ```
+
+**💡 Tras el primer "despertar", el backend responde normalmente (< 1 segundo) mientras esté activo.**
+
+---
+
+## ✅ REQUISITOS PARA PROBAR LA APLICACIÓN
+
+### Navegador y Sistema
+| Requisito | Mínimo | Recomendado |
+|-----------|--------|-------------|
+| **Navegador** | Chrome 90+, Firefox 88+, Edge 90+ | Chrome/Edge 120+ |
+| **Resolución** | 1024x768 | 1920x1080 o superior |
+| **JavaScript** | Habilitado (requerido) | Habilitado |
+| **Cookies** | Habilitadas (requerido) | Habilitadas |
+| **Conexión** | 2 Mbps | 10+ Mbps |
+| **Bloqueadores** | Desactivar para el sitio | Desactivar |
+
+### Tiempos Estimados
+- ⏱️ **Cold start inicial:** 30-90 segundos (solo primera vez)
+- ⏱️ **Carga del frontend:** 3-5 segundos
+- ⏱️ **Prueba rápida:** 10-15 minutos
+- ⏱️ **Prueba completa:** 25-30 minutos
 
 ### Testing local (Opcional)
 - **Backend:** http://localhost/probatfm/backend/api/
@@ -88,13 +149,7 @@
 
 ### 1️⃣ CLONAR O DESCOMPRIMIR EL PROYECTO
 
-Si tienes acceso al repositorio:
-```bash
-git clone https://github.com/tonikampos/render-test-php.git galitroco
-cd galitroco
-```
-
-Si tienes el ZIP:
+Con el ZIP:
 ```bash
 unzip PEC2_pry_Campos_Antonio.zip
 cd PEC2_pry_Campos_Antonio
@@ -136,9 +191,6 @@ return [
 ];
 ```
 
-**📝 Más detalles:** Ver `database/README_DATABASE.md`
-
----
 
 ### 3️⃣ CONFIGURAR EL BACKEND
 
@@ -175,19 +227,20 @@ FRONTEND_URL=http://localhost:4200
 ```
 
 4. **Verificar instalación:**
-Acceder a: `http://galitroco.local/backend/api/test.php`
+Acceder a: `http://galitroco.local/backend/api/index.php?resource=health`
 
 Debe mostrar:
 ```json
 {
-  "status": "ok",
-  "php_version": "8.2.x",
-  "database": "connected",
-  "message": "API Backend funcionando correctamente"
+  "success": true,
+  "data": {
+    "status": "healthy",
+    "timestamp": "2025-10-28...",
+    "database": "connected"
+  },
+  "message": "API funcionando correctamente"
 }
 ```
-
-**📝 Más detalles:** Ver `backend/README_BACKEND.md`
 
 ---
 
@@ -315,27 +368,39 @@ Si prefieres probar localmente:
 
 ## 📊 ESTADO DEL PROYECTO (PEC2)
 
-### Backend: ✅ **92% OPERATIVO**
-- ✅ 25 endpoints implementados y testeados
-- ✅ 23/25 tests pasados en producción
+### Backend: ✅ **92% OPERATIVO** (23/25 endpoints OK)
+- ✅ 25 endpoints implementados y testeados en producción
+- ✅ 23/25 tests pasados (92% éxito)
 - ✅ 2 bugs críticos corregidos (transacciones ACID, router)
 - ✅ 0 bugs pendientes críticos
-- ✅ Autenticación JWT + Sesiones PHP
-- ✅ Sistema de email funcional (Brevo)
-- ✅ Desplegado en Render.com con auto-deploy
-- ✅ Documentación técnica completa
+- ✅ Autenticación con Sesiones PHP + tokens hexadecimales SHA-256
+- ✅ Sistema de email funcional (Brevo API - 300 emails/día)
+- ✅ Desplegado en Render.com con auto-deploy desde GitHub
+- ✅ Documentación técnica completa (25+ páginas)
 
-### Frontend: ✅ **95% IMPLEMENTADO Y DESPLEGADO**
-- ✅ Autenticación completa (login, registro, recuperación password)
-- ✅ CRUD de habilidades con filtros y paginación
-- ✅ Sistema de intercambios end-to-end
-- ✅ Sistema de valoraciones con estrellas
-- ✅ Panel de administración (reportes, usuarios)
+### Frontend: ✅ **50% IMPLEMENTADO Y DESPLEGADO** (12/16 tests OK)
+
+**Funcionalidades COMPLETADAS (☑):**
+- ✅ Autenticación completa (login, registro, logout)
+- ✅ Listado de habilidades con filtros y búsqueda
+- ✅ Detalle de habilidades
+- ✅ Creación de habilidades
+- ✅ Visualización de intercambios propios
+- ✅ Proponer intercambio (con dialog)
+- ✅ Sistema de valoraciones (con dialog de estrellas)
+- ✅ Perfiles públicos y privados
+- ✅ Panel de administración (reportes)
 - ✅ Guards de seguridad (auth, admin)
-- ✅ Angular Material Design
-- ✅ Integración con backend de producción (Render)
+- ✅ Angular Material Design completo
 - ✅ **Desplegado en Render.com como Static Site**
-- ⚠️ Pendiente: Testing exhaustivo manual
+
+**Funcionalidades PENDIENTES (☐):**
+- ⏳ Edición de habilidades propias
+- ⏳ Eliminación de habilidades
+- ⏳ Botones aceptar/rechazar intercambios
+- ⏳ Botón completar intercambio
+
+**Documentación:** Ver `TESTING_FRONTEND_MANUAL.md` para detalles completos (12/16 tests = 75%)
 
 ### Base de Datos: ✅ **100% OPERATIVA**
 - ✅ Esquema completo con 10 tablas
@@ -351,25 +416,26 @@ Si prefieres probar localmente:
 ```
 galitroco/
 │
-├── backend/                    # API REST en PHP
+├── backend/                    # API HTTP en PHP
 │   ├── api/                   # Endpoints de la API
-│   │   ├── index.php         # Router principal
-│   │   ├── auth.php          # Autenticación
+│   │   ├── index.php         # Router principal (endpoint único)
+│   │   ├── auth.php          # Autenticación y recuperación password
 │   │   ├── habilidades.php   # CRUD habilidades
 │   │   ├── intercambios.php  # Sistema de intercambios
 │   │   ├── valoraciones.php  # Sistema de valoraciones
 │   │   ├── reportes.php      # Reportes y moderación
+│   │   ├── mensajes.php      # Sistema de mensajería
 │   │   └── ...
 │   ├── config/               # Configuración
-│   │   ├── database.php      # Conexión PostgreSQL
-│   │   ├── cors.php          # CORS y cookies
-│   │   └── jwt.php           # JWT secret
-│   ├── models/               # Modelos de datos
+│   │   ├── database.php      # Conexión PostgreSQL (Supabase)
+│   │   ├── cors.php          # CORS y configuración cookies
+│   │   └── .env              # Variables de entorno (no en repo)
+│   ├── models/               # Modelos de datos (clases PHP)
 │   ├── utils/                # Utilidades
-│   │   ├── Response.php      # Respuestas JSON
-│   │   ├── Auth.php          # Middleware auth
-│   │   └── Email.php         # Envío de emails
-│   └── Dockerfile            # Contenedor para Render
+│   │   ├── Response.php      # Respuestas JSON estandarizadas
+│   │   ├── Auth.php          # Gestión de sesiones y tokens
+│   │   └── EmailService.php  # Envío de emails (Brevo API)
+│   └── Dockerfile            # Contenedor Docker para Render
 │
 ├── frontend/                  # Aplicación Angular
 │   ├── src/
@@ -401,14 +467,16 @@ galitroco/
 
 ### Medidas implementadas:
 - ✅ Contraseñas hasheadas con bcrypt (cost 12)
-- ✅ Prepared statements (prevención SQL Injection)
-- ✅ Validación de entrada en todos los endpoints
-- ✅ CORS configurado específicamente
-- ✅ HTTPS en producción
-- ✅ JWT para autenticación stateless
-- ✅ Sesiones PHP con SameSite=None
-- ✅ Guards de autenticación y autorización en frontend
-- ✅ Middleware de protección en backend
+- ✅ Prepared statements en todas las queries (prevención SQL Injection)
+- ✅ Validación de entrada en todos los endpoints (sanitización)
+- ✅ CORS configurado específicamente para dominios permitidos
+- ✅ HTTPS en producción (certificados SSL de Render)
+- ✅ Tokens de sesión hexadecimales SHA-256 (64 caracteres)
+- ✅ Sesiones PHP con cookies SameSite=None; Secure
+- ✅ Guards de autenticación y autorización en frontend (canActivate)
+- ✅ Middleware de protección en backend (verificación de sesión)
+- ✅ Rate limiting implícito (Render free tier)
+- ✅ Variables de entorno para credenciales sensibles
 
 ---
 
@@ -435,29 +503,151 @@ galitroco/
 
 ## 🐛 PROBLEMAS CONOCIDOS Y SOLUCIONES
 
-### 1. CORS en localhost
-**Problema:** Error "blocked by CORS policy" al conectar frontend local con backend Render.
+### 1. ⏱️ Cold Start en Render (MUY COMÚN)
+**Síntomas:**
+- Primera petición tarda 30-90 segundos
+- Error 502 Bad Gateway
+- Frontend muestra "Error al conectar con servidor"
+- Pantalla de carga infinita
 
-**Solución:** Backend ya tiene configurado CORS para `http://localhost:4200` en `backend/config/cors.php`.
+**Causa:** Render free tier pone el backend en sleep tras 15 minutos de inactividad.
 
-### 2. Sesiones PHP entre dominios
-**Problema:** Sesiones no persisten entre frontend y backend en dominios distintos.
+**✅ Solución:**
+1. Abrir primero: `https://render-test-php-1.onrender.com/api.php?resource=health`
+2. Esperar respuesta JSON (30-90 segundos)
+3. Ahora abrir el frontend
+4. Tras "despertar", funciona normalmente (< 1 segundo)
 
-**Solución:** Configurado `SameSite=None` y `Secure=true` en cookies. Usa `withCredentials: true` en Angular.
+---
 
-### 3. Cold start en Render
-**Problema:** Primera petición al backend tarda 30-60 segundos (servidor dormido).
+### 2. 🍪 Cookies bloqueadas o no se guardan
+**Síntomas:**
+- No persiste login tras refrescar página
+- Siempre pide autenticación
+- Error 401 Unauthorized en peticiones autenticadas
 
-**Solución:** Esperar a que el servidor despierte. Render free tier tiene cold start inevitable.
+**Causa:** Navegador bloquea cookies de terceros o navegación privada.
+
+**✅ Solución:**
+- **Chrome/Edge:** Settings → Privacy → Allow all cookies (temporalmente)
+- **Firefox:** Settings → Privacy → Standard mode
+- **NO usar modo incógnito/privado** (bloquea cookies cross-site)
+- Verificar que cookies están habilitadas en navegador
+
+---
+
+### 3. 🚫 Error CORS "blocked by CORS policy"
+**Síntomas:**
+- Error en consola: `Access to fetch at '...' has been blocked by CORS policy`
+- Peticiones fallan desde frontend local
+
+**Causa:** Backend no reconoce el dominio de origen.
+
+**✅ Solución:**
+- Si usas frontend local (localhost:4200): Ya está configurado en `backend/config/cors.php`
+- Si usas otro puerto: Añadir a whitelist en CORS config
+- **Render production**: Ya configurado para `galitroco-frontend.onrender.com`
+
+---
+
+### 4. 📧 Email de recuperación no llega
+**Síntomas:**
+- Solicitar recuperación de contraseña → no llega email
+
+**Causa:** Brevo API puede tardar o email en spam.
+
+**✅ Solución:**
+1. **Revisar carpeta SPAM** (muy común)
+2. Esperar 1-2 minutos (Brevo puede tardar)
+3. Verificar que el email existe en base de datos
+4. Límite: 300 emails/día en plan gratuito
+
+---
+
+### 5. 💾 Base de datos con datos antiguos
+**Síntomas:**
+- Usuarios o habilidades que ya eliminaste siguen apareciendo
+- Contadores incorrectos
+
+**Causa:** Base de datos de prueba no reseteada.
+
+**✅ Solución:**
+- Usar las 3 cuentas de prueba predefinidas (admin, demo, test)
+- Si necesitas reset: Contactar con autor (no hay acceso directo a Supabase)
+
+---
+
+### 6. 🔴 Frontend muestra página en blanco
+**Síntomas:**
+- Pantalla blanca después de cargar
+- No hay errores visibles
+
+**Causa:** JavaScript deshabilitado o error crítico de carga.
+
+**✅ Solución:**
+1. Abrir **DevTools** (F12) → Console
+2. Ver errores en consola
+3. Verificar JavaScript habilitado
+4. Probar en navegador diferente
+5. Limpiar caché (Ctrl+Shift+R)
+
+---
+
+### 7. 🐌 Aplicación muy lenta
+**Síntomas:**
+- Todas las operaciones tardan mucho
+- Timeout frecuentes
+
+**Causa:** Limitaciones del plan gratuito de Render.
+
+**✅ Solución:**
+- **Normal:** Render free tier tiene CPU compartida y limitada
+- Primera petición siempre lenta (cold start)
+- Después mejora significativamente
+- Esperar pacientemente (no es un bug, es limitación del hosting)
+
+---
+
+### 8. ❌ Error 404 en rutas del frontend
+**Síntomas:**
+- Refrescar página en `/habilidades` → Error 404
+- Links directos no funcionan
+
+**Causa:** Render Static Site necesita configuración para SPA.
+
+**✅ Solución:**
+- Ya configurado con `render.yaml` y rewrites
+- Si persiste: Siempre navegar desde la home `https://galitroco-frontend.onrender.com`
+- Usar navegación interna (no F5 en subrutas)
+
+---
+
+### 9. 🔐 No puedo acceder al panel de admin
+**Síntomas:**
+- Acceder a `/admin` → Redirige a login
+- Mensaje "No tienes permisos"
+
+**Causa:** Usuario no tiene rol `administrador`.
+
+**✅ Solución:**
+- Usar cuenta: `admin@galitroco.com` / `Pass123456`
+- Solo este usuario tiene rol de administrador
+- No se pueden crear admins desde el frontend (solo en BD)
 
 ---
 
 ## 📞 SOPORTE Y CONTACTO
 
-**Autor:** Antonio Campos  
-**Email:** _(incluir email institucional UOC)_  
+**Autor:** Antonio Manuel Campos Gerpe  
+**Email UOC:** acamposg@uoc.edu _(verificar email correcto)_  
 **GitHub:** https://github.com/tonikampos/render-test-php  
-**Consultor:** _(incluir nombre del consultor)_
+**Proyecto:** Trabajo Final de Máster - UOC  
+**Consultor/Tutor:** _(Nombre del tutor asignado)_  
+
+**⚠️ Nota para evaluadores:** Si encuentran problemas técnicos al probar la aplicación:
+1. Revisar primero la sección **"🐛 PROBLEMAS CONOCIDOS Y SOLUCIONES"**
+2. El 90% de problemas son cold start de Render (esperar 60 segundos)
+3. Para consultas urgentes, contactar por email institucional
 
 ---
 
@@ -502,6 +692,37 @@ Rol:      Usuario normal
 Email:    test@galitroco.com
 Password: Pass123456
 Rol:      Usuario normal
+```
+
+---
+
+---
+
+### ⚠️ RECORDATORIO ANTES DE EMPEZAR TESTING
+
+**1. Despertar el backend primero (obligatorio):**
+```
+https://render-test-php-1.onrender.com/api.php?resource=health
+```
+Esperar hasta ver respuesta JSON (puede tardar 30-90 segundos la primera vez).
+
+**2. Verificar que está "despierto":**
+Debe mostrar:
+```json
+{
+  "success": true,
+  "data": {
+    "status": "healthy",
+    "timestamp": "...",
+    "database": "connected"
+  },
+  "message": "API funcionando correctamente"
+}
+```
+
+**3. Ahora sí, abrir el frontend:**
+```
+https://galitroco-frontend.onrender.com
 ```
 
 ---
@@ -815,9 +1036,14 @@ PUT /api.php?resource=intercambios&id=1&action=aceptar
 
 ### ⏱️ Tiempo Total de Pruebas
 
-- **Prueba rápida (funcionalidades básicas):** 10-15 minutos
-- **Prueba completa (todos los escenarios):** 25-30 minutos
-- **Prueba exhaustiva (+ testing API):** 45-60 minutos
+| Tipo de Prueba | Tiempo Estimado | Incluye |
+|----------------|-----------------|---------|
+| **Prueba Express** | 5-10 minutos | Login + explorar habilidades + proponer intercambio |
+| **Prueba Rápida** | 10-15 minutos | Funcionalidades básicas (escenarios 1-2) |
+| **Prueba Completa** | 25-30 minutos | Todos los escenarios (1-6) + checklist |
+| **Prueba Exhaustiva** | 45-60 minutos | Todo + testing manual API + verificar documentación |
+
+**⏱️ Importante:** Añadir 1-2 minutos extra al primer acceso por cold start de Render.
 
 ---
 
@@ -843,14 +1069,22 @@ PUT /api.php?resource=intercambios&id=1&action=aceptar
 
 ## 📅 HISTORIAL DE VERSIONES
 
-### v1.0 - PEC2 (Noviembre 2025)
-- ✅ Backend completo con 25 endpoints
-- ✅ Frontend Angular con 95% funcionalidades
-- ✅ Sistema de intercambios end-to-end
-- ✅ Sistema de valoraciones
-- ✅ Panel de administración
-- ✅ Testing en producción (92% éxito)
-- ✅ Documentación técnica completa
+### v1.1 - PEC2 Final (28 Octubre 2025)
+- ✅ Backend completo con 25 endpoints (23 operativos = 92%)
+- ✅ Frontend Angular con 50% funcionalidades core (12/16 tests OK)
+- ✅ Sistema de intercambios funcional (proponer + listar)
+- ✅ Sistema de valoraciones (dialog implementado)
+- ✅ Panel de administración operativo
+- ✅ Testing exhaustivo en producción documentado
+- ✅ Documentación técnica completa (25+ páginas)
+- ✅ Ambos desplegados en Render.com con auto-deploy
+- ✅ Sistema de autenticación con sesiones PHP + tokens hexadecimales
+
+### v1.0 - PEC2 Inicial (23 Octubre 2025)
+- ✅ Primera versión funcional desplegada
+- ✅ Backend operativo con endpoints principales
+- ✅ Frontend básico con autenticación
+- ✅ Base de datos en Supabase configurada
 
 ### v0.5 - PEC1 (Septiembre 2025)
 - ✅ Planificación inicial
@@ -870,6 +1104,67 @@ Este proyecto es un Trabajo Final de Máster para la UOC con fines académicos.
 
 ---
 
-**Última actualización:** 23 de octubre de 2025  
-**Versión del documento:** 1.0 (PEC2)  
-**Estado:** ✅ Listo para entrega PEC2
+---
+
+## 📸 CAPTURAS DE PANTALLA Y RECURSOS VISUALES
+
+**Nota:** Para ver capturas de pantalla de la aplicación en funcionamiento, consultar:
+- `docs/screenshots/` (si existe en el proyecto)
+- Memoria PEC2 (documento Word con imágenes incluidas)
+- O probar directamente la aplicación en: https://galitroco-frontend.onrender.com
+
+**Recomendación para evaluadores:** La mejor forma de evaluar es **probando la aplicación real en producción** siguiendo la guía de pruebas anterior.
+
+---
+
+## 🎓 CONSIDERACIONES ACADÉMICAS
+
+### Alcance del Proyecto (PEC2)
+Este documento y la aplicación representan el estado del TFM en la **PEC2 (Octubre 2025)**.
+
+**Progreso actual:**
+- ✅ Backend: 92% funcional (23/25 endpoints operativos)
+- ✅ Frontend: 50% funcional (12/16 tests completados - funcionalidades core)
+- ✅ Base de datos: 100% diseñada e implementada
+- ✅ Despliegue: 100% operativo en Render.com
+- ✅ Documentación: Completa y exhaustiva
+
+**Próximos pasos (PEC3 - Diciembre 2025):**
+- ⏳ Completar funcionalidades pendientes del frontend (50% restante)
+- ⏳ Implementar sistema de notificaciones en tiempo real
+- ⏳ Mejorar UX/UI basado en feedback
+- ⏳ Testing exhaustivo de usuarios
+- ⏳ Corrección de bugs menores
+- ⏳ Optimización de rendimiento
+- ⏳ Memoria final completa
+
+### Limitaciones Conocidas (Plan Gratuito)
+- ⚠️ **Render Free Tier:** Cold start de 30-90 segundos tras inactividad
+- ⚠️ **Supabase Free:** Límite de 500 MB base de datos
+- ⚠️ **Brevo Free:** 300 emails/día máximo
+- ⚠️ **Sin dominio propio:** URLs técnicas (.onrender.com)
+
+Estas limitaciones **NO afectan la funcionalidad** para propósitos académicos y de evaluación.
+
+---
+
+## 📖 GLOSARIO DE TÉRMINOS
+
+Para facilitar la evaluación, definimos términos técnicos clave:
+
+- **Cold Start:** Tiempo de arranque del servidor tras inactividad (limitación de hosting gratuito)
+- **CORS:** Cross-Origin Resource Sharing - Política de seguridad para peticiones entre dominios
+- **Sesión PHP:** Mecanismo de autenticación server-side con cookies
+- **Token Hexadecimal:** Cadena de 64 caracteres (SHA-256) para identificar sesiones
+- **Endpoint:** URL específica de la API que realiza una operación (ej: crear habilidad)
+- **Guard:** Protección en Angular que verifica permisos antes de acceder a rutas
+- **Supabase:** Servicio cloud de PostgreSQL (alternativa open source a Firebase)
+- **Render:** Plataforma de hosting con despliegue automático desde GitHub
+- **Brevo:** Servicio de email transaccional (ex-Sendinblue)
+
+---
+
+**Última actualización:** 28 de octubre de 2025  
+**Versión del documento:** 1.1 (PEC2 - Revisión Final)  
+**Estado:** ✅ Listo para entrega y evaluación PEC2  
+**Próxima revisión:** Diciembre 2025 (PEC3 Final)

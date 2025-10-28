@@ -34,7 +34,6 @@ class Database {
                 $dsn = "pgsql:host={$host};port={$port};dbname={$dbname}";
             } else {
                 // Configuración local (desarrollo)
-                // Puedes cambiar estas credenciales o definir variables de entorno
                 $host = getenv('DB_HOST') ?: 'localhost';
                 $port = getenv('DB_PORT') ?: 5432;
                 $dbname = getenv('DB_NAME') ?: 'galitrocodb';
@@ -60,7 +59,6 @@ class Database {
         } catch (PDOException $e) {
             error_log("Error de conexión a BD: " . $e->getMessage());
             
-            // En desarrollo, mostrar error detallado
             $is_dev = (getenv('ENVIRONMENT') !== 'production');
             $message = $is_dev ? $e->getMessage() : "Error al conectar con la base de datos";
             

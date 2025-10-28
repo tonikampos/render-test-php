@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { ApiResponse } from '../../shared/models/api-response.model';
-import { Valoracion } from '../../shared/models/valoracion.model'; // Crearemos este modelo despois
+import { Valoracion } from '../../shared/models/valoracion.model'; 
 
 @Injectable({
   providedIn: 'root'

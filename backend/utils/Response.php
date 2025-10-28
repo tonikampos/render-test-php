@@ -81,7 +81,6 @@ class Response {
             error_log("Server Error: $message - " . json_encode($details));
         }
         
-        // En producción, no mostrar detalles internos
         $isProduction = getenv('ENVIRONMENT') === 'production';
         
         self::error(

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-// Engadir User e PaginatedResponse aos imports dende os modelos compartidos
 import { ApiResponse, Reporte, User, PaginatedResponse } from '../../shared/models';
 
 @Injectable({
@@ -11,16 +10,14 @@ export class AdminService {
 
   constructor(private apiService: ApiService) { }
 
-  // --- NOVO MÉTODO ENGADIDO ---
   /**
    * Obter a listaxe de usuarios con filtros e paxinación (só admin).
    * Corresponde a: GET /api/usuarios
    */
   getUsuarios(params?: { page?: number, per_page?: number, search?: string, ubicacion?: string, activo?: boolean }): Observable<ApiResponse<PaginatedResponse<User>>> {
-    // Engadir aquí calquera parámetro adicional que o teu backend admita
+    // Engadir aquí calquera parámetro adicional que o backend admita
     return this.apiService.get<ApiResponse<PaginatedResponse<User>>>('usuarios', params);
   }
-  // -------------------------
 
   /**
    * Obter os reportes, con opción de filtrar por estado.

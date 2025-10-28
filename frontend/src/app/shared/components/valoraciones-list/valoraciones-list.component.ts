@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// Engadimos os imports para os compoñentes de Material que usamos na vista
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { Valoracion } from '../../models/valoracion.model';

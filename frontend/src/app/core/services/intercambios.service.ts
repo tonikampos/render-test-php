@@ -1,9 +1,8 @@
-// src/app/core/services/intercambios.service.ts
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import { ApiResponse, Intercambio } from '../../shared/models'; // Asegúrate de crear el modelo 'Intercambio'
+import { ApiResponse, Intercambio } from '../../shared/models'; 
 
 @Injectable({
   providedIn: 'root'

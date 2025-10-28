@@ -17,11 +17,10 @@ interface Feature {
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule, // Se mantiene para que funcione 'routerLink' en el HTML
+    RouterModule, 
     MatButtonModule,
     MatCardModule,
     MatIconModule
-    // Se elimina MatToolbarModule porque ya no se usa aquí
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'

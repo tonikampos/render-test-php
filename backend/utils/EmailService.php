@@ -1,8 +1,7 @@
 <?php
 /**
  * Servicio de envío de emails
- * Integración con Brevo (antes Sendinblue)
- * 
+ * Integración con Brevo 
  * CONFIGURACIÓN REQUERIDA:
  * - Variable de entorno: BREVO_API_KEY
  * - Variable de entorno: FRONTEND_URL
@@ -12,9 +11,8 @@
  * 2. Ir a Settings → SMTP & API → API Keys
  * 3. Crear API Key (Create a new API Key)
  * 4. Copiar la key y añadirla como variable de entorno en Render
+ *  * Plan gratuito: 300 emails/día (9,000/mes)
  * 
- * Plan gratuito: 300 emails/día (9,000/mes)
- * ✅ Ventaja: Puedes enviar a CUALQUIER email sin verificar dominio
  */
 
 class EmailService {
@@ -39,7 +37,7 @@ class EmailService {
                 error_log("Token: $token");
                 error_log("Link de recuperación: $frontend_url/reset-password?token=$token");
                 error_log("===========================================");
-                return true; // En desarrollo, consideramos éxito
+                return true; 
             }
             
             // URL del enlace de recuperación
@@ -49,8 +47,7 @@ class EmailService {
             $html_content = self::getEmailTemplate($reset_link);
             
             // Preparar datos para Brevo API
-            // NOTA: El email "from" debe ser un email que hayas verificado en Brevo
-            // O usa el email con el que te registraste en Brevo
+            // NOTA: El email "from" debe ser un email que verificado en Brevo
             $from_email = getenv('BREVO_FROM_EMAIL') ?: 'noreply@galitroco.com';
             $from_name = getenv('BREVO_FROM_NAME') ?: 'GaliTroco';
             
@@ -302,14 +299,14 @@ class EmailService {
     }
     
     /**
-     * Enviar email de bienvenida (opcional - futuro)
+     * Enviar email de benvida (opcional - para o futuro)
      * 
      * @param string $email Email del nuevo usuario
      * @param string $nombre Nombre del usuario
      * @return bool
      */
     public static function enviarBienvenida($email, $nombre) {
-        // TODO: Implementar cuando sea necesario
+        // TODO: Implementar cando teña tempo
         return true;
     }
     
@@ -321,7 +318,7 @@ class EmailService {
      * @return bool
      */
     public static function enviarNotificacionMensaje($email, $remitente) {
-        // TODO: Implementar cuando sea necesario
+        // TODO: Implementar cando teña tempo
         return true;
     }
 }

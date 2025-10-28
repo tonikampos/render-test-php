@@ -79,7 +79,7 @@ function crearValoracion($input) {
         ]);
         
         if ($stmtExists->fetch()) {
-            Response::error('Xa valoraches este intercambio previamente', 409); // 409 Conflict
+            Response::error('Xa valoraches este intercambio previamente', 409); 
         }
         
         // 4. Inserir a nova valoración

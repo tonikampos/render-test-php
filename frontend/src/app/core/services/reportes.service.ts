@@ -1,9 +1,7 @@
-// src/app/core/services/reportes.service.ts
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import { ApiResponse, Reporte } from '../../shared/models'; // Asegúrate de que Reporte está exportado en models/index.ts
-
+import { ApiResponse, Reporte } from '../../shared/models'; 
 @Injectable({
   providedIn: 'root'
 })

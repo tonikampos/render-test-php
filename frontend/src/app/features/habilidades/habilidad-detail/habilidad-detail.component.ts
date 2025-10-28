@@ -132,12 +132,11 @@ export class HabilidadDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.snackBar.open('¡Propuesta enviada! Serás notificado con la respuesta.', 'Entendido', { duration: 4000 });
-        this.router.navigate(['/perfil']); // Considerar redirixir a /intercambios no futuro
+        this.router.navigate(['/perfil']); 
       }
     });
   }
 
-  // CAMBIO REPORTE: Engadir o novo método para abrir o diálogo de reporte
   abrirDialogoReporte(): void {
     if (!this.habilidad) return;
 

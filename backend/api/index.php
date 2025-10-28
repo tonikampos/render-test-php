@@ -1,9 +1,4 @@
 <?php
-/**
- * API Router Principal
- * Maneja todas las rutas de la API y delega a los controladores correspondientes
- */
-
 // Headers y configuración inicial
 require_once __DIR__ . '/../config/cors.php';
 setupCORS();
@@ -169,5 +164,3 @@ try {
     ]);
 }
 
-
-//problemas

@@ -3,7 +3,7 @@
 **Proyecto:** GaliTroco - Sistema de Intercambio de Habilidades  
 **Autor:** Antonio Campos  
 **Universidad:** UOC - Trabajo Final de Máster  
-**Fecha:** Octubre-Noviembre 2025
+**Fecha:** Octubre 2025
 
 ---
 
@@ -33,7 +33,7 @@ Se especifica para cada recurso:
 **Autor:** The PHP Group  
 **Licencia:** PHP License 3.01 (Open Source)  
 **URL:** https://www.php.net  
-**Uso en el proyecto:** Lenguaje principal del backend para API REST  
+**Uso en el proyecto:** Lenguaje principal del backend para API HTTP  
 **Estado legal:** ✅ Licencia permisiva, uso gratuito incluso en proyectos comerciales  
 **Archivos originales:** N/A (lenguaje de programación interpretado)
 
@@ -45,9 +45,9 @@ Se especifica para cada recurso:
 **Autor:** Apache Software Foundation  
 **Licencia:** Apache License 2.0 (Open Source)  
 **URL:** https://httpd.apache.org  
-**Uso en el proyecto:** Servidor web para hosting del backend PHP  
+**Uso en el proyecto:** Servidor web para hosting del backend PHP (incluido en imagen Docker `php:8.2-apache`)  
 **Estado legal:** ✅ Licencia permisiva, uso libre  
-**Archivos originales:** N/A (software de sistema)
+**Archivos originales:** N/A (incluido en contenedor Docker)
 
 ---
 
@@ -161,7 +161,7 @@ copies of the Software...
 
 ### 10. RxJS
 **Nombre:** RxJS (Reactive Extensions for JavaScript)  
-**Versión:** 7.8.x  
+**Versión:** ~7.8.0  
 **Autor:** ReactiveX Contributors  
 **Licencia:** Apache License 2.0 (Open Source)  
 **URL:** https://rxjs.dev  
@@ -171,7 +171,32 @@ copies of the Software...
 
 ---
 
-### 11. Material Design Icons
+### 11. Zone.js
+**Nombre:** Zone.js  
+**Versión:** ~0.15.0  
+**Autor:** Google LLC (parte del ecosistema Angular)  
+**Licencia:** MIT License (Open Source)  
+**URL:** https://github.com/angular/angular/tree/main/packages/zone.js  
+**Uso en el proyecto:** Librería de ejecución para detección de cambios en Angular  
+**Estado legal:** ✅ Licencia MIT, uso libre  
+**Package:** `zone.js`  
+**Descripción:** Proporciona contextos de ejecución para rastrear operaciones asíncronas en Angular
+
+---
+
+### 12. TSLib
+**Nombre:** TSLib (TypeScript Runtime Library)  
+**Versión:** ^2.3.0  
+**Autor:** Microsoft Corporation  
+**Licencia:** 0BSD (Zero-Clause BSD) - Dominio público  
+**URL:** https://github.com/microsoft/tslib  
+**Uso en el proyecto:** Funciones helper de TypeScript para compatibilidad runtime  
+**Estado legal:** ✅ Licencia 0BSD, completamente libre y sin restricciones  
+**Package:** `tslib`
+
+---
+
+### 13. Material Design Icons
 **Nombre:** Material Icons  
 **Versión:** Incluida en Angular Material  
 **Autor:** Google LLC  
@@ -189,7 +214,7 @@ copies of the Software...
 
 ## 🌐 SERVICIOS Y APIs EXTERNAS
 
-### 12. GitHub
+### 14. GitHub
 **Nombre:** GitHub (Repository Hosting)  
 **Versión:** Cloud Platform  
 **Autor:** GitHub Inc. (Microsoft)  
@@ -205,7 +230,7 @@ copies of the Software...
 
 ---
 
-### 13. Google Fonts
+### 15. Google Fonts
 **Nombre:** Google Fonts  
 **Versión:** Web Fonts API  
 **Autor:** Google LLC  
@@ -220,7 +245,7 @@ copies of the Software...
 
 ## 🛠️ HERRAMIENTAS DE DESARROLLO
 
-### 14. Visual Studio Code
+### 16. Visual Studio Code
 **Nombre:** Visual Studio Code  
 **Versión:** Latest  
 **Autor:** Microsoft Corporation  
@@ -232,7 +257,7 @@ copies of the Software...
 
 ---
 
-### 15. Node.js y npm
+### 17. Node.js y npm
 **Nombre:** Node.js  
 **Versión:** 20.x  
 **Autor:** OpenJS Foundation  
@@ -244,7 +269,7 @@ copies of the Software...
 
 ---
 
-### 16. Angular CLI
+### 18. Angular CLI
 **Nombre:** Angular Command Line Interface  
 **Versión:** 19.2.0  
 **Autor:** Google LLC  
@@ -256,21 +281,42 @@ copies of the Software...
 
 ---
 
-### 17. Docker
+### 19. Docker
 **Nombre:** Docker  
 **Versión:** Latest  
 **Autor:** Docker Inc.  
 **Licencia:** Apache License 2.0 (Docker Engine)  
 **URL:** https://www.docker.com  
 **Uso en el proyecto:** Containerización del backend para despliegue en Render  
-**Dockerfile:** Incluido en `/backend/Dockerfile`  
+**Dockerfile:** Incluido en `/Dockerfile`  
+**Imagen base:** `php:8.2-apache` (PHP oficial con Apache integrado)  
 **Estado legal:** ✅ Docker Engine es open source (Apache 2.0)
+
+---
+
+### 20. Karma y Jasmine (Testing Framework)
+**Nombre:** Karma Test Runner + Jasmine  
+**Versiones:** 
+- Karma: ~6.4.0
+- Jasmine Core: ~5.6.0
+- Karma-Jasmine: ~5.1.0
+**Autor:** 
+- Karma: Google LLC y contribuidores
+- Jasmine: Pivotal Labs
+**Licencias:** MIT License (ambos)  
+**URL:** 
+- https://karma-runner.github.io
+- https://jasmine.github.io
+**Uso en el proyecto:** Framework de testing para componentes Angular  
+**Estado legal:** ✅ Licencia MIT, uso libre  
+**Packages:** `karma`, `jasmine-core`, `karma-jasmine`, `karma-chrome-launcher`, `karma-coverage`, `karma-jasmine-html-reporter`  
+**Nota:** Herramientas de desarrollo, no incluidas en build de producción
 
 ---
 
 ## 📚 RECURSOS EDUCATIVOS Y DOCUMENTACIÓN
 
-### 18. Stack Overflow
+### 21. Stack Overflow
 **Nombre:** Stack Overflow  
 **URL:** https://stackoverflow.com  
 **Autor:** Stack Exchange Inc.  
@@ -280,7 +326,7 @@ copies of the Software...
 
 ---
 
-### 19. MDN Web Docs
+### 22. MDN Web Docs
 **Nombre:** MDN Web Docs (Mozilla Developer Network)  
 **URL:** https://developer.mozilla.org  
 **Autor:** Mozilla Foundation y contribuidores  
@@ -290,7 +336,7 @@ copies of the Software...
 
 ---
 
-### 20. Angular Documentation
+### 23. Angular Documentation
 **Nombre:** Angular Official Documentation  
 **URL:** https://angular.dev  
 **Autor:** Google LLC  
@@ -302,7 +348,7 @@ copies of the Software...
 
 ## 🎨 RECURSOS VISUALES
 
-### 21. Tema de Color - Angular Material Indigo-Pink
+### 24. Tema de Color - Angular Material Indigo-Pink
 **Nombre:** Indigo-Pink Prebuilt Theme  
 **Autor:** Google LLC (Angular Material)  
 **Licencia:** MIT License  
@@ -340,6 +386,9 @@ Este proyecto no recopila datos personales reales de usuarios fuera del entorno 
 | Angular Material | MIT | ✅ Sí | ❌ No | ✅ Cumple |
 | TypeScript | Apache 2.0 | ✅ Sí | ❌ No | ✅ Cumple |
 | RxJS | Apache 2.0 | ✅ Sí | ❌ No | ✅ Cumple |
+| Zone.js | MIT | ✅ Sí | ❌ No | ✅ Cumple |
+| TSLib | 0BSD | ✅ Sí | ❌ No | ✅ Cumple |
+| Karma/Jasmine | MIT | ✅ Sí | ❌ No | ✅ Cumple |
 | Material Icons | Apache 2.0 | ✅ Sí | ✅ Sí (incluida) | ✅ Cumple |
 | Brevo API | Comercial | ✅ Sí (plan free) | ❌ No | ✅ Cumple |
 | Supabase | Apache 2.0 + Comercial | ✅ Sí | ❌ No | ✅ Cumple |
@@ -359,6 +408,6 @@ Este proyecto no recopila datos personales reales de usuarios fuera del entorno 
 
 ---
 
-**Última actualización:** 23 de octubre de 2025  
-**Versión del documento:** 1.0 (PEC2)  
+**Última actualización:** 28 de octubre de 2025  
+**Versión del documento:** 1.1 (PEC2)  
 **Estado:** ✅ Completo y verificado

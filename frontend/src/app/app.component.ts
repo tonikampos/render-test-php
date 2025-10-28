@@ -6,7 +6,7 @@ import { MainLayoutComponent } from './layout/main-layout/main-layout.component'
 
 @Component({
   selector: 'app-root',
-  standalone: true, // Asegúrate de que este componente sea standalone
+  standalone: true, 
   imports: [
     CommonModule,
     // 2. Añade MainLayoutComponent a los imports. Se eliminan los demás.
