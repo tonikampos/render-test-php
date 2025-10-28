@@ -7,8 +7,8 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo pdo_pgsql \
     && rm -rf /var/lib/apt/lists/*
 
-# Habilitar mod_rewrite de Apache
-RUN a2enmod rewrite
+# Habilitar módulos de Apache necesarios
+RUN a2enmod rewrite headers
 
 # Configurar Apache para permitir .htaccess
 RUN echo '<Directory /var/www/html/>\n\
