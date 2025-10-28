@@ -8,7 +8,7 @@ export interface Habilidad {
   estado: 'activa' | 'pausada' | 'intercambiada';
   duracion_estimada?: number;
   fecha_publicacion: string;
-  fecha_actualizacion?: string;
+  ultima_actualizacion?: string;
   // Datos relacionados (JOINs)
   categoria?: string;
   categoria_icono?: string;
