@@ -1,39 +1,398 @@
+// ========================================
+// CONTAINER
+// ========================================
 .perfil-container {
   max-width: 800px;
   margin: 2rem auto;
-  padding: 1rem;
+  padding: 2rem;
   background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+// ========================================
+// HEADER
+// ========================================
 .perfil-header {
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  padding-bottom: 1rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid #eee;
 }
 
-.perfil-info h1 {
-  margin: 0;
-  font-size: 2rem;
-  color: #333;
+.perfil-info {
+  flex: 1;
+
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .ubicacion {
+    margin: 0.5rem 0 0;
+    font-size: 1rem;
+    color: #777;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
 }
 
-.perfil-info .ubicacion {
-  margin: 0.25rem 0 0;
-  color: #777;
-}
-
+// ========================================
+// SECTIONS
+// ========================================
 .perfil-section {
-  margin-top: 1.5rem;
+  margin-top: 2rem;
+
+  h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #444;
+    border-bottom: 2px solid #3f51b5;
+    padding-bottom: 0.5rem;
+    display: inline-block;
+  }
+
+  p {
+    color: #666;
+    line-height: 1.6;
+    font-size: 1rem;
+  }
 }
 
-.perfil-section h2 {
-  margin-bottom: 0.5rem;
-  color: #444;
-  border-bottom: 2px solid #3f51b5; /* Cor primaria do teu tema */
-  padding-bottom: 0.25rem;
-  display: inline-block;
+// ========================================
+// ESTADÍSTICAS
+// ========================================
+.stats-section {
+  margin-top: 2rem;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #444;
+    border-bottom: 2px solid #3f51b5;
+    padding-bottom: 0.5rem;
+
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+      color: #3f51b5;
+    }
+  }
+}
+
+.stats-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 1rem;
+
+  p {
+    color: #666;
+    margin: 0;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .stat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+
+    &.habilidades {
+      color: #2196f3;
+    }
+
+    &.intercambios {
+      color: #4caf50;
+    }
+
+    &.valoracion {
+      color: #ff9800;
+    }
+  }
+
+  .stat-content {
+    flex: 1;
+    min-width: 0;
+
+    h3 {
+      margin: 0 0 0.25rem 0;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #333;
+      line-height: 1;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #666;
+      line-height: 1.3;
+    }
+
+    .estrellas {
+      display: flex;
+      gap: 2px;
+      margin: 0.25rem 0;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        color: #ff9800;
+      }
+    }
+  }
+}
+
+// ========================================
+// LOADING
+// ========================================
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+
+  mat-spinner {
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: #666;
+  }
+}
+
+// ========================================
+// RESPONSIVE - TABLET
+// ========================================
+@media (max-width: 768px) {
+  .perfil-container {
+    margin: 1.5rem auto;
+    padding: 1.5rem;
+  }
+
+  .perfil-header {
+    gap: 1rem;
+    padding-bottom: 1.25rem;
+  }
+
+  .perfil-info {
+    h1 {
+      font-size: 1.75rem;
+    }
+
+    .ubicacion {
+      font-size: 0.95rem;
+    }
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+
+    .stat-card:last-child {
+      grid-column: span 2;
+    }
+  }
+
+  .perfil-section {
+    margin-top: 1.5rem;
+
+    h2 {
+      font-size: 1.35rem;
+      margin-bottom: 0.85rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+    }
+  }
+}
+
+// ========================================
+// RESPONSIVE - MOBILE
+// ========================================
+@media (max-width: 600px) {
+  .perfil-container {
+    margin: 1rem;
+    padding: 1.25rem;
+    border-radius: 6px;
+  }
+
+  .perfil-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+  }
+
+  .perfil-info {
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    .ubicacion {
+      font-size: 0.9rem;
+    }
+  }
+
+  .stats-section h2 {
+    font-size: 1.35rem;
+    margin-bottom: 1.25rem;
+
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+
+    .stat-card {
+      padding: 1.25rem;
+
+      &:last-child {
+        grid-column: span 1;
+      }
+
+      .stat-icon {
+        font-size: 40px;
+        width: 40px;
+        height: 40px;
+      }
+
+      .stat-content h3 {
+        font-size: 1.75rem;
+      }
+    }
+  }
+
+  .perfil-section {
+    margin-top: 1.25rem;
+
+    h2 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.35rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+
+  .loading-container {
+    padding: 2rem 1rem;
+  }
+}
+
+// ========================================
+// RESPONSIVE - MOBILE PEQUEÑO
+// ========================================
+@media (max-width: 400px) {
+  .perfil-container {
+    margin: 0.75rem;
+    padding: 1rem;
+  }
+
+  .perfil-header {
+    gap: 0.5rem;
+    padding-bottom: 0.85rem;
+  }
+
+  .perfil-info {
+    h1 {
+      font-size: 1.35rem;
+    }
+
+    .ubicacion {
+      font-size: 0.85rem;
+    }
+  }
+
+  .stats-section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .stats-grid {
+    gap: 0.85rem;
+
+    .stat-card {
+      padding: 1rem;
+      flex-direction: column;
+      text-align: center;
+      gap: 0.75rem;
+
+      .stat-icon {
+        font-size: 36px;
+        width: 36px;
+        height: 36px;
+      }
+
+      .stat-content {
+        h3 {
+          font-size: 1.5rem;
+        }
+
+        p {
+          font-size: 0.8rem;
+        }
+
+        .estrellas {
+          justify-content: center;
+        }
+      }
+    }
+  }
+
+  .perfil-section {
+    margin-top: 1rem;
+
+    h2 {
+      font-size: 1.15rem;
+      margin-bottom: 0.65rem;
+    }
+
+    p {
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+  }
 }

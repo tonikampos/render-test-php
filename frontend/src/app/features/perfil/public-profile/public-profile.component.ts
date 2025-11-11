@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { UsuariosService } from '../../../core/services/usuarios.service';
 import { ValoracionesService } from '../../../core/services/valoraciones.service';
+import { ConversacionesService } from '../../../core/services/conversaciones.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { User, Valoracion } from '../../../shared/models';
 import { ValoracionesListComponent } from '../../../shared/components/valoraciones-list/valoraciones-list.component';
 
@@ -20,6 +23,7 @@ import { ValoracionesListComponent } from '../../../shared/components/valoracion
     MatCardModule,
     MatProgressSpinnerModule,
     MatIconModule,
+    MatButtonModule,
     ValoracionesListComponent 
   ],
   templateUrl: './public-profile.component.html',
@@ -29,11 +33,15 @@ export class PublicProfileComponent implements OnInit {
   usuario: User | null = null;
   valoraciones: Valoracion[] = [];
   loading = true;
+  sendingMessage = false;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private usuariosService: UsuariosService,
     private valoracionesService: ValoracionesService,
+    private conversacionesService: ConversacionesService,
+    private authService: AuthService,
     private snackBar: MatSnackBar
   ) { }
 
@@ -67,5 +75,54 @@ export class PublicProfileComponent implements OnInit {
   private handleError(): void {
     this.loading = false;
     this.snackBar.open('Error ao cargar o perfil do usuario.', 'Cerrar', { duration: 3000 });
+  }
+
+  get isOwnProfile(): boolean {
+    const currentUser = this.authService.getCurrentUser();
+    return currentUser ? (currentUser as any).id === this.usuario?.id : false;
+  }
+
+  get isLoggedIn(): boolean {
+    return !!this.authService.getCurrentUser();
+  }
+
+  iniciarConversacion(): void {
+    if (!this.usuario) return;
+    
+    this.sendingMessage = true;
+    
+    console.log('Iniciando conversación con usuario:', this.usuario.id);
+    
+    this.conversacionesService.create({
+      usuario2_id: this.usuario.id,
+      mensaje_inicial: `Ola ${this.usuario.nombre_usuario}! Estou interesado en contactar contigo.`
+    }).subscribe({
+      next: (res) => {
+        console.log('Respuesta del backend:', JSON.stringify(res, null, 2));
+        console.log('res.data:', res.data);
+        if (res.success) {
+          this.snackBar.open('Conversación iniciada', 'Ok', { duration: 2000 });
+          // El backend devuelve conversacion_id en data
+          const conversacionId = (res.data as any)?.conversacion_id || res.data?.id;
+          console.log('ID extraído:', conversacionId);
+          if (conversacionId) {
+            console.log('Navegando a:', '/conversaciones/' + conversacionId);
+            this.router.navigate(['/conversaciones', conversacionId]);
+          } else {
+            console.error('No se recibió ID de conversación:', res);
+            this.router.navigate(['/conversaciones']);
+          }
+        } else {
+          console.error('Error en respuesta:', res);
+          this.snackBar.open(res.message || 'Error ao iniciar conversación', 'Cerrar', { duration: 3000 });
+        }
+        this.sendingMessage = false;
+      },
+      error: (err) => {
+        console.error('Error completo:', err);
+        this.snackBar.open(err.error?.message || 'Error ao iniciar conversación', 'Cerrar', { duration: 3000 });
+        this.sendingMessage = false;
+      }
+    });
   }
 }

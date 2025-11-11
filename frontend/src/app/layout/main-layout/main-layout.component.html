@@ -1,5 +1,120 @@
-<app-header></app-header>
+<mat-sidenav-container class="sidenav-container">
+  <!-- Sidenav para móvil -->
+  <mat-sidenav 
+    #sidenav 
+    mode="over" 
+    position="start"
+    class="mobile-sidenav">
+    
+    <div class="sidenav-header">
+      <mat-icon class="sidenav-logo">recycling</mat-icon>
+      <h2>GaliTroco</h2>
+      <button mat-icon-button (click)="closeSidenav()" aria-label="Cerrar menú">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
 
-<main class="content">
-  <router-outlet></router-outlet>
-</main>
+    <mat-divider></mat-divider>
+
+    <mat-nav-list>
+      <!-- Usuario autenticado -->
+      <ng-container *ngIf="authService.currentUser$ | async as user">
+        <div class="user-info">
+          <mat-icon class="user-avatar">account_circle</mat-icon>
+          <div class="user-details">
+            <span class="user-name">{{ user.nombre_usuario }}</span>
+            <span class="user-email">{{ user.email }}</span>
+          </div>
+        </div>
+        
+        <mat-divider></mat-divider>
+
+        <a mat-list-item routerLink="/perfil" (click)="closeSidenav()">
+          <mat-icon matListItemIcon>person</mat-icon>
+          <span matListItemTitle>Mi Perfil</span>
+        </a>
+
+        <a mat-list-item routerLink="/habilidades" (click)="closeSidenav()">
+          <mat-icon matListItemIcon>category</mat-icon>
+          <span matListItemTitle>Explorar Habilidades</span>
+        </a>
+
+        <a mat-list-item routerLink="/habilidades/nueva" (click)="closeSidenav()">
+          <mat-icon matListItemIcon>add_circle</mat-icon>
+          <span matListItemTitle>Ofrecer Habilidad</span>
+        </a>
+
+        <a mat-list-item routerLink="/intercambios" (click)="closeSidenav()">
+          <mat-icon matListItemIcon>inbox</mat-icon>
+          <span matListItemTitle>Mis Intercambios</span>
+        </a>
+
+        <a mat-list-item routerLink="/notificaciones" (click)="closeSidenav()">
+          <mat-icon matListItemIcon>notifications</mat-icon>
+          <span matListItemTitle>Notificaciones</span>
+        </a>
+
+        <a mat-list-item routerLink="/conversaciones" (click)="closeSidenav()">
+          <mat-icon matListItemIcon>chat</mat-icon>
+          <span matListItemTitle>Mensajes</span>
+        </a>
+
+        <mat-divider *ngIf="authService.isAdmin()"></mat-divider>
+
+        <!-- Opciones Admin -->
+        <ng-container *ngIf="authService.isAdmin()">
+          <h3 mat-subheader class="admin-subheader">
+            <mat-icon>admin_panel_settings</mat-icon>
+            Administración
+          </h3>
+
+          <a mat-list-item routerLink="/admin/reportes" (click)="closeSidenav()">
+            <mat-icon matListItemIcon color="warn">report_problem</mat-icon>
+            <span matListItemTitle>Gestionar Reportes</span>
+          </a>
+
+          <a mat-list-item routerLink="/admin/usuarios" (click)="closeSidenav()">
+            <mat-icon matListItemIcon color="warn">manage_accounts</mat-icon>
+            <span matListItemTitle>Gestionar Usuarios</span>
+          </a>
+        </ng-container>
+
+        <mat-divider></mat-divider>
+
+        <a mat-list-item (click)="logout()">
+          <mat-icon matListItemIcon color="accent">logout</mat-icon>
+          <span matListItemTitle>Cerrar Sesión</span>
+        </a>
+      </ng-container>
+
+      <!-- Usuario NO autenticado -->
+      <ng-container *ngIf="!(authService.currentUser$ | async)">
+        <a mat-list-item routerLink="/habilidades" (click)="closeSidenav()">
+          <mat-icon matListItemIcon>category</mat-icon>
+          <span matListItemTitle>Explorar Habilidades</span>
+        </a>
+
+        <mat-divider></mat-divider>
+
+        <a mat-list-item routerLink="/login" (click)="closeSidenav()">
+          <mat-icon matListItemIcon>login</mat-icon>
+          <span matListItemTitle>Iniciar Sesión</span>
+        </a>
+
+        <a mat-list-item routerLink="/register" (click)="closeSidenav()">
+          <mat-icon matListItemIcon color="accent">person_add</mat-icon>
+          <span matListItemTitle>Crear Cuenta</span>
+        </a>
+      </ng-container>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- Contenido principal -->
+  <mat-sidenav-content>
+    <app-header #header (menuToggle)="toggleSidenav()"></app-header>
+    
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

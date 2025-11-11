@@ -1,4 +1,14 @@
 <mat-toolbar color="primary" class="main-header">
+  <!-- Botón hamburguesa (solo móvil) -->
+  <button 
+    mat-icon-button 
+    class="menu-toggle" 
+    (click)="toggleSidenav()"
+    aria-label="Abrir menú">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <!-- Logo -->
   <a routerLink="/" class="logo">
     <mat-icon>recycling</mat-icon>
     <span>GaliTroco</span>
@@ -6,46 +16,56 @@
 
   <span class="spacer"></span>
 
-  <a mat-button routerLink="/habilidades">Explorar Habilidades</a>
+  <!-- Navegación Desktop -->
+  <div class="nav-desktop">
+    <a mat-button routerLink="/habilidades">Explorar Habilidades</a>
 
-  <ng-container *ngIf="!(authService.currentUser$ | async)">
-    <a mat-button routerLink="/login">Iniciar Sesión</a>
-    <a mat-raised-button color="accent" routerLink="/register">Crear Cuenta</a>
-  </ng-container>
+    <ng-container *ngIf="!(authService.currentUser$ | async)">
+      <a mat-button routerLink="/login">Iniciar Sesión</a>
+      <a mat-raised-button color="accent" routerLink="/register">Crear Cuenta</a>
+    </ng-container>
 
-  <ng-container *ngIf="authService.currentUser$ | async as user">
-    <a mat-button routerLink="/habilidades/nueva" class="nav-button-desktop">
-      <mat-icon>add</mat-icon>
-      Ofrecer Habilidad
-    </a>
-    <a mat-button routerLink="/intercambios" class="nav-button-desktop">
-      <mat-icon>inbox</mat-icon>
-      Mis Intercambios
-    </a>
-
-    <ng-container *ngIf="authService.isAdmin()">
-      <a mat-button routerLink="/admin/reportes" class="nav-button-desktop admin-link">
-        <mat-icon>report_problem</mat-icon> Gestionar Reportes
+    <ng-container *ngIf="authService.currentUser$ | async as user">
+      <a mat-button routerLink="/habilidades/nueva">
+        <mat-icon>add</mat-icon>
+        Ofrecer Habilidad
       </a>
-      <a mat-button routerLink="/admin/usuarios" class="nav-button-desktop admin-link">
-        <mat-icon>manage_accounts</mat-icon>
-        Gestionar Usuarios
+      <a mat-button routerLink="/intercambios">
+        <mat-icon>inbox</mat-icon>
+        Mis Intercambios
       </a>
+      <app-notification-badge></app-notification-badge>
+      <a mat-button routerLink="/conversaciones">
+        <mat-icon>chat</mat-icon>
+        Mensajes
+      </a>
+
+      <ng-container *ngIf="authService.isAdmin()">
+        <a mat-button routerLink="/admin/reportes" class="admin-link">
+          <mat-icon>report_problem</mat-icon> 
+          Reportes
+        </a>
+        <a mat-button routerLink="/admin/usuarios" class="admin-link">
+          <mat-icon>manage_accounts</mat-icon>
+          Usuarios
+        </a>
       </ng-container>
-    <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-trigger">
-      <mat-icon>account_circle</mat-icon>
-      <span>{{ user.nombre_usuario }}</span>
-      <mat-icon>arrow_drop_down</mat-icon>
-    </button>
-    <mat-menu #userMenu="matMenu">
-      <button mat-menu-item routerLink="/perfil">
-        <mat-icon>person</mat-icon>
-        <span>Mi Perfil</span>
+
+      <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-trigger">
+        <mat-icon>account_circle</mat-icon>
+        <span class="username-desktop">{{ user.nombre_usuario }}</span>
+        <mat-icon>arrow_drop_down</mat-icon>
       </button>
-      <button mat-menu-item (click)="logout()">
-        <mat-icon>logout</mat-icon>
-        <span>Cerrar Sesión</span>
-      </button>
-    </mat-menu>
-  </ng-container>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item routerLink="/perfil">
+          <mat-icon>person</mat-icon>
+          <span>Mi Perfil</span>
+        </button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar Sesión</span>
+        </button>
+      </mat-menu>
+    </ng-container>
+  </div>
 </mat-toolbar>

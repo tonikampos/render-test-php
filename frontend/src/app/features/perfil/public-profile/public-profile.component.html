@@ -12,6 +12,18 @@
           <mat-icon>location_on</mat-icon> {{ usuario.ubicacion }}
         </p>
       </div>
+      
+      <div class="perfil-actions" *ngIf="isLoggedIn && !isOwnProfile">
+        <button 
+          mat-raised-button 
+          color="primary"
+          (click)="iniciarConversacion()"
+          [disabled]="sendingMessage">
+          <mat-icon>chat</mat-icon>
+          <span *ngIf="!sendingMessage">Enviar mensaje</span>
+          <span *ngIf="sendingMessage">Enviando...</span>
+        </button>
+      </div>
     </header>
 
     <section class="perfil-section" *ngIf="usuario.biografia">

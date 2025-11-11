@@ -5,3 +5,7 @@ export * from './api-response.model';
 export * from './intercambio.model';
 export * from './valoracion.model';
 export * from './reporte.model';
+export * from './conversacion.model';
+export * from './mensaje.model';
+export * from './notificacion.model';
+

@@ -11,55 +11,115 @@
   <!-- Filtros -->
   <mat-card class="filters-card">
     <form [formGroup]="filterForm" class="filters-form">
-      <!-- Búsqueda -->
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Buscar</mat-label>
-        <input matInput formControlName="search" placeholder="Ej: programación, inglés...">
-        <mat-icon matPrefix>search</mat-icon>
-      </mat-form-field>
+      <!-- Fila 1: Búsqueda principal y Tipo -->
+      <div class="filters-row filters-main">
+        <!-- Búsqueda -->
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar</mat-label>
+          <input matInput formControlName="search" placeholder="Ej: programación, inglés...">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
 
-      <!-- Tipo -->
-      <mat-form-field appearance="outline">
-        <mat-label>Tipo</mat-label>
-        <mat-select formControlName="tipo">
-          <mat-option value="">Todos</mat-option>
-          <mat-option value="oferta">Ofertas</mat-option>
-          <mat-option value="demanda">Demandas</mat-option>
-        </mat-select>
-        <mat-icon matPrefix>swap_horiz</mat-icon>
-      </mat-form-field>
+        <!-- Tipo -->
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo</mat-label>
+          <mat-select formControlName="tipo">
+            <mat-option value="">Todos</mat-option>
+            <mat-option value="oferta">Ofertas</mat-option>
+            <mat-option value="demanda">Demandas</mat-option>
+          </mat-select>
+          <mat-icon matPrefix>swap_horiz</mat-icon>
+        </mat-form-field>
 
-      <!-- Categoría -->
-      <mat-form-field appearance="outline">
-        <mat-label>Categoría</mat-label>
-        <mat-select formControlName="categoria">
-          <mat-option value="">Todas</mat-option>
-          <mat-option *ngFor="let cat of categorias" [value]="cat.nombre">
-            {{ cat.nombre }}
-          </mat-option>
-        </mat-select>
-        <mat-icon matPrefix>label</mat-icon>
-      </mat-form-field>
+        <!-- Ordenar -->
+        <mat-form-field appearance="outline">
+          <mat-label>Ordenar por</mat-label>
+          <mat-select formControlName="orden">
+            <mat-option *ngFor="let opt of ordenOptions" [value]="opt.value">
+              {{ opt.label }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>sort</mat-icon>
+        </mat-form-field>
 
-      <!-- Ubicación -->
-      <mat-form-field appearance="outline">
-        <mat-label>Ubicación</mat-label>
-        <input matInput formControlName="ubicacion" placeholder="Ciudad...">
-        <mat-icon matPrefix>location_on</mat-icon>
-      </mat-form-field>
+        <!-- Botón Filtros Avanzados -->
+        <button 
+          mat-stroked-button 
+          type="button" 
+          class="toggle-filters-btn"
+          (click)="toggleFilters()">
+          <mat-icon>{{ filtersExpanded ? 'expand_less' : 'tune' }}</mat-icon>
+          Filtros Avanzados
+          <span *ngIf="activeFiltersCount > 0" class="filter-badge">{{ activeFiltersCount }}</span>
+        </button>
+      </div>
 
-      <!-- Botón Limpiar -->
-      <button mat-stroked-button type="button" (click)="clearFilters()">
-        <mat-icon>clear</mat-icon>
-        Limpiar
-      </button>
+      <!-- Panel Expandible: Filtros Avanzados -->
+      <mat-expansion-panel 
+        [(expanded)]="filtersExpanded"
+        class="filters-expansion">
+        <div class="filters-row">
+          <!-- Categoría -->
+          <mat-form-field appearance="outline">
+            <mat-label>Categoría</mat-label>
+            <mat-select formControlName="categoria">
+              <mat-option value="">Todas</mat-option>
+              <mat-option *ngFor="let cat of categorias" [value]="cat.nombre">
+                {{ cat.nombre }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>label</mat-icon>
+          </mat-form-field>
+
+          <!-- Ubicación -->
+          <mat-form-field appearance="outline">
+            <mat-label>Ubicación</mat-label>
+            <input matInput formControlName="ubicacion" placeholder="Ciudad...">
+            <mat-icon matPrefix>location_on</mat-icon>
+          </mat-form-field>
+
+          <!-- Duración -->
+          <mat-form-field appearance="outline">
+            <mat-label>Duración estimada</mat-label>
+            <mat-select formControlName="duracion">
+              <mat-option value="">Cualquiera</mat-option>
+              <mat-option *ngFor="let opt of duracionOptions" [value]="opt.value">
+                {{ opt.label }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>schedule</mat-icon>
+          </mat-form-field>
+
+          <!-- Modalidad -->
+          <mat-form-field appearance="outline">
+            <mat-label>Modalidad</mat-label>
+            <mat-select formControlName="modalidad">
+              <mat-option value="">Cualquiera</mat-option>
+              <mat-option *ngFor="let opt of modalidadOptions" [value]="opt.value">
+                {{ opt.label }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>language</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Botón Limpiar Filtros -->
+        <div class="filters-actions">
+          <button mat-stroked-button type="button" (click)="clearFilters()" color="warn">
+            <mat-icon>clear_all</mat-icon>
+            Limpiar todos los filtros
+          </button>
+        </div>
+      </mat-expansion-panel>
     </form>
   </mat-card>
 
-  <!-- Loading Spinner -->
-  <div *ngIf="loading" class="loading-container">
-    <mat-spinner></mat-spinner>
-    <p>Cargando habilidades...</p>
+  <!-- Loading Skeleton -->
+  <div *ngIf="loading" class="habilidades-grid">
+    <app-skeleton-loader 
+      *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12]" 
+      type="card">
+    </app-skeleton-loader>
   </div>
 
   <!-- Grid de Habilidades -->
@@ -69,6 +129,12 @@
       <div class="tipo-badge" [class.oferta]="habilidad.tipo === 'oferta'" [class.demanda]="habilidad.tipo === 'demanda'">
         <mat-icon>{{ getTipoIcon(habilidad.tipo) }}</mat-icon>
         <span>{{ habilidad.tipo | uppercase }}</span>
+      </div>
+
+      <!-- Badge Pausada -->
+      <div *ngIf="habilidad.estado === 'pausada'" class="pausada-badge">
+        <mat-icon>pause_circle</mat-icon>
+        <span>PAUSADA</span>
       </div>
 
       <mat-card-header>
@@ -113,12 +179,21 @@
 
   <!-- Sin Resultados -->
   <div *ngIf="!loading && habilidades.length === 0" class="no-results">
-    <mat-icon>search_off</mat-icon>
+    <div class="no-results-icon">
+      <mat-icon>search_off</mat-icon>
+    </div>
     <h2>No se encontraron habilidades</h2>
-    <p>Intenta ajustar los filtros o búsqueda</p>
-    <button mat-raised-button color="primary" (click)="clearFilters()">
-      Limpiar Filtros
-    </button>
+    <p>Intenta ajustar los filtros de búsqueda o explora otras categorías</p>
+    <div class="no-results-actions">
+      <button mat-raised-button color="primary" (click)="clearFilters()">
+        <mat-icon>refresh</mat-icon>
+        Limpiar Filtros
+      </button>
+      <button mat-stroked-button routerLink="/habilidades/nueva" *ngIf="authService.isAuthenticated()">
+        <mat-icon>add</mat-icon>
+        Ofrecer Habilidad
+      </button>
+    </div>
   </div>
 
   <!-- Paginación -->

@@ -1,0 +1,295 @@
+// ========================================
+// CONTAINER
+// ========================================
+.perfil-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-height: calc(100vh - 200px);
+}
+
+// ========================================
+// LOADING
+// ========================================
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+
+  mat-spinner {
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-top: 0.5rem;
+  }
+}
+
+// ========================================
+// HEADER
+// ========================================
+.perfil-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #eee;
+  margin-bottom: 2rem;
+}
+
+.perfil-actions {
+  button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+.perfil-info {
+  flex: 1;
+
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+    line-height: 1.2;
+  }
+
+  .ubicacion {
+    margin: 0.75rem 0 0;
+    font-size: 1rem;
+    color: #777;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: #3f51b5;
+    }
+  }
+}
+
+// ========================================
+// SECTIONS
+// ========================================
+.perfil-section {
+  margin-top: 2rem;
+
+  h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #444;
+    border-bottom: 2px solid #3f51b5;
+    padding-bottom: 0.5rem;
+    display: inline-block;
+  }
+
+  p {
+    color: #666;
+    line-height: 1.6;
+    font-size: 1rem;
+    margin: 0.5rem 0;
+  }
+}
+
+// ========================================
+// NO USUARIO
+// ========================================
+div > p {
+  text-align: center;
+  color: #999;
+  font-size: 1.1rem;
+  padding: 2rem;
+}
+
+// ========================================
+// RESPONSIVE - TABLET
+// ========================================
+@media (max-width: 768px) {
+  .perfil-container {
+    margin: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .perfil-header {
+    gap: 1rem;
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .perfil-info {
+    h1 {
+      font-size: 1.75rem;
+    }
+
+    .ubicacion {
+      font-size: 0.95rem;
+      gap: 0.3rem;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  .perfil-section {
+    margin-top: 1.5rem;
+
+    h2 {
+      font-size: 1.35rem;
+      margin-bottom: 0.85rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+    }
+  }
+
+  .loading-container {
+    padding: 3rem 1.5rem;
+
+    p {
+      font-size: 1rem;
+    }
+  }
+}
+
+// ========================================
+// RESPONSIVE - MOBILE
+// ========================================
+@media (max-width: 600px) {
+  .perfil-container {
+    margin: 1rem;
+    padding: 1.25rem;
+    border-radius: 6px;
+  }
+
+  .perfil-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .perfil-info {
+    width: 100%;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    .ubicacion {
+      font-size: 0.9rem;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+
+  .perfil-section {
+    margin-top: 1.25rem;
+
+    h2 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.35rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+
+  .loading-container {
+    padding: 2rem 1rem;
+
+    p {
+      font-size: 0.95rem;
+    }
+  }
+
+  div > p {
+    font-size: 1rem;
+    padding: 1.5rem 1rem;
+  }
+}
+
+// ========================================
+// RESPONSIVE - MOBILE PEQUEÑO
+// ========================================
+@media (max-width: 400px) {
+  .perfil-container {
+    margin: 0.75rem;
+    padding: 1rem;
+  }
+
+  .perfil-header {
+    gap: 0.5rem;
+    padding-bottom: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .perfil-info {
+    h1 {
+      font-size: 1.35rem;
+    }
+
+    .ubicacion {
+      font-size: 0.85rem;
+      gap: 0.25rem;
+
+      mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+
+  .perfil-section {
+    margin-top: 1rem;
+
+    h2 {
+      font-size: 1.15rem;
+      margin-bottom: 0.65rem;
+      padding-bottom: 0.3rem;
+    }
+
+    p {
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+  }
+
+  .loading-container {
+    padding: 1.5rem 0.75rem;
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+
+  div > p {
+    font-size: 0.9rem;
+    padding: 1.25rem 0.75rem;
+  }
+}

@@ -8,6 +8,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { HabilidadesService } from '../../../core/services/habilidades.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Habilidad } from '../../../shared/models';
@@ -17,6 +18,11 @@ import { ProponerIntercambioDialogComponent } from '../../intercambios/proponer-
 
 // CAMBIO REPORTE: Engadir import para o diálogo de reporte
 import { ReportarDialogComponent } from '../../reportes/reportar-dialog/reportar-dialog.component';
+
+// CAMBIO ELIMINAR: Import do diálogo de confirmación
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+
+import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 
 
 @Component({
@@ -32,7 +38,9 @@ import { ReportarDialogComponent } from '../../reportes/reportar-dialog/reportar
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatDividerModule,
-    MatDialogModule // Xa inclúe o necesario para ambos diálogos
+    MatDialogModule,
+    MatSlideToggleModule,
+    SkeletonLoaderComponent
   ],
   templateUrl: './habilidad-detail.component.html',
   styleUrl: './habilidad-detail.component.scss'
@@ -41,6 +49,7 @@ export class HabilidadDetailComponent implements OnInit {
   habilidad: Habilidad | null = null;
   loading = true;
   isOwner = false;
+  togglingEstado = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -48,7 +57,7 @@ export class HabilidadDetailComponent implements OnInit {
     private habilidadesService: HabilidadesService,
     public authService: AuthService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog // Xa está inxectado
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -103,17 +112,32 @@ export class HabilidadDetailComponent implements OnInit {
   }
 
   deleteHabilidad(): void {
-    if (!this.habilidad || !confirm('¿Estás seguro de eliminar esta habilidad?')) {
+    if (!this.habilidad) {
       return;
     }
 
-    this.habilidadesService.delete(this.habilidad.id).subscribe({
-      next: () => {
-        this.snackBar.open('Habilidad eliminada correctamente', 'Cerrar', { duration: 3000 });
-        this.router.navigate(['/habilidades']);
-      },
-      error: (error) => {
-        this.snackBar.open('Error al eliminar la habilidad', 'Cerrar', { duration: 3000 });
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '450px',
+      data: {
+        title: 'Eliminar Habilidad',
+        message: `¿Estás seguro de que deseas eliminar "${this.habilidad.titulo}"? Esta acción no se puede deshacer.`,
+        confirmText: 'Eliminar',
+        cancelText: 'Cancelar',
+        confirmColor: 'warn'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed && this.habilidad) {
+        this.habilidadesService.delete(this.habilidad.id).subscribe({
+          next: () => {
+            this.snackBar.open('Habilidad eliminada correctamente', 'Cerrar', { duration: 3000 });
+            this.router.navigate(['/habilidades']);
+          },
+          error: (error) => {
+            this.snackBar.open('Error al eliminar la habilidad', 'Cerrar', { duration: 3000 });
+          }
+        });
       }
     });
   }
@@ -156,5 +180,51 @@ export class HabilidadDetailComponent implements OnInit {
         this.snackBar.open('Reporte enviado. Revisarémolo pronto.', 'OK', { duration: 3000 });
       }
     });
+  }
+
+  toggleEstadoHabilidad(): void {
+    if (!this.habilidad || this.togglingEstado) return;
+
+    const nuevoEstado: 'activa' | 'pausada' = this.habilidad.estado === 'activa' ? 'pausada' : 'activa';
+    const accion = nuevoEstado === 'pausada' ? 'pausar' : 'activar';
+    
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '450px',
+      data: {
+        title: `${accion.charAt(0).toUpperCase() + accion.slice(1)} Habilidad`,
+        message: `¿Estás seguro de que deseas ${accion} "${this.habilidad.titulo}"?`,
+        confirmText: accion.charAt(0).toUpperCase() + accion.slice(1),
+        cancelText: 'Cancelar',
+        confirmColor: nuevoEstado === 'pausada' ? 'warn' : 'primary'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed && this.habilidad) {
+        this.togglingEstado = true;
+
+        // Llamar al endpoint de actualización de estado
+        this.habilidadesService.cambiarEstado(this.habilidad.id, nuevoEstado).subscribe({
+          next: (response) => {
+            this.togglingEstado = false;
+            if (response.success && this.habilidad) {
+              this.habilidad.estado = nuevoEstado;
+              const mensaje = nuevoEstado === 'pausada' 
+                ? 'Habilidad pausada. No aparecerá en las búsquedas.'
+                : 'Habilidad activada. Visible en las búsquedas.';
+              this.snackBar.open(mensaje, 'Cerrar', { duration: 4000 });
+            }
+          },
+          error: () => {
+            this.togglingEstado = false;
+            this.snackBar.open('Error al cambiar el estado de la habilidad', 'Cerrar', { duration: 3000 });
+          }
+        });
+      }
+    });
+  }
+
+  get estaActiva(): boolean {
+    return this.habilidad?.estado === 'activa';
   }
 }

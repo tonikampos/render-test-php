@@ -87,6 +87,12 @@
           background: #fce4ec;
           color: #c2185b;
         }
+
+        .pausada-chip {
+          background: #fff3e0;
+          color: #f57c00;
+          font-weight: 600;
+        }
       }
     }
 
@@ -202,6 +208,57 @@
   }
 
   .owner-actions-card {
+    mat-card-content {
+      padding: 1rem 1rem 0.5rem;
+
+      .estado-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        gap: 1rem;
+
+        .toggle-label {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          flex: 1;
+
+          mat-icon {
+            font-size: 32px;
+            width: 32px;
+            height: 32px;
+            transition: color 0.3s ease;
+
+            &.activa {
+              color: #4caf50;
+            }
+
+            &.pausada {
+              color: #f57c00;
+            }
+          }
+
+          .toggle-text {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+
+            .estado-text {
+              font-weight: 600;
+              font-size: 1rem;
+              color: #333;
+            }
+
+            .estado-descripcion {
+              font-size: 0.8rem;
+              color: #666;
+            }
+          }
+        }
+      }
+    }
+
     mat-card-actions {
       padding: 0 1rem 1rem;
       display: flex;

@@ -53,6 +53,13 @@ export class HabilidadesService {
   }
 
   /**
+   * Cambiar estado de habilidad (activa/pausada)
+   */
+  cambiarEstado(id: number, estado: 'activa' | 'pausada'): Observable<ApiResponse<Habilidad>> {
+    return this.apiService.put<ApiResponse<Habilidad>>(`habilidades/${id}/estado`, { estado });
+  }
+
+  /**
    * Obtener habilidades de un usuario específico
    */
   getByUser(userId: number): Observable<ApiResponse<Habilidad[]>> {

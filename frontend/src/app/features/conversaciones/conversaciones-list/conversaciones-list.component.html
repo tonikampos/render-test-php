@@ -1,0 +1,59 @@
+<div class="conversaciones-container">
+  <div class="page-header">
+    <h1>
+      <mat-icon>chat</mat-icon>
+      Mis Conversaciones
+    </h1>
+    <p class="subtitle">Mantén contacto con otros usuarios de GaliTroco</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <app-skeleton-loader *ngFor="let i of [1,2,3,4,5]" type="list-item"></app-skeleton-loader>
+  </div>
+
+  <div *ngIf="!loading && conversaciones.length === 0" class="no-results">
+    <div class="no-results-icon">
+      <mat-icon>chat_bubble_outline</mat-icon>
+    </div>
+    <h2>No tienes conversaciones</h2>
+    <p>Cuando inicies una conversación con otro usuario, aparecerá aquí.</p>
+    <div class="no-results-actions">
+      <button mat-raised-button color="primary" routerLink="/habilidades">
+        <mat-icon>explore</mat-icon>
+        Explorar Habilidades
+      </button>
+    </div>
+  </div>
+
+  <mat-card *ngIf="!loading && conversaciones.length > 0" class="conversaciones-card">
+    <mat-list>
+      <mat-list-item 
+        *ngFor="let conv of conversaciones; let last = last" 
+        [routerLink]="['/conversaciones', conv.id]"
+        class="conversacion-item">
+        
+        <mat-icon matListItemIcon>account_circle</mat-icon>
+        
+        <div matListItemTitle class="conversacion-title">
+          <span class="usuario-nombre">{{ conv.otro_usuario_nombre }}</span>
+          <span class="tiempo" *ngIf="conv.ultimo_mensaje_fecha">
+            {{ getTimeAgo(conv.ultimo_mensaje_fecha) }}
+          </span>
+        </div>
+        
+        <div matListItemLine class="conversacion-preview">
+          <span [class.no-leido]="conv.mensajes_no_leidos && conv.mensajes_no_leidos > 0">
+            {{ conv.ultimo_mensaje || 'No hay mensajes aún' }}
+          </span>
+        </div>
+
+        <div matListItemMeta *ngIf="conv.mensajes_no_leidos && conv.mensajes_no_leidos > 0">
+          <span class="badge-no-leidos" [matBadge]="conv.mensajes_no_leidos" matBadgeColor="warn" matBadgeSize="small">
+          </span>
+        </div>
+
+        <mat-divider *ngIf="!last"></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </mat-card>
+</div>

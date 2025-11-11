@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -8,6 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 
 import { AuthService } from '../../core/services/auth.service';
+import { NotificationBadgeComponent } from '../../shared/components/notification-badge/notification-badge.component';
 
 @Component({
   selector: 'app-header',
@@ -19,12 +20,14 @@ import { AuthService } from '../../core/services/auth.service';
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    MatMenuModule
+    MatMenuModule,
+    NotificationBadgeComponent
   ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
+  @Output() menuToggle = new EventEmitter<void>();
 
   constructor(public authService: AuthService, private router: Router) {}
 
@@ -32,5 +35,9 @@ export class HeaderComponent {
     this.authService.logout().subscribe(() => {
       this.router.navigate(['/login']);
     });
+  }
+
+  toggleSidenav(): void {
+    this.menuToggle.emit();
   }
 }

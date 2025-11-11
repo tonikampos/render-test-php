@@ -56,6 +56,21 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'conversaciones',
+    loadComponent: () => import('./features/conversaciones/conversaciones-list/conversaciones-list.component').then(m => m.ConversacionesListComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'conversaciones/:id',
+    loadComponent: () => import('./features/conversaciones/conversacion-detail/conversacion-detail.component').then(m => m.ConversacionDetailComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'notificaciones',
+    loadComponent: () => import('./features/notificaciones/notificaciones-list/notificaciones-list.component').then(m => m.NotificacionesListComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'admin/reportes',
     loadComponent: () => import('./features/admin/reportes-list/reportes-list.component').then(m => m.ReportesListComponent),
     canActivate: [authGuard, adminGuard]
@@ -66,7 +81,11 @@ export const routes: Routes = [
     canActivate: [authGuard, adminGuard] 
   },
   {
+    path: '404',
+    loadComponent: () => import('./shared/components/not-found/not-found.component').then(m => m.NotFoundComponent)
+  },
+  {
     path: '**',
-    redirectTo: ''
+    redirectTo: '404'
   }
 ];

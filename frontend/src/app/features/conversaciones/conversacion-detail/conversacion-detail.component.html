@@ -1,0 +1,70 @@
+<div class="conversacion-container">
+  <!-- Header -->
+  <div class="chat-header">
+    <button mat-icon-button routerLink="/conversaciones" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="header-info">
+      <mat-icon class="user-icon">account_circle</mat-icon>
+      <div class="user-details">
+        <h2>Conversación #{{ conversacionId }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <app-skeleton-loader *ngFor="let i of [1,2,3,4,5]" type="list-item"></app-skeleton-loader>
+  </div>
+
+  <!-- Mensajes -->
+  <div *ngIf="!loading" class="chat-content">
+    <div class="messages-container" #messagesContainer>
+      <div *ngIf="mensajes.length === 0" class="no-messages">
+        <mat-icon>chat_bubble_outline</mat-icon>
+        <p>No hay mensajes todavía.<br>¡Envía el primero!</p>
+      </div>
+
+      <ng-container *ngFor="let mensaje of mensajes; let i = index">
+        <!-- Separador de fecha -->
+        <div *ngIf="shouldShowDateSeparator(i)" class="date-separator">
+          <span>{{ formatDate(mensaje.fecha_envio) }}</span>
+        </div>
+
+        <!-- Mensaje -->
+        <div class="message-wrapper" [class.sent]="isMiMensaje(mensaje)" [class.received]="!isMiMensaje(mensaje)">
+          <div class="message-bubble">
+            <p class="message-text">{{ mensaje.contenido }}</p>
+            <span class="message-time">{{ formatTime(mensaje.fecha_envio) }}</span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Formulario de envío -->
+    <div class="message-input-container">
+      <form [formGroup]="mensajeForm" (ngSubmit)="onSubmit()" class="message-form">
+        <mat-form-field appearance="outline" class="message-field">
+          <textarea 
+            matInput 
+            formControlName="contenido"
+            placeholder="Escribe un mensaje..."
+            rows="1"
+            [maxLength]="1000"
+            (keydown.enter)="onEnterPress($any($event))"></textarea>
+          <mat-hint align="end">{{ contenido?.value?.length || 0 }}/1000</mat-hint>
+        </mat-form-field>
+
+        <button 
+          mat-fab 
+          color="primary" 
+          type="submit"
+          [disabled]="mensajeForm.invalid || sending"
+          class="send-button">
+          <mat-spinner *ngIf="sending" diameter="24"></mat-spinner>
+          <mat-icon *ngIf="!sending">send</mat-icon>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

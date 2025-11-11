@@ -4,8 +4,6 @@
 
 ---
 
-probas
-
 ## 📋 Índice
 
 1. [Resumen Ejecutivo](#resumen-ejecutivo)
@@ -51,7 +49,7 @@ Usuario → HTTP Request → Apache → PHP 8.2 → PostgreSQL
 El backend **procesa** cada petición dinámicamente:
 - Ejecuta código PHP
 - Conecta a base de datos
-- Valida autenticación (JWT)
+- Valida autenticación (Sesiones PHP + tokens hexadecimales)
 - Genera respuestas personalizadas
 
 #### 2. Dependencias del Sistema
@@ -62,7 +60,7 @@ FROM php:8.2-apache
 RUN docker-php-ext-install pdo pdo_pgsql
 
 # Configuración de Apache
-RUN a2enmod rewrite
+RUN a2enmod rewrite headers
 
 # Variables de entorno
 ENV DB_HOST=...
@@ -180,6 +178,12 @@ Free Tier de Render:
 └── Total: GRATIS ✅
 ```
 
+**⚠️ Limitación importante del Free Tier:**
+- **Cold Start:** Tras 15 minutos de inactividad, el backend entra en "sleep mode"
+- **Primera petición:** Tarda 30-90 segundos en "despertar" el servicio
+- **Peticiones posteriores:** Respuesta normal (<500ms) mientras esté activo
+- **Solución:** Acceder a `/api.php?resource=health` antes de usar la aplicación
+
 Si pusieras **ambos en Docker**:
 - ❌ Necesitarías 2 Web Services
 - ❌ Free Tier solo incluye 1 Web Service
@@ -239,19 +243,20 @@ Si pusieras **ambos en Docker**:
    ↓
 3. Backend (Docker) recibe petición
 4. PHP valida credenciales en PostgreSQL
-5. PHP genera token JWT
-6. Backend → JSON con token
+5. PHP genera token hexadecimal (64 caracteres, SHA-256)
+6. PHP crea sesión con cookies (SameSite=None; Secure)
+7. Backend → JSON con token y datos de usuario
    ↓
-7. Angular guarda token en localStorage
-8. Angular actualiza UI (muestra usuario logueado)
+8. Angular guarda token en localStorage
+9. Angular actualiza UI (muestra usuario logueado)
 ```
 
 #### Paso 3: Usuario lista habilidades
 ```
 1. Angular → GET /api.php/habilidades
-   (con header: Authorization: Bearer <token>)
+   (con cookies de sesión PHP automáticas)
    ↓
-2. Backend valida JWT
+2. Backend valida sesión PHP ($_SESSION['user_id'])
 3. Backend consulta PostgreSQL
 4. Backend → JSON con lista de habilidades
    ↓
@@ -274,6 +279,25 @@ $allowed_origins = [
 ];
 ```
 
+**Configuración crítica de cookies para autenticación cross-domain:**
+
+```php
+session_set_cookie_params([
+    'lifetime' => 86400,      // 1 día
+    'path' => '/',
+    'domain' => '',           // Vacío para localhost, dominio específico para producción
+    'secure' => true,         // Solo HTTPS (obligatorio para SameSite=None)
+    'httponly' => true,       // No accesible desde JavaScript (seguridad)
+    'samesite' => 'None'      // Permite cookies cross-domain (crítico)
+]);
+```
+
+**Headers CORS necesarios:**
+- `Access-Control-Allow-Origin`: Dominio específico del frontend (no '*')
+- `Access-Control-Allow-Credentials: true` (obligatorio para cookies)
+- `Access-Control-Allow-Methods`: GET, POST, PUT, DELETE, OPTIONS
+- `Access-Control-Allow-Headers`: Content-Type, Authorization, X-Requested-With
+
 ---
 
 ## 🏆 Ventajas de esta Arquitectura
@@ -283,7 +307,7 @@ $allowed_origins = [
 ```
 Frontend (Presentación)           Backend (Lógica + Datos)
 ├── UI/UX                         ├── API REST
-├── Routing (Angular)             ├── Autenticación JWT
+├── Routing (Angular)             ├── Autenticación (Sesiones PHP + cookies)
 ├── Validación de formularios     ├── Validación de negocio
 ├── Estado de la aplicación       ├── Consultas a BD
 └── Interacción con el usuario    └── Procesamiento de datos
@@ -607,8 +631,8 @@ Resultado: ✅ Nota alta por decisión fundamentada
 
 ---
 
-**Autor**: Toni Kampos  
+**Autor**: Antonio Campos  
 **Proyecto**: Galitroco - Plataforma de Intercambio de Habilidades  
 **Universidad**: UOC (Universitat Oberta de Catalunya)  
 **Documento**: Arquitectura de Deploy  
-**Fecha**: 2 de octubre de 2025
+**Fecha**: 28 de octubre de 2025 (última revisión)

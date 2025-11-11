@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
@@ -53,11 +53,17 @@ export class UsuariosListComponent implements OnInit, AfterViewInit {
 
   totalItems = 0;
   pageSize = 10;
+  isMobile = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   filterForm: FormGroup;
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkViewport();
+  }
 
   constructor(
     private adminService: AdminService,
@@ -71,6 +77,7 @@ export class UsuariosListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.checkViewport();
     this.loadUsuarios();
     this.filterForm.valueChanges.pipe(
       debounceTime(500),
@@ -79,6 +86,10 @@ export class UsuariosListComponent implements OnInit, AfterViewInit {
       if (this.paginator) this.paginator.pageIndex = 0;
       this.loadUsuarios();
     });
+  }
+
+  checkViewport(): void {
+    this.isMobile = window.innerWidth <= 768;
   }
 
   ngAfterViewInit(): void {

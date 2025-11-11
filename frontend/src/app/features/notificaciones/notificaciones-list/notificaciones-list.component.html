@@ -1,0 +1,73 @@
+<div class="notificaciones-container">
+  <div class="notificaciones-header">
+    <h1>
+      <mat-icon>notifications</mat-icon>
+      Notificaciones
+    </h1>
+    <button 
+      mat-raised-button 
+      color="primary"
+      *ngIf="notificacionesNoLeidas > 0"
+      (click)="marcarTodasLeidas()"
+      class="marcar-todas-btn">
+      <mat-icon>done_all</mat-icon>
+      Marcar todas como leídas
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <app-skeleton-loader *ngFor="let i of [1,2,3,4,5,6]" type="list-item"></app-skeleton-loader>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <mat-icon>error</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="loadNotificaciones()">
+      Reintentar
+    </button>
+  </div>
+
+  <div *ngIf="!loading && !error" class="notificaciones-list">
+    <div 
+      *ngFor="let notificacion of notificaciones"
+      class="notificacion-card"
+      [class.no-leida]="!notificacion.leida"
+      (click)="marcarLeida(notificacion)">
+      
+      <div class="notificacion-icon" [class]="getColorNotificacion(notificacion.tipo)">
+        <mat-icon>{{ getIconoNotificacion(notificacion.tipo) }}</mat-icon>
+      </div>
+
+      <div class="notificacion-content">
+        <div class="notificacion-titulo">
+          {{ notificacion.titulo }}
+          <mat-chip *ngIf="!notificacion.leida" class="chip-nueva">Nueva</mat-chip>
+        </div>
+        <p class="notificacion-mensaje">{{ notificacion.mensaje }}</p>
+        <span class="notificacion-fecha">{{ getTimeAgo(notificacion.fecha_creacion) }}</span>
+      </div>
+
+      <div class="notificacion-actions">
+        <mat-icon>chevron_right</mat-icon>
+      </div>
+    </div>
+
+    <div *ngIf="notificaciones.length === 0" class="empty-state">
+      <div class="empty-state-icon">
+        <mat-icon>notifications_none</mat-icon>
+      </div>
+      <h2>No tienes notificaciones</h2>
+      <p>Aquí aparecerán las notificaciones sobre tus intercambios, mensajes y valoraciones</p>
+      <div class="empty-state-actions">
+        <button mat-raised-button color="primary" routerLink="/habilidades">
+          <mat-icon>explore</mat-icon>
+          Explorar Habilidades
+        </button>
+        <button mat-raised-button routerLink="/intercambios">
+          <mat-icon>swap_horiz</mat-icon>
+          Mis Intercambios
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

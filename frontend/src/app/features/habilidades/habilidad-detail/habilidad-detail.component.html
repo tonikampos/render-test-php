@@ -1,7 +1,6 @@
 <div class="detail-container">
   <div *ngIf="loading" class="loading-container">
-    <mat-spinner></mat-spinner>
-    <p>Cargando habilidad...</p>
+    <app-skeleton-loader type="detail"></app-skeleton-loader>
   </div>
 
   <div *ngIf="!loading && habilidad" class="detail-content">
@@ -25,6 +24,10 @@
               <mat-chip>
                 <mat-icon>label</mat-icon>
                 {{ habilidad.categoria }}
+              </mat-chip>
+              <mat-chip *ngIf="habilidad.estado === 'pausada'" class="pausada-chip">
+                <mat-icon>pause_circle</mat-icon>
+                PAUSADA
               </mat-chip>
             </mat-chip-set>
           </div>
@@ -105,6 +108,29 @@
           <mat-card-header>
             <mat-card-title>Tus Acciones</mat-card-title>
           </mat-card-header>
+
+          <mat-card-content>
+            <div class="estado-toggle">
+              <div class="toggle-label">
+                <mat-icon [class.activa]="estaActiva" [class.pausada]="!estaActiva">
+                  {{ estaActiva ? 'visibility' : 'visibility_off' }}
+                </mat-icon>
+                <div class="toggle-text">
+                  <span class="estado-text">{{ estaActiva ? 'Visible' : 'Oculta' }}</span>
+                  <span class="estado-descripcion">
+                    {{ estaActiva ? 'Aparece en búsquedas' : 'No aparece en búsquedas' }}
+                  </span>
+                </div>
+              </div>
+              <mat-slide-toggle 
+                [checked]="estaActiva"
+                [disabled]="togglingEstado"
+                (change)="toggleEstadoHabilidad()"
+                color="primary">
+              </mat-slide-toggle>
+            </div>
+          </mat-card-content>
+
           <mat-card-actions>
             <button mat-button color="primary" (click)="editHabilidad()">
               <mat-icon>edit</mat-icon>

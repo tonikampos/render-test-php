@@ -1,0 +1,115 @@
+// ========================================
+// DIALOG TITLE
+// ========================================
+h1[mat-dialog-title] {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  
+  mat-icon {
+    color: #3f51b5;
+  }
+}
+
+// ========================================
+// DIALOG CONTENT
+// ========================================
+div[mat-dialog-content] {
+  padding: 1.5rem 0;
+  
+  p {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    
+    strong {
+      color: #3f51b5;
+      font-weight: 600;
+    }
+  }
+}
+
+// ========================================
+// FORM FIELDS
+// ========================================
+.full-width {
+  width: 100%;
+}
+
+// ========================================
+// DIALOG ACTIONS
+// ========================================
+div[mat-dialog-actions] {
+  padding: 1rem 0 0;
+  gap: 0.5rem;
+  
+  button {
+    min-width: 120px;
+    
+    mat-spinner {
+      display: inline-block;
+      margin-right: 8px;
+    }
+    
+    mat-icon {
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+  }
+}
+
+// ========================================
+// RESPONSIVE - MOBILE
+// ========================================
+@media (max-width: 600px) {
+  // Override Material Dialog width
+  ::ng-deep {
+    .mat-mdc-dialog-container {
+      max-width: 95vw !important;
+      width: 95vw !important;
+    }
+  }
+
+  h1[mat-dialog-title] {
+    font-size: 1.25rem;
+    gap: 0.35rem;
+    
+    mat-icon {
+      font-size: 1.5rem;
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  div[mat-dialog-content] {
+    padding: 1rem 0;
+    
+    p {
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  div[mat-dialog-actions] {
+    flex-direction: column-reverse;
+    padding-top: 0.75rem;
+    
+    button {
+      width: 100%;
+      min-width: unset;
+    }
+  }
+}
+
+// ========================================
+// RESPONSIVE - MOBILE PEQUEÑO
+// ========================================
+@media (max-width: 400px) {
+  h1[mat-dialog-title] {
+    font-size: 1.1rem;
+  }
+
+  div[mat-dialog-content] p {
+    font-size: 0.85rem;
+  }
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -38,6 +38,12 @@ export class ReportesListComponent implements OnInit {
   loading = true;
   reportes: Reporte[] = [];
   displayedColumns: string[] = ['id', 'tipo_contenido', 'contenido_id', 'motivo', 'fecha_reporte', 'acciones'];
+  isMobile = false;
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkViewport();
+  }
 
   constructor(
     private adminService: AdminService,
@@ -46,7 +52,12 @@ export class ReportesListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.checkViewport();
     this.loadReportesPendientes();
+  }
+
+  checkViewport(): void {
+    this.isMobile = window.innerWidth <= 768;
   }
 
   loadReportesPendientes(): void {

@@ -8,6 +8,51 @@
       </div>
     </header>
 
+    <!-- Estadísticas -->
+    <section class="stats-section">
+      <h2>
+        <mat-icon>insights</mat-icon>
+        Estadísticas
+      </h2>
+
+      <div *ngIf="loadingStats" class="stats-grid">
+        <app-skeleton-loader type="stats"></app-skeleton-loader>
+        <app-skeleton-loader type="stats"></app-skeleton-loader>
+        <app-skeleton-loader type="stats"></app-skeleton-loader>
+      </div>
+
+      <div *ngIf="!loadingStats" class="stats-grid">
+        <mat-card class="stat-card">
+          <mat-icon class="stat-icon habilidades">volunteer_activism</mat-icon>
+          <div class="stat-content">
+            <h3>{{ stats.totalHabilidades }}</h3>
+            <p>Habilidades Ofrecidas</p>
+          </div>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-icon class="stat-icon intercambios">swap_horiz</mat-icon>
+          <div class="stat-content">
+            <h3>{{ stats.intercambiosCompletados }}</h3>
+            <p>Intercambios Completados</p>
+          </div>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-icon class="stat-icon valoracion">star</mat-icon>
+          <div class="stat-content">
+            <h3>{{ stats.valoracionPromedio | number:'1.1-1' }}</h3>
+            <div class="estrellas">
+              <mat-icon *ngFor="let estrella of getEstrellas(stats.valoracionPromedio)">
+                {{ estrella }}
+              </mat-icon>
+            </div>
+            <p>{{ stats.totalValoraciones }} valoración{{ stats.totalValoraciones !== 1 ? 'es' : '' }}</p>
+          </div>
+        </mat-card>
+      </div>
+    </section>
+
     <section class="perfil-section">
       <h2>Sobre min</h2>
       <p>{{ usuario.biografia || 'Este usuario aínda non engadiu unha biografía.' }}</p>
@@ -20,6 +65,9 @@
   </div>
 
   <ng-template #noUsuario>
-    <p>Cargando perfil...</p>
+    <div class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Cargando perfil...</p>
+    </div>
   </ng-template>
 </div>
