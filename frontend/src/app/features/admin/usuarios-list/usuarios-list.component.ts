@@ -17,11 +17,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatCardModule } from '@angular/material/card'; 
+import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
 
 // Servizos e Modelos
 import { AdminService } from '../../../core/services/admin.service';
 import { ApiResponse, User, PaginatedResponse } from '../../../shared/models';
+import { EditarUsuarioDialogComponent } from '../editar-usuario-dialog/editar-usuario-dialog.component';
 
 @Component({
   selector: 'app-usuarios-list',
@@ -68,7 +70,8 @@ export class UsuariosListComponent implements OnInit, AfterViewInit {
   constructor(
     private adminService: AdminService,
     private snackBar: MatSnackBar,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private dialog: MatDialog
   ) {
     this.filterForm = this.fb.group({
       search: [''],
@@ -132,7 +135,23 @@ export class UsuariosListComponent implements OnInit, AfterViewInit {
   }
 
   editarUsuario(id: number): void {
-    this.snackBar.open(`Funcionalidad Editar Usuario #${id} pendiente.`, 'OK', { duration: 2000 });
+    const usuario = this.dataSource.data.find(u => u.id === id);
+    if (!usuario) {
+      this.snackBar.open('Usuario non atopado.', 'OK', { duration: 2000 });
+      return;
+    }
+
+    const dialogRef = this.dialog.open(EditarUsuarioDialogComponent, {
+      width: '600px',
+      data: { usuario }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        // Recargar a lista de usuarios despois de editar
+        this.loadUsuarios();
+      }
+    });
   }
 
   toggleActivo(usuario: User): void {

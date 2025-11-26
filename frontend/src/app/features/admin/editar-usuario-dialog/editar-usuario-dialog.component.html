@@ -1,0 +1,88 @@
+<h1 mat-dialog-title>
+  <mat-icon>edit</mat-icon>
+  Editar Usuario #{{ data.usuario.id }}
+</h1>
+
+<div mat-dialog-content>
+  <p>Modifica os datos do usuario <strong>{{ data.usuario.nombre_usuario }}</strong>:</p>
+
+  <form [formGroup]="editForm" id="edit-form" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nome de usuario</mat-label>
+      <input matInput formControlName="nombre_usuario" placeholder="ej. xoan_perez">
+      <mat-error *ngIf="editForm.get('nombre_usuario')?.hasError('required')">
+        O nome de usuario é obrigatorio.
+      </mat-error>
+      <mat-error *ngIf="editForm.get('nombre_usuario')?.hasError('minlength')">
+        Mínimo 2 caracteres.
+      </mat-error>
+      <mat-error *ngIf="editForm.get('nombre_usuario')?.hasError('maxlength')">
+        Máximo 50 caracteres.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" placeholder="ej. xoan@example.com">
+      <mat-error *ngIf="editForm.get('email')?.hasError('required')">
+        O email é obrigatorio.
+      </mat-error>
+      <mat-error *ngIf="editForm.get('email')?.hasError('email')">
+        Email non válido.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Rol</mat-label>
+      <mat-select formControlName="rol">
+        <mat-option *ngFor="let rol of roles" [value]="rol">
+          {{ rol | titlecase }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="editForm.get('rol')?.hasError('required')">
+        Debes seleccionar un rol.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Ubicación</mat-label>
+      <input matInput formControlName="ubicacion" placeholder="ej. A Coruña">
+      <mat-error *ngIf="editForm.get('ubicacion')?.hasError('required')">
+        A ubicación é obrigatoria.
+      </mat-error>
+      <mat-error *ngIf="editForm.get('ubicacion')?.hasError('maxlength')">
+        Máximo 100 caracteres.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Biografía (opcional)</mat-label>
+      <textarea
+        matInput
+        formControlName="biografia"
+        rows="3"
+        placeholder="Breve descripción do usuario..."
+      ></textarea>
+      <mat-error *ngIf="editForm.get('biografia')?.hasError('maxlength')">
+        Máximo 500 caracteres.
+      </mat-error>
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="onCancel()" [disabled]="submitting">Cancelar</button>
+  <button
+    mat-raised-button
+    color="primary"
+    type="submit"
+    form="edit-form"
+    [disabled]="editForm.invalid || submitting"
+  >
+    <mat-spinner *ngIf="submitting" diameter="20"></mat-spinner>
+    <span *ngIf="!submitting">
+      <mat-icon>save</mat-icon>
+      Guardar Cambios
+    </span>
+  </button>
+</div>

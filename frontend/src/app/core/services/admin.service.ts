@@ -38,4 +38,12 @@ export class AdminService {
     };
     return this.apiService.put<ApiResponse<Reporte>>(`reportes/${id}`, body);
   }
+
+  /**
+   * Actualizar datos de un usuario (solo admin).
+   * Corresponde a: PUT /api/usuarios/:id
+   */
+  actualizarUsuario(id: number, datos: Partial<User>): Observable<ApiResponse<User>> {
+    return this.apiService.put<ApiResponse<User>>(`usuarios/${id}`, datos);
+  }
 }
