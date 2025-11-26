@@ -261,7 +261,7 @@ function actualizarUsuario($id, $data) {
 
         // Verificar permisos (solo el mismo usuario o admin)
 
-        if ($user_id != $id && $user_role !== 'admin') {
+        if ($user_id != $id && $user_role !== 'administrador') {
             Response::forbidden('No tienes permisos para editar este usuario');
         }
    
@@ -291,7 +291,7 @@ function actualizarUsuario($id, $data) {
 
         // Si es admin, permitir actualizar campos adicionales
     
-        if ($user_role === 'admin') {
+        if ($user_role === 'administrador') {
             foreach ($allowedFieldsAdmin as $field) {
                  if (isset($data[$field])) {
                      if ($field === 'activo') {
