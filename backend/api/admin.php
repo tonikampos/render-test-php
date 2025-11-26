@@ -11,7 +11,7 @@ require_once __DIR__ . '/../config/database.php';
 function handleAdminRoutes($method, $id, $action, $input) {
     
     // GET /api/admin/estadisticas
-    if ($method === 'GET' && $action === 'estadisticas') {
+    if ($method === 'GET' && $id === 'estadisticas') {
         Auth::requireAdmin();
         getEstadisticas();
     }
