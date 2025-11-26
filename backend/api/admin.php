@@ -42,14 +42,14 @@ function getEstadisticas() {
         $stats['usuarios_mes'] = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
         
         // Total habilidades activas
-        $stmt = $db->query("SELECT COUNT(*) as total FROM habilidades WHERE activo = true");
+        $stmt = $db->query("SELECT COUNT(*) as total FROM habilidades WHERE estado = 'activa'");
         $stats['total_habilidades'] = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
         
         // Habilidades por tipo
         $stmt = $db->query("
             SELECT tipo, COUNT(*) as total 
             FROM habilidades 
-            WHERE activo = true 
+            WHERE estado = 'activa'
             GROUP BY tipo
         ");
         $habilidades_tipo = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -78,9 +78,25 @@ function getEstadisticas() {
         $stats['intercambios_aceptados'] = 0;
         $stats['intercambios_completados'] = 0;
         $stats['intercambios_rechazados'] = 0;
+        
         foreach ($intercambios_estado as $row) {
-            $key = 'intercambios_' . $row['estado'] . 's';
-            $stats[$key] = (int) $row['total'];
+            $estado = $row['estado'];
+            $total = (int) $row['total'];
+            
+            switch ($estado) {
+                case 'propuesto':
+                    $stats['intercambios_propuestos'] = $total;
+                    break;
+                case 'aceptado':
+                    $stats['intercambios_aceptados'] = $total;
+                    break;
+                case 'completado':
+                    $stats['intercambios_completados'] = $total;
+                    break;
+                case 'rechazado':
+                    $stats['intercambios_rechazados'] = $total;
+                    break;
+            }
         }
         
         // Total reportes
@@ -115,8 +131,8 @@ function getEstadisticas() {
         // Categoría más popular
         $stmt = $db->query("
             SELECT c.nombre, COUNT(h.id) as total
-            FROM categorias c
-            LEFT JOIN habilidades h ON c.id = h.categoria_id AND h.activo = true
+            FROM categorias_habilidades c
+            LEFT JOIN habilidades h ON c.id = h.categoria_id AND h.estado = 'activa'
             GROUP BY c.id, c.nombre
             ORDER BY total DESC
             LIMIT 1
