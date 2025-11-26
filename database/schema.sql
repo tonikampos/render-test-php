@@ -10,7 +10,7 @@
 
 CREATE TYPE estado_habilidad AS ENUM ('activa', 'pausada', 'intercambiada');
 CREATE TYPE estado_intercambio AS ENUM ('propuesto', 'aceptado', 'rechazado', 'completado', 'cancelado');
-CREATE TYPE estado_reporte AS ENUM ('pendiente', 'revisado', 'resuelto');
+CREATE TYPE estado_reporte AS ENUM ('pendiente', 'revisado', 'desestimado', 'accion_tomada');
 CREATE TYPE rol_usuario AS ENUM ('usuario', 'administrador');
 CREATE TYPE tipo_contenido_reportado AS ENUM ('perfil', 'habilidad');
 CREATE TYPE tipo_habilidad AS ENUM ('oferta', 'demanda');

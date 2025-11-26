@@ -16,7 +16,7 @@ h1[mat-dialog-title] {
 // DIALOG CONTENT
 // ========================================
 div[mat-dialog-content] {
-  padding: 1.5rem 0;
+  padding: 1.5rem 1.5rem !important;
   
   p {
     margin-bottom: 1.5rem;
@@ -26,6 +26,13 @@ div[mat-dialog-content] {
       font-weight: 600;
       color: #333;
     }
+  }
+}
+
+// Force padding con ng-deep para Material Dialog
+::ng-deep {
+  .mat-mdc-dialog-content {
+    padding: 1.5rem 1.5rem !important;
   }
 }
 
@@ -82,7 +89,7 @@ div[mat-dialog-actions] {
   }
 
   div[mat-dialog-content] {
-    padding: 1rem 0;
+    padding: 1rem 1rem;
     
     p {
       font-size: 0.9rem;

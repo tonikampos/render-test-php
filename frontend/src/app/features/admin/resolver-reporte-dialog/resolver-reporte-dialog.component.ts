@@ -57,6 +57,9 @@ export class ResolverReporteDialogComponent {
 
     this.submitting = true;
     const { decision, notas_revision } = this.resolveForm.value;
+    
+    // Debug: Ver qué valores se están enviando
+    console.log('Enviando resolución:', { decision, notas_revision });
 
     this.adminService.resolverReporte(this.data.reporte.id, decision, notas_revision).subscribe({
       // Añadir tipo explícito a 'response'
@@ -67,6 +70,7 @@ export class ResolverReporteDialogComponent {
        // Añadir tipo explícito a 'err'
       error: (err: HttpErrorResponse) => {
         this.submitting = false;
+        console.error('Error al resolver reporte:', err);
         const errorMessage = err.error?.message || 'Error al resolver el reporte.';
         this.snackBar.open(errorMessage, 'Cerrar', { duration: 5000 });
       }

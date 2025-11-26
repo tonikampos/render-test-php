@@ -153,6 +153,8 @@
     margin-bottom: 1.5rem;
 
     mat-card-header {
+      padding: 1rem;
+      
       mat-icon[mat-card-avatar] {
         font-size: 48px;
         width: 48px;
@@ -209,7 +211,7 @@
 
   .owner-actions-card {
     mat-card-content {
-      padding: 1rem 1rem 0.5rem;
+      padding: 1rem;
 
       .estado-toggle {
         display: flex;

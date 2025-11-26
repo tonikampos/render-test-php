@@ -16,7 +16,7 @@ h1[mat-dialog-title] {
 // DIALOG CONTENT
 // ========================================
 div[mat-dialog-content] {
-  padding: 1.5rem 0;
+  padding: 1.5rem 1.5rem !important;
   
   p {
     margin-bottom: 1rem;
@@ -44,6 +44,13 @@ div[mat-dialog-content] {
         margin-bottom: 0;
       }
     }
+  }
+}
+
+// Force padding con ng-deep para Material Dialog
+::ng-deep {
+  .mat-mdc-dialog-content {
+    padding: 1.5rem 1.5rem !important;
   }
 }
 
@@ -101,7 +108,7 @@ div[mat-dialog-actions] {
   }
 
   div[mat-dialog-content] {
-    padding: 1rem 0;
+    padding: 1rem 1rem !important;
     
     p {
       font-size: 0.9rem;
@@ -114,6 +121,12 @@ div[mat-dialog-actions] {
         font-size: 0.85rem;
         margin-bottom: 0.4rem;
       }
+    }
+  }
+
+  ::ng-deep {
+    .mat-mdc-dialog-content {
+      padding: 1rem 1rem !important;
     }
   }
 
