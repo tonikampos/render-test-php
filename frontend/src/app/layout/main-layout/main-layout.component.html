@@ -49,9 +49,10 @@
           <span matListItemTitle>Mis Intercambios</span>
         </a>
 
-        <a mat-list-item routerLink="/notificaciones" (click)="closeSidenav()">
+        <a mat-list-item routerLink="/notificaciones" (click)="closeSidenav()" class="notification-menu-item">
           <mat-icon matListItemIcon>notifications</mat-icon>
           <span matListItemTitle>Notificaciones</span>
+          <app-notification-badge></app-notification-badge>
         </a>
 
         <a mat-list-item routerLink="/conversaciones" (click)="closeSidenav()">
@@ -67,6 +68,11 @@
             <mat-icon>admin_panel_settings</mat-icon>
             Administración
           </h3>
+
+          <a mat-list-item routerLink="/admin" (click)="closeSidenav()">
+            <mat-icon matListItemIcon color="warn">dashboard</mat-icon>
+            <span matListItemTitle>Dashboard</span>
+          </a>
 
           <a mat-list-item routerLink="/admin/reportes" (click)="closeSidenav()">
             <mat-icon matListItemIcon color="warn">report_problem</mat-icon>

@@ -8,6 +8,7 @@ import { MatDividerModule } from '@angular/material/divider';
 
 import { HeaderComponent } from '../header/header.component';
 import { AuthService } from '../../core/services/auth.service';
+import { NotificationBadgeComponent } from '../../shared/components/notification-badge/notification-badge.component';
 
 @Component({
   selector: 'app-main-layout',
@@ -19,7 +20,8 @@ import { AuthService } from '../../core/services/auth.service';
     MatSidenavModule,
     MatListModule,
     MatIconModule,
-    MatDividerModule
+    MatDividerModule,
+    NotificationBadgeComponent
   ],
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.scss']
