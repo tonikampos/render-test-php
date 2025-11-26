@@ -16,6 +16,12 @@ function handleNotificacionesRoutes($method, $id, $action, $input) {
         listarNotificaciones();
     }
     
+    // GET /api/notificaciones/no-leidas (contar no leídas)
+    if ($method === 'GET' && $id === 'no-leidas') {
+        Auth::requireAuth();
+        contarNoLeidas();
+    }
+    
     // PUT /api/notificaciones/:id/leida (marcar unha como lida)
     if ($method === 'PUT' && is_numeric($id) && $action === 'leida') {
         Auth::requireAuth();
@@ -60,6 +66,29 @@ function listarNotificaciones() {
         
     } catch (Exception $e) {
         Response::serverError('Erro ao listar as notificacións', $e->getMessage());
+    }
+}
+
+/**
+ * Contar notificaciones no leídas del usuario
+ */
+function contarNoLeidas() {
+    try {
+        $db = Database::getConnection();
+        $usuario_id = $_SESSION['user_id'];
+        
+        $stmt = $db->prepare("
+            SELECT COUNT(*) as total 
+            FROM notificaciones 
+            WHERE usuario_id = :usuario_id AND leida = false
+        ");
+        $stmt->execute(['usuario_id' => $usuario_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        Response::success(['count' => (int) $result['total']]);
+        
+    } catch (Exception $e) {
+        Response::serverError('Erro ao contar notificacións non lidas', $e->getMessage());
     }
 }
 

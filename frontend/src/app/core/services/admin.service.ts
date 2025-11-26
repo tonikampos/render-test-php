@@ -46,4 +46,12 @@ export class AdminService {
   actualizarUsuario(id: number, datos: Partial<User>): Observable<ApiResponse<User>> {
     return this.apiService.put<ApiResponse<User>>(`usuarios/${id}`, datos);
   }
+
+  /**
+   * Obtener estadísticas globales del sistema (solo admin).
+   * Corresponde a: GET /api/admin/estadisticas
+   */
+  getEstadisticas(): Observable<ApiResponse<any>> {
+    return this.apiService.get<ApiResponse<any>>('admin/estadisticas');
+  }
 }

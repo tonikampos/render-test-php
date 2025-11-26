@@ -41,6 +41,10 @@
       </a>
 
       <ng-container *ngIf="authService.isAdmin()">
+        <a mat-button routerLink="/admin" class="admin-link">
+          <mat-icon>dashboard</mat-icon>
+          Dashboard
+        </a>
         <a mat-button routerLink="/admin/reportes" class="admin-link">
           <mat-icon>report_problem</mat-icon> 
           Reportes

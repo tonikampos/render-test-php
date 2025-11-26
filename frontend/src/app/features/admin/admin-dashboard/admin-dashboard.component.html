@@ -1,0 +1,250 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1><mat-icon>dashboard</mat-icon> Panel de Administración</h1>
+    <p class="subtitle">Estadísticas globales del sistema GaliTroco</p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Cargando estadísticas...</p>
+  </div>
+
+  <!-- Error -->
+  <mat-card *ngIf="error && !loading" class="error-card">
+    <mat-card-content>
+      <div class="error-content">
+        <mat-icon color="warn">error</mat-icon>
+        <p>{{ error }}</p>
+        <button mat-raised-button color="primary" (click)="loadEstadisticas()">
+          <mat-icon>refresh</mat-icon>
+          Reintentar
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="estadisticas && !loading" class="stats-grid">
+    
+    <!-- USUARIOS -->
+    <mat-card class="stat-card usuarios-card">
+      <mat-card-header>
+        <div class="card-header-content">
+          <mat-icon class="card-icon">people</mat-icon>
+          <div>
+            <h2>Usuarios</h2>
+            <p class="card-subtitle">Usuarios registrados</p>
+          </div>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stat-number">{{ estadisticas.total_usuarios }}</div>
+        <div class="stat-detail">
+          <mat-chip class="chip-info">
+            <mat-icon>person_add</mat-icon>
+            {{ estadisticas.usuarios_mes }} este mes
+          </mat-chip>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- HABILIDADES -->
+    <mat-card class="stat-card habilidades-card">
+      <mat-card-header>
+        <div class="card-header-content">
+          <mat-icon class="card-icon">lightbulb</mat-icon>
+          <div>
+            <h2>Habilidades</h2>
+            <p class="card-subtitle">Habilidades publicadas</p>
+          </div>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stat-number">{{ estadisticas.total_habilidades }}</div>
+        <div class="stat-detail">
+          <mat-chip class="chip-success">
+            <mat-icon>add_circle</mat-icon>
+            {{ estadisticas.habilidades_oferta }} ofertas
+          </mat-chip>
+          <mat-chip class="chip-warning">
+            <mat-icon>search</mat-icon>
+            {{ estadisticas.habilidades_demanda }} demandas
+          </mat-chip>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- INTERCAMBIOS -->
+    <mat-card class="stat-card intercambios-card">
+      <mat-card-header>
+        <div class="card-header-content">
+          <mat-icon class="card-icon">swap_horiz</mat-icon>
+          <div>
+            <h2>Intercambios</h2>
+            <p class="card-subtitle">Total de intercambios</p>
+          </div>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stat-number">{{ estadisticas.total_intercambios }}</div>
+        <div class="stat-detail">
+          <mat-chip class="chip-primary">{{ estadisticas.intercambios_propuestos }} propuestos</mat-chip>
+          <mat-chip class="chip-accent">{{ estadisticas.intercambios_aceptados }} aceptados</mat-chip>
+          <mat-chip class="chip-success">{{ estadisticas.intercambios_completados }} completados</mat-chip>
+        </div>
+        <div class="progress-info" *ngIf="estadisticas.total_intercambios > 0">
+          <small>{{ getIntercambiosActivosPorcentaje() }}% activos</small>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- VALORACIONES -->
+    <mat-card class="stat-card valoraciones-card">
+      <mat-card-header>
+        <div class="card-header-content">
+          <mat-icon class="card-icon">star</mat-icon>
+          <div>
+            <h2>Valoraciones</h2>
+            <p class="card-subtitle">Sistema de reputación</p>
+          </div>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stat-number">{{ estadisticas.total_valoraciones }}</div>
+        <div class="stat-detail">
+          <div class="rating-stars">
+            <mat-icon *ngFor="let star of getEstrellas(estadisticas.valoracion_promedio)" 
+                      [class.filled]="star === 'star'"
+                      [class.half]="star === 'star_half'">
+              {{ star }}
+            </mat-icon>
+            <span class="rating-number">{{ estadisticas.valoracion_promedio }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- REPORTES -->
+    <mat-card class="stat-card reportes-card">
+      <mat-card-header>
+        <div class="card-header-content">
+          <mat-icon class="card-icon">flag</mat-icon>
+          <div>
+            <h2>Reportes</h2>
+            <p class="card-subtitle">Moderación de contenido</p>
+          </div>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stat-number">{{ estadisticas.total_reportes }}</div>
+        <div class="stat-detail">
+          <mat-chip class="chip-warn" *ngIf="estadisticas.reportes_pendientes > 0">
+            <mat-icon>warning</mat-icon>
+            {{ estadisticas.reportes_pendientes }} pendientes
+          </mat-chip>
+          <mat-chip class="chip-success">
+            <mat-icon>check_circle</mat-icon>
+            {{ estadisticas.reportes_resueltos }} resueltos
+          </mat-chip>
+        </div>
+        <div class="progress-info" *ngIf="estadisticas.reportes_pendientes > 0">
+          <small>{{ getReportesPendientesPorcentaje() }}% pendientes de revisión</small>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- CONVERSACIONES -->
+    <mat-card class="stat-card conversaciones-card">
+      <mat-card-header>
+        <div class="card-header-content">
+          <mat-icon class="card-icon">chat</mat-icon>
+          <div>
+            <h2>Comunicación</h2>
+            <p class="card-subtitle">Mensajería</p>
+          </div>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stat-number">{{ estadisticas.total_conversaciones }}</div>
+        <div class="stat-detail">
+          <mat-chip class="chip-info">
+            <mat-icon>message</mat-icon>
+            {{ estadisticas.total_mensajes }} mensajes
+          </mat-chip>
+        </div>
+        <div class="progress-info" *ngIf="estadisticas.total_conversaciones > 0">
+          <small>~{{ (estadisticas.total_mensajes / estadisticas.total_conversaciones).toFixed(1) }} mensajes por conversación</small>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- CATEGORÍA MÁS POPULAR -->
+    <mat-card class="stat-card categoria-card">
+      <mat-card-header>
+        <div class="card-header-content">
+          <mat-icon class="card-icon">local_fire_department</mat-icon>
+          <div>
+            <h2>Categoría Popular</h2>
+            <p class="card-subtitle">Más demandada</p>
+          </div>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stat-category">{{ estadisticas.categoria_mas_popular }}</div>
+        <div class="stat-detail">
+          <mat-chip class="chip-accent">
+            <mat-icon>trending_up</mat-icon>
+            {{ estadisticas.categoria_mas_popular_count }} habilidades
+          </mat-chip>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- RESUMEN GENERAL -->
+    <mat-card class="stat-card resumen-card full-width">
+      <mat-card-header>
+        <div class="card-header-content">
+          <mat-icon class="card-icon">assessment</mat-icon>
+          <div>
+            <h2>Resumen de Actividad</h2>
+            <p class="card-subtitle">Métricas clave del sistema</p>
+          </div>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="resumen-grid">
+          <div class="resumen-item">
+            <mat-icon color="primary">trending_up</mat-icon>
+            <div>
+              <strong>Tasa de Éxito</strong>
+              <p>{{ estadisticas.total_intercambios > 0 ? ((estadisticas.intercambios_completados / estadisticas.total_intercambios) * 100).toFixed(1) : 0 }}% de intercambios completados</p>
+            </div>
+          </div>
+          <div class="resumen-item">
+            <mat-icon color="accent">verified</mat-icon>
+            <div>
+              <strong>Calidad</strong>
+              <p>Valoración promedio de {{ estadisticas.valoracion_promedio }}/5.0 estrellas</p>
+            </div>
+          </div>
+          <div class="resumen-item">
+            <mat-icon color="warn">security</mat-icon>
+            <div>
+              <strong>Moderación</strong>
+              <p>{{ estadisticas.reportes_pendientes }} reportes requieren atención</p>
+            </div>
+          </div>
+          <div class="resumen-item">
+            <mat-icon>groups</mat-icon>
+            <div>
+              <strong>Comunidad</strong>
+              <p>{{ estadisticas.total_usuarios }} usuarios activos en la plataforma</p>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>
