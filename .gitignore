@@ -15,3 +15,6 @@ vendor/
 # Archivos de respaldo
 *.bak
 *~
+
+# Documentación privada
+old/
