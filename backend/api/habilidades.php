@@ -286,7 +286,7 @@ function actualizarHabilidad($id, $data) {
 }
 
 /**
- * Eliminar habilidad (soft delete)
+ * Eliminar habilidad (DELETE real con verificación de integridad)
  */
 function eliminarHabilidad($id) {
     try {
@@ -307,8 +307,24 @@ function eliminarHabilidad($id) {
             Response::forbidden('No tienes permisos para eliminar esta habilidad');
         }
         
-        // Soft delete (marcar como inactiva)
-        $stmt = $db->prepare("UPDATE habilidades SET estado = 'inactiva' WHERE id = :id");
+        // Verificar si tiene intercambios asociados
+        $stmt = $db->prepare("
+            SELECT COUNT(*) as total 
+            FROM intercambios 
+            WHERE habilidad_ofrecida_id = :id OR habilidad_solicitada_id = :id
+        ");
+        $stmt->execute(['id' => $id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($result['total'] > 0) {
+            Response::badRequest(
+                'No se puede eliminar la habilidad porque tiene intercambios asociados',
+                ['intercambios' => $result['total']]
+            );
+        }
+        
+        // DELETE real (solo si no tiene intercambios)
+        $stmt = $db->prepare("DELETE FROM habilidades WHERE id = :id");
         $stmt->execute(['id' => $id]);
         
         Response::deleted('Habilidad eliminada exitosamente');

@@ -233,10 +233,8 @@ function crearConversacion($input) {
             ], 200);
         }
         
-        // INICIAR TRANSACCIÓN para garantizar atomicidad
         $db->beginTransaction();
         
-        // 1. Crear conversación
         $sqlConversacion = "
             INSERT INTO conversaciones (intercambio_id, fecha_creacion, ultima_actualizacion)
             VALUES (NULL, NOW(), NOW())
@@ -250,7 +248,6 @@ function crearConversacion($input) {
             throw new Exception("No se pudo obtener el ID de la conversación creada");
         }
         
-        // 2. Añadir participantes
         $sqlParticipantes = "
             INSERT INTO participantes_conversacion (conversacion_id, usuario_id, fecha_union) 
             VALUES 
@@ -264,10 +261,9 @@ function crearConversacion($input) {
             'receptor_id' => $receptor_id
         ]);
         
-        // 3. Enviar mensaje inicial
         enviarMensajeInterno($db, $conversacion_id, $usuario_id, $mensaje_inicial);
         
-        // COMMIT: Todo salió bien
+
         $db->commit();
         
         Response::success([
@@ -276,7 +272,6 @@ function crearConversacion($input) {
         ], 201);
         
     } catch (Exception $e) {
-        // ROLLBACK en caso de error
         if ($db && $db->inTransaction()) {
             $db->rollBack();
         }

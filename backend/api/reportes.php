@@ -40,7 +40,6 @@ function crearReporte($input) {
         $db = Database::getConnection();
         $reportador_id = $_SESSION['user_id'];
         
-        // 1. Validar datos de entrada
         $tipo_contenido = $input['tipo_contenido'] ?? null;
         $contenido_id = $input['contenido_id'] ?? null;
         $motivo = $input['motivo'] ?? null;
@@ -75,7 +74,7 @@ function crearReporte($input) {
         
     } catch (Exception $e) {
         error_log('Error en crearReporte: ' . $e->getMessage());
-        Response::serverError('Erro ao enviar o reporte', $e->getMessage());
+        Response::serverError('Error al enviar el reporte', $e->getMessage());
     }
 }
 
@@ -148,9 +147,56 @@ function actualizarReporte($id, $input) {
         
         $reporteActualizado = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        Response::success($reporteActualizado, 'O reporte foi actualizado correctamente');
+        // 3. Crear notificación para el usuario que reportó
+        $reportador_id = $reporteActualizado['reportador_id'];
+        
+        // Generar mensaje según el estado
+        $mensajes = [
+            'desestimado' => 'Tu reporte ha sido revisado y desestimado.',
+            'revisado' => 'Tu reporte ha sido revisado por el equipo de moderación.',
+            'accion_tomada' => 'Tu reporte ha sido revisado y se ha tomado acción sobre el contenido reportado.'
+        ];
+        
+        $mensaje = $mensajes[$novo_estado] ?? 'Tu reporte ha sido revisado.';
+        
+        // Si hay notas del revisor, añadirlas al mensaje
+        if (!empty($notas_revision)) {
+            $mensaje .= ' Nota: ' . $notas_revision;
+        }
+        
+        // Insertar notificación (igual que en intercambios.php)
+        try {
+            $sqlNotificacion = "
+                INSERT INTO notificaciones (
+                    usuario_id,
+                    tipo,
+                    titulo,
+                    mensaje,
+                    fecha_creacion
+                )
+                VALUES (
+                    :usuario_id,
+                    'nueva_valoracion',
+                    :titulo,
+                    :mensaje,
+                    NOW()
+                )
+            ";
+            
+            $stmtNotif = $db->prepare($sqlNotificacion);
+            $stmtNotif->execute([
+                'usuario_id' => $reportador_id,
+                'titulo' => 'Tu reporte ha sido revisado',
+                'mensaje' => $mensaje
+            ]);
+        } catch (Exception $eNotif) {
+            // Log del error pero no detener el proceso
+            error_log("Error al crear notificación de reporte: " . $eNotif->getMessage());
+        }
+        
+        Response::success($reporteActualizado, 'El reporte fue actualizado correctamente');
         
     } catch (Exception $e) {
-        Response::serverError('Erro ao actualizar o reporte', $e->getMessage());
+        Response::serverError('Error al actualizar el reporte', $e->getMessage());
     }
 }

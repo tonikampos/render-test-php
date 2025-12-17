@@ -413,7 +413,6 @@ class Auth {
                 ];
             }
             
-            // Validar complejidad de contraseña (opcional pero recomendado)
             if (!preg_match('/[A-Za-z]/', $new_password) || !preg_match('/[0-9]/', $new_password)) {
                 return [
                     'success' => false,

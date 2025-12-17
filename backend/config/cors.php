@@ -15,8 +15,6 @@ function setupCORS() {
     $is_allowed = in_array($origin, $allowed_origins) || (strpos($origin, 'http://localhost:') === 0);
 
     if ($is_allowed) {
-        // Se a orixe está permitida, respondemos coa orixe específica.
-        // Isto é OBRIGATORIO para que `withCredentials: true` no frontend funcione.
         header("Access-Control-Allow-Origin: $origin");
 
      

@@ -1,9 +1,9 @@
 <?php
 /**
- * Endpoints de Notificacións
- * GET    /api/notificaciones                  - Listar as miñas notificacións
- * PUT    /api/notificaciones/:id/leida        - Marcar unha notificación como lida
- * PUT    /api/notificaciones/marcar-todas-leidas - Marcar todas como lidas
+ * Endpoints de Notificaciones
+ * GET    /api/notificaciones                   - Listar mis notificaciones
+ * PUT    /api/notificaciones/:id/leida        - Marcar una notificación como leída
+ * PUT    /api/notificaciones/marcar-todas-leidas  - Marcar todas como leídas
  */
 
 require_once __DIR__ . '/../config/database.php';
@@ -22,13 +22,13 @@ function handleNotificacionesRoutes($method, $id, $action, $input) {
         contarNoLeidas();
     }
     
-    // PUT /api/notificaciones/:id/leida (marcar unha como lida)
+    // PUT /api/notificaciones/:id/leida (marcar una como leída)
     if ($method === 'PUT' && is_numeric($id) && $action === 'leida') {
         Auth::requireAuth();
         marcarComoLeida($id);
     }
 
-    // PUT /api/notificaciones/marcar-todas-leidas (marcar todas como lidas)
+    // PUT /api/notificaciones/marcar-todas-leidas (marcar todas como leídas)
     if ($method === 'PUT' && $id === 'marcar-todas-leidas') {
         Auth::requireAuth();
         marcarTodasComoLeidas();
@@ -38,7 +38,7 @@ function handleNotificacionesRoutes($method, $id, $action, $input) {
 }
 
 /**
- * Listar as notificacións do usuario con sesión iniciada
+ * Listar las notificaciones del usuario con sesión iniciada
  */
 function listarNotificaciones() {
     try {
@@ -65,7 +65,7 @@ function listarNotificaciones() {
         Response::success($notificaciones);
         
     } catch (Exception $e) {
-        Response::serverError('Erro ao listar as notificacións', $e->getMessage());
+        Response::serverError('Error al listar las notificaciones', $e->getMessage());
     }
 }
 
@@ -88,12 +88,12 @@ function contarNoLeidas() {
         Response::success(['count' => (int) $result['total']]);
         
     } catch (Exception $e) {
-        Response::serverError('Erro ao contar notificacións non lidas', $e->getMessage());
+        Response::serverError('Error al contar notificaciones no leídas', $e->getMessage());
     }
 }
 
 /**
- * Marcar unha notificación específica como lida
+ * Marcar una notificación específica como leída
  */
 function marcarComoLeida($id) {
     try {
@@ -111,20 +111,20 @@ function marcarComoLeida($id) {
         $stmt->execute(['id' => $id, 'usuario_id' => $usuario_id]);
         
         if ($stmt->rowCount() === 0) {
-            Response::notFound('Non se atopou a notificación ou non che pertence');
+            Response::notFound('No se encontró la notificación o no te pertenece');
         }
         
         $notificacion = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        Response::success($notificacion, 'Notificación marcada como lida');
+        Response::success($notificacion, 'Notificación marcada como leída');
         
     } catch (Exception $e) {
-        Response::serverError('Erro ao marcar a notificación como lida', $e->getMessage());
+        Response::serverError('Error al marcar la notificación como leída', $e->getMessage());
     }
 }
 
 /**
- * Marcar todas as notificacións do usuario como lidas
+ * Marcar todas las notificaciones del usuario como leídas
  */
 function marcarTodasComoLeidas() {
     try {

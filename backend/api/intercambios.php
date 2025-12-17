@@ -94,7 +94,13 @@ function listarIntercambios() {
                 -- Receptor
                 u2.id as receptor_id,
                 u2.nombre_usuario as receptor_nombre,
-                u2.foto_url as receptor_foto
+                u2.foto_url as receptor_foto,
+                -- Verificar si el usuario actual ya valoró este intercambio
+                EXISTS(
+                    SELECT 1 FROM valoraciones v 
+                    WHERE v.intercambio_id = i.id 
+                    AND v.evaluador_id = :usuario_id
+                ) as ya_valorado
             FROM intercambios i
             INNER JOIN habilidades h1 ON i.habilidad_ofrecida_id = h1.id
             INNER JOIN habilidades h2 ON i.habilidad_solicitada_id = h2.id
