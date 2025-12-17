@@ -42,6 +42,7 @@ export class ConversacionDetailComponent implements OnInit, OnDestroy, AfterView
 
   conversacion: Conversacion | null = null;
   conversacionId: number | null = null;
+  otroUsuarioNombre: string = '';
   mensajes: Mensaje[] = [];
   mensajeForm: FormGroup;
   loading = true;
@@ -73,6 +74,12 @@ export class ConversacionDetailComponent implements OnInit, OnDestroy, AfterView
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.conversacionId = +id;
+      
+      // Obtener nombre del otro usuario del state de navegación
+      const navigation = this.router.getCurrentNavigation();
+      const state = navigation?.extras?.state || window.history.state;
+      this.otroUsuarioNombre = state?.['usuario'] || '';
+      
       // No llamamos loadConversacion porque ese endpoint no existe
       this.loadMensajes(this.conversacionId);
       this.marcarComoLeido(this.conversacionId);
@@ -115,6 +122,15 @@ export class ConversacionDetailComponent implements OnInit, OnDestroy, AfterView
       next: (response) => {
         if (response.success) {
           this.mensajes = response.data;
+          
+          // Si no tenemos el nombre del otro usuario, obtenerlo del primer mensaje
+          if (!this.otroUsuarioNombre && this.mensajes.length > 0) {
+            const primerMensaje = this.mensajes[0];
+            this.otroUsuarioNombre = primerMensaje.emisor_id !== this.currentUserId 
+              ? (primerMensaje.emisor_nombre || 'Usuario')
+              : (this.mensajes.find(m => m.emisor_id !== this.currentUserId)?.emisor_nombre || 'Usuario');
+          }
+          
           this.shouldScrollToBottom = true;
         }
         this.loading = false;

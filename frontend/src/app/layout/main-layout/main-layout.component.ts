@@ -5,6 +5,7 @@ import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatBadgeModule } from '@angular/material/badge';
 
 import { HeaderComponent } from '../header/header.component';
 import { AuthService } from '../../core/services/auth.service';
@@ -21,6 +22,7 @@ import { NotificationBadgeComponent } from '../../shared/components/notification
     MatListModule,
     MatIconModule,
     MatDividerModule,
+    MatBadgeModule,
     NotificationBadgeComponent
   ],
   templateUrl: './main-layout.component.html',
@@ -28,10 +30,15 @@ import { NotificationBadgeComponent } from '../../shared/components/notification
 })
 export class MainLayoutComponent {
   @ViewChild('sidenav') sidenav!: MatSidenav;
+  @ViewChild('header') header!: HeaderComponent;
 
   constructor(public authService: AuthService) {}
 
-  // Este método será llamado por el HeaderComponent
+  get mensajesNoLeidos(): number {
+    return this.header?.mensajesNoLeidos ?? 0;
+  }
+
+
   toggleSidenav(): void {
     this.sidenav.toggle();
   }

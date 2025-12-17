@@ -35,30 +35,31 @@
       <table mat-table [dataSource]="dataSource" matSort>
 
         <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header scope="col"> ID </th>
           <td mat-cell *matCellDef="let user"> {{user.id}} </td>
         </ng-container>
 
         <ng-container matColumnDef="nombre_usuario">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre Usuario </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header scope="col"> Nombre Usuario </th>
           <td mat-cell *matCellDef="let user"> {{user.nombre_usuario}} </td>
         </ng-container>
 
         <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header scope="col"> Email </th>
           <td mat-cell *matCellDef="let user"> {{user.email}} </td>
         </ng-container>
 
         <ng-container matColumnDef="ubicacion">
-          <th mat-header-cell *matHeaderCellDef> Ubicación </th>
+          <th mat-header-cell *matHeaderCellDef scope="col"> Ubicación </th>
           <td mat-cell *matCellDef="let user"> {{user.ubicacion}} </td>
         </ng-container>
 
         <ng-container matColumnDef="activo">
-          <th mat-header-cell *matHeaderCellDef> Activo </th>
+          <th mat-header-cell *matHeaderCellDef scope="col"> Activo </th>
           <td mat-cell *matCellDef="let user">
             <mat-slide-toggle
               [checked]="user.activo"
+              [attr.aria-label]="user.activo ? 'Usuario ' + user.nombre_usuario + ' activo' : 'Usuario ' + user.nombre_usuario + ' inactivo'"
               (change)="toggleActivo(user)"
               matTooltip="{{ user.activo ? 'Desactivar usuario' : 'Activar usuario' }}"
               color="primary">
@@ -67,23 +68,27 @@
         </ng-container>
 
         <ng-container matColumnDef="rol">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Rol </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header scope="col"> Rol </th>
           <td mat-cell *matCellDef="let user"> {{user.rol | titlecase}} </td>
         </ng-container>
 
         <ng-container matColumnDef="fecha_registro">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Registrado </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header scope="col"> Registrado </th>
           <td mat-cell *matCellDef="let user"> {{user.fecha_registro | date:'dd/MM/yy'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="acciones">
-          <th mat-header-cell *matHeaderCellDef> Acciones </th>
+          <th mat-header-cell *matHeaderCellDef scope="col"> Acciones </th>
           <td mat-cell *matCellDef="let user" class="acciones-cell">
-            <button mat-icon-button color="primary" (click)="editarUsuario(user.id)" matTooltip="Editar perfil usuario">
-              <mat-icon>edit</mat-icon>
+            <button mat-icon-button color="primary" (click)="editarUsuario(user.id)" 
+                    [attr.aria-label]="'Editar perfil de ' + user.nombre_usuario"
+                    matTooltip="Editar perfil usuario">
+              <mat-icon aria-hidden="true">edit</mat-icon>
             </button>
-            <a mat-icon-button [routerLink]="['/perfil', user.id]" target="_blank" matTooltip="Ver perfil público">
-              <mat-icon>visibility</mat-icon>
+            <a mat-icon-button [routerLink]="['/perfil', user.id]" target="_blank" 
+               [attr.aria-label]="'Ver perfil público de ' + user.nombre_usuario"
+               matTooltip="Ver perfil público">
+              <mat-icon aria-hidden="true">visibility</mat-icon>
             </a>
           </td>
         </ng-container>
@@ -140,11 +145,13 @@
         </div>
 
         <div class="card-actions">
-          <button mat-stroked-button color="primary" (click)="editarUsuario(user.id)">
-            <mat-icon>edit</mat-icon> Editar
+          <button mat-stroked-button color="primary" (click)="editarUsuario(user.id)"
+                  [attr.aria-label]="'Editar perfil de ' + user.nombre_usuario">
+            <mat-icon aria-hidden="true">edit</mat-icon> Editar
           </button>
-          <a mat-stroked-button [routerLink]="['/perfil', user.id]" target="_blank">
-            <mat-icon>visibility</mat-icon> Ver Perfil
+          <a mat-stroked-button [routerLink]="['/perfil', user.id]" target="_blank"
+             [attr.aria-label]="'Ver perfil público de ' + user.nombre_usuario">
+            <mat-icon aria-hidden="true">visibility</mat-icon> Ver Perfil
           </a>
         </div>
       </div>

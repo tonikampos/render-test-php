@@ -2,9 +2,19 @@
   <div *ngIf="usuario; else noUsuario">
 
     <header class="perfil-header">
+      <div class="perfil-avatar">
+        <img *ngIf="usuario.foto_url" [src]="usuario.foto_url" [alt]="usuario.nombre_usuario" class="avatar-img">
+        <mat-icon *ngIf="!usuario.foto_url" class="avatar-icon">account_circle</mat-icon>
+      </div>
       <div class="perfil-info">
         <h1>{{ usuario.nombre_usuario }}</h1>
         <p class="ubicacion">📍 {{ usuario.ubicacion }}</p>
+      </div>
+      <div class="perfil-actions">
+        <button mat-raised-button color="primary" (click)="openEditarPerfilDialog()">
+          <mat-icon>edit</mat-icon>
+          Editar Perfil
+        </button>
       </div>
     </header>
 
@@ -54,8 +64,8 @@
     </section>
 
     <section class="perfil-section">
-      <h2>Sobre min</h2>
-      <p>{{ usuario.biografia || 'Este usuario aínda non engadiu unha biografía.' }}</p>
+      <h2>Sobre mí</h2>
+      <p>{{ usuario.biografia || 'Este usuario aún no ha añadido una biografía.' }}</p>
     </section>
 
     <section class="perfil-section">

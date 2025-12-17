@@ -95,7 +95,7 @@ export class PublicProfileComponent implements OnInit {
     
     this.conversacionesService.create({
       usuario2_id: this.usuario.id,
-      mensaje_inicial: `Ola ${this.usuario.nombre_usuario}! Estou interesado en contactar contigo.`
+      mensaje_inicial: `Hola ${this.usuario.nombre_usuario}. Estoy interesado en contactar contigo.`
     }).subscribe({
       next: (res) => {
         console.log('Respuesta del backend:', JSON.stringify(res, null, 2));
@@ -114,13 +114,13 @@ export class PublicProfileComponent implements OnInit {
           }
         } else {
           console.error('Error en respuesta:', res);
-          this.snackBar.open(res.message || 'Error ao iniciar conversación', 'Cerrar', { duration: 3000 });
+          this.snackBar.open(res.message || 'Error al iniciar conversación', 'Cerrar', { duration: 3000 });
         }
         this.sendingMessage = false;
       },
       error: (err) => {
         console.error('Error completo:', err);
-        this.snackBar.open(err.error?.message || 'Error ao iniciar conversación', 'Cerrar', { duration: 3000 });
+        this.snackBar.open(err.error?.message || 'Error al iniciar conversación', 'Cerrar', { duration: 3000 });
         this.sendingMessage = false;
       }
     });

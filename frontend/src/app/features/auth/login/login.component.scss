@@ -7,7 +7,7 @@
   align-items: center;
   min-height: calc(100vh - 64px);
   padding: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent-color) 100%);
 }
 
 // ========================================
@@ -67,7 +67,7 @@
   margin: -0.5rem 0 0.5rem;
 
   a {
-    color: #667eea;
+    color: var(--accent-color);
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
@@ -75,7 +75,7 @@
     
     &:hover {
       text-decoration: underline;
-      color: #764ba2;
+      color: var(--primary-color);
     }
   }
 }
@@ -85,6 +85,27 @@
   font-size: 1rem;
   font-weight: 500;
   margin-top: 1rem;
+  
+  // Asegurar color primario visible (CTA principal)
+  &:not(:disabled) {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      background-color: var(--primary-dark) !important;
+      box-shadow: 0 4px 8px rgba(46, 125, 50, 0.3);
+    }
+  }
+
+  // Estado disabled claramente diferenciado
+  &:disabled {
+    background-color: #e0e0e0 !important;
+    color: rgba(0, 0, 0, 0.38) !important;
+    cursor: not-allowed !important;
+    opacity: 1 !important; // Evitar doble opacidad de Material
+  }
 
   mat-spinner {
     display: inline-block;
@@ -99,14 +120,14 @@
   color: #666;
 
   a {
-    color: #667eea;
+    color: var(--accent-color);
     text-decoration: none;
     font-weight: 500;
     transition: color 0.3s ease;
     
     &:hover {
       text-decoration: underline;
-      color: #764ba2;
+      color: var(--primary-color);
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -6,9 +6,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatBadgeModule } from '@angular/material/badge';
 
 import { AuthService } from '../../core/services/auth.service';
 import { NotificationBadgeComponent } from '../../shared/components/notification-badge/notification-badge.component';
+import { ConversacionesService } from '../../core/services/conversaciones.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -21,15 +24,74 @@ import { NotificationBadgeComponent } from '../../shared/components/notification
     MatIconModule,
     MatTooltipModule,
     MatMenuModule,
-    NotificationBadgeComponent
+    NotificationBadgeComponent,
+    MatBadgeModule
   ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit, OnDestroy {
   @Output() menuToggle = new EventEmitter<void>();
+  mensajesNoLeidos = 0;
+  private pollingSubscription?: Subscription;
 
-  constructor(public authService: AuthService, private router: Router) {}
+  constructor(
+    public authService: AuthService, 
+    private router: Router,
+    private conversacionesService: ConversacionesService
+  ) {}
+
+  ngOnInit(): void {
+    // Solo cargar si hay usuario autenticado
+    if (this.authService.currentUserValue) {
+      this.loadMensajesCount();
+      this.startPolling();
+    }
+
+    // Suscribirse a cambios de autenticación
+    this.authService.currentUser$.subscribe(user => {
+      if (user) {
+        this.loadMensajesCount();
+        this.startPolling();
+      } else {
+        this.mensajesNoLeidos = 0;
+        this.stopPolling();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.stopPolling();
+  }
+
+  private loadMensajesCount(): void {
+    this.conversacionesService.countMensajesNoLeidos().subscribe({
+      next: (response) => {
+        if (response.success && response.data?.count !== undefined) {
+          this.mensajesNoLeidos = response.data.count;
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar mensajes no leídos:', error);
+      }
+    });
+  }
+
+  private startPolling(): void {
+    this.pollingSubscription = this.conversacionesService.pollMensajesNoLeidos().subscribe({
+      next: (response) => {
+        if (response.success && response.data?.count !== undefined) {
+          this.mensajesNoLeidos = response.data.count;
+        }
+      }
+    });
+  }
+
+  private stopPolling(): void {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
+  }
 
   logout(): void {
     this.authService.logout().subscribe(() => {

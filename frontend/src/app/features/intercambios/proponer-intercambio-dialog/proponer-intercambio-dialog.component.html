@@ -14,7 +14,7 @@
       <mat-label>Habilidad que ofreces a cambio</mat-label>
       <mat-select formControlName="habilidad_ofrecida_id">
         <mat-option *ngIf="userSkills.length === 0" disabled>
-          No tienes habilidades de "oferta" para intercambiar.
+          No tienes habilidades de oferta activas. Crea una primero.
         </mat-option>
         <mat-option *ngFor="let skill of userSkills" [value]="skill.id">
           {{ skill.titulo }}

@@ -32,7 +32,7 @@ export class ApiService {
     
     return this.http.get<T>(url, { 
       params: httpParams,
-      withCredentials: true // Importante para cookies de sesión PHP
+      withCredentials: true // Para cookies de sesión PHP
     }).pipe(
       catchError(this.handleError)
     );

@@ -11,16 +11,16 @@ export class AdminService {
   constructor(private apiService: ApiService) { }
 
   /**
-   * Obter a listaxe de usuarios con filtros e paxinación (só admin).
+   * Obtener el listado de usuarios con filtros y paginación (solo admin).
    * Corresponde a: GET /api/usuarios
    */
   getUsuarios(params?: { page?: number, per_page?: number, search?: string, ubicacion?: string, activo?: boolean }): Observable<ApiResponse<PaginatedResponse<User>>> {
-    // Engadir aquí calquera parámetro adicional que o backend admita
+    // Añadir aquí cualquier parámetro adicional que el backend admita
     return this.apiService.get<ApiResponse<PaginatedResponse<User>>>('usuarios', params);
   }
 
   /**
-   * Obter os reportes, con opción de filtrar por estado.
+   * Obtener los reportes, con opción de filtrar por estado.
    * Corresponde a: GET /api/reportes?estado=...
    */
   getReportes(estado: 'pendiente' | 'revisado' | 'accion_tomada'): Observable<ApiResponse<Reporte[]>> {

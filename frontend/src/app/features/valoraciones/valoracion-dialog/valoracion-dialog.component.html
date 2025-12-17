@@ -1,24 +1,32 @@
 <h1 mat-dialog-title>
   <mat-icon>star_rate</mat-icon>
-  Valora o Intercambio
+  Valora el Intercambio
 </h1>
 
 <div mat-dialog-content>
   <p>
-    Valora a túa experiencia con <strong>{{ data.intercambio.receptor_nombre }}</strong> no intercambio de "<strong>{{ data.intercambio.habilidad_solicitada_titulo }}</strong>".
+    Valora tu experiencia con <strong>{{ data.intercambio.receptor_nombre }}</strong> en el intercambio de "<strong>{{ data.intercambio.habilidad_solicitada_titulo }}</strong>".
   </p>
 
   <form [formGroup]="valoracionForm" id="valoracion-form" (ngSubmit)="onSubmit()">
-    <div class="rating-stars">
+    <div class="rating-stars" role="radiogroup" aria-label="Puntuación del intercambio">
       <button 
         *ngFor="let star of [1, 2, 3, 4, 5]" 
         type="button" 
         mat-icon-button
+        role="radio"
+        [attr.aria-label]="star === 1 ? star + ' estrella' : star + ' estrellas'"
+        [attr.aria-checked]="rating === star"
+        [attr.tabindex]="rating === star || (rating === 0 && star === 1) ? 0 : -1"
         (click)="setRating(star)"
+        (keydown.enter)="setRating(star)"
+        (keydown.space)="setRating(star); $event.preventDefault()"
+        (keydown.arrowRight)="setRating(star < 5 ? star + 1 : star)"
+        (keydown.arrowLeft)="setRating(star > 1 ? star - 1 : star)"
         (mouseenter)="hoverRating = star"
         (mouseleave)="hoverRating = 0"
         [color]="(hoverRating || rating) >= star ? 'accent' : 'primary'">
-        <mat-icon>{{ (hoverRating || rating) >= star ? 'star' : 'star_border' }}</mat-icon>
+        <mat-icon aria-hidden="true">{{ (hoverRating || rating) >= star ? 'star' : 'star_border' }}</mat-icon>
       </button>
     </div>
     
@@ -28,7 +36,7 @@
         matInput 
         formControlName="comentario"
         rows="4"
-        placeholder="Describe a túa experiencia..."></textarea>
+        placeholder="Describe tu experiencia..."></textarea>
     </mat-form-field>
   </form>
 </div>
@@ -43,7 +51,7 @@
     [disabled]="valoracionForm.invalid || submitting">
     <mat-spinner *ngIf="submitting" diameter="20"></mat-spinner>
     <span *ngIf="!submitting">
-      <mat-icon>send</mat-icon>
+      <mat-icon aria-hidden="true">send</mat-icon>
       Enviar Valoración
     </span>
   </button>

@@ -17,13 +17,15 @@ h1[mat-dialog-title] {
 // ========================================
 div[mat-dialog-content] {
   padding: 1.5rem 1.5rem !important;
+  overflow: visible !important;
+  max-height: none !important; /* Permite altura dinámica */
   
   p {
     margin-bottom: 1.5rem;
     line-height: 1.6;
     
     strong {
-      color: #3f51b5;
+      color: var(--primary-color);
       font-weight: 600;
     }
   }
@@ -33,6 +35,8 @@ div[mat-dialog-content] {
 ::ng-deep {
   .mat-mdc-dialog-content {
     padding: 1.5rem 1.5rem !important;
+    overflow: visible !important;
+    max-height: none !important;
   }
 }
 
@@ -52,6 +56,24 @@ div[mat-dialog-actions] {
   
   button {
     min-width: 120px;
+    
+    &[color="primary"] {
+      &:not(:disabled) {
+        background-color: var(--primary-color) !important;
+        color: white !important;
+        
+        &:hover {
+          background-color: var(--primary-dark) !important;
+          box-shadow: 0 4px 8px rgba(46, 125, 50, 0.3);
+        }
+      }
+      
+      &:disabled {
+        background-color: #e0e0e0 !important;
+        color: rgba(0, 0, 0, 0.38) !important;
+        cursor: not-allowed !important;
+      }
+    }
     
     mat-spinner {
       display: inline-block;

@@ -35,7 +35,12 @@
         Mis Intercambios
       </a>
       <app-notification-badge></app-notification-badge>
-      <a mat-button routerLink="/conversaciones">
+      <a mat-button 
+         routerLink="/conversaciones"
+         [matBadge]="mensajesNoLeidos > 0 ? '✉' : ''"
+         [matBadgeHidden]="mensajesNoLeidos === 0"
+         matBadgeColor="warn"
+         matBadgeSize="small">
         <mat-icon>chat</mat-icon>
         Mensajes
       </a>

@@ -16,10 +16,10 @@ import { Habilidad } from '../../../shared/models';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ProponerIntercambioDialogComponent } from '../../intercambios/proponer-intercambio-dialog/proponer-intercambio-dialog.component';
 
-// CAMBIO REPORTE: Engadir import para o diálogo de reporte
+// CAMBIO REPORTE: Añadir import para el diálogo de reporte
 import { ReportarDialogComponent } from '../../reportes/reportar-dialog/reportar-dialog.component';
 
-// CAMBIO ELIMINAR: Import do diálogo de confirmación
+// CAMBIO ELIMINAR: Import del diálogo de confirmación
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
@@ -147,18 +147,43 @@ export class HabilidadDetailComponent implements OnInit {
       return;
     }
 
-    const dialogRef = this.dialog.open(ProponerIntercambioDialogComponent, {
-      width: '550px',
-      data: { habilidadDeseada: this.habilidad },
-      disableClose: true
-    });
+    // Verificar si el usuario tiene habilidades de oferta
+    const currentUser = this.authService.currentUserValue;
+    if (currentUser) {
+      this.habilidadesService.getByUser(currentUser.id).subscribe(response => {
+        if (response.success) {
+          const habilidadesOferta = response.data.filter(skill => skill.tipo === 'oferta' && skill.estado === 'activa');
+          
+          if (habilidadesOferta.length === 0) {
+            // Usuario NO tiene habilidades activas para ofrecer
+            const snackBarRef = this.snackBar.open(
+              'Necesitas publicar al menos una habilidad de "Oferta" activa para poder intercambiar.',
+              'Crear Habilidad',
+              { duration: 6000 }
+            );
+            
+            snackBarRef.onAction().subscribe(() => {
+              this.router.navigate(['/habilidades/nueva']);
+            });
+            return;
+          }
+          
+          // Usuario SÍ tiene habilidades: abrir diálogo
+          const dialogRef = this.dialog.open(ProponerIntercambioDialogComponent, {
+            width: '550px',
+            data: { habilidadDeseada: this.habilidad },
+            disableClose: true
+          });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.snackBar.open('¡Propuesta enviada! Serás notificado con la respuesta.', 'Entendido', { duration: 4000 });
-        this.router.navigate(['/perfil']); 
-      }
-    });
+          dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+              this.snackBar.open('¡Propuesta enviada! Serás notificado con la respuesta.', 'Entendido', { duration: 4000 });
+              this.router.navigate(['/intercambios']); 
+            }
+          });
+        }
+      });
+    }
   }
 
   abrirDialogoReporte(): void {

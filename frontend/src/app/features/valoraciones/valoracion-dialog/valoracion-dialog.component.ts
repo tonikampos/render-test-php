@@ -30,8 +30,8 @@ import { ValoracionesService } from '../../../core/services/valoraciones.service
 })
 export class ValoracionDialogComponent {
   valoracionForm: FormGroup;
-  rating: number = 0; // Para gardar a puntuación seleccionada
-  hoverRating: number = 0; // Para o efecto visual das estrelas
+  rating: number = 0; // Para guardar la puntuación seleccionada
+  hoverRating: number = 0; // Para el efecto visual de las estrellas
   submitting = false;
 
   constructor(
@@ -48,8 +48,10 @@ export class ValoracionDialogComponent {
   }
 
   setRating(newRating: number): void {
-    this.rating = newRating;
-    this.valoracionForm.get('puntuacion')?.setValue(newRating);
+    if (newRating >= 1 && newRating <= 5) {
+      this.rating = newRating;
+      this.valoracionForm.get('puntuacion')?.setValue(newRating);
+    }
   }
 
   onSubmit(): void {
@@ -70,7 +72,7 @@ export class ValoracionDialogComponent {
       },
       error: (err) => {
         this.submitting = false;
-        this.snackBar.open(err.message || 'Error ao enviar a valoración.', 'Cerrar', { duration: 5000 });
+        this.snackBar.open(err.message || 'Error al enviar la valoración.', 'Cerrar', { duration: 5000 });
       }
     });
   }

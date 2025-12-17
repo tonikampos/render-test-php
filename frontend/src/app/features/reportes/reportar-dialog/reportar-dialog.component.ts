@@ -64,7 +64,7 @@ export class ReportarDialogComponent {
       },
       error: (err) => {
         this.submitting = false;
-        this.snackBar.open(err.message || 'Error ao enviar o reporte.', 'Cerrar', { duration: 5000 });
+        this.snackBar.open(err.message || 'Error al enviar el reporte.', 'Cerrar', { duration: 5000 });
       }
     });
   }

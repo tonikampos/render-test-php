@@ -25,7 +25,7 @@
   
   p {
     font-size: 1.1rem;
-    color: #666;
+    color: #424242;
   }
 }
 
@@ -87,6 +87,16 @@ th.mat-mdc-header-cell {
 .acciones-cell {
   white-space: nowrap;
   text-align: right;
+  
+  button, a {
+    margin-left: 8px; /* Separación entre botones */
+    min-width: 44px;
+    min-height: 44px;
+    
+    &:first-child {
+      margin-left: 0;
+    }
+  }
 }
 
 // Para el toggle de activo/inactivo

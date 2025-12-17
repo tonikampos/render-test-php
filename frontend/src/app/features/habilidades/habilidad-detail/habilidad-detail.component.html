@@ -37,7 +37,7 @@
 
             <div class="meta-info">
               <div class="meta-item">
-                <mat-icon>schedule</mat-icon>
+                <mat-icon aria-hidden="true">schedule</mat-icon>
                 <span *ngIf="habilidad.duracion_estimada">
                   {{ formatDuration(habilidad.duracion_estimada) }}
                 </span>
@@ -46,7 +46,7 @@
                 </span>
               </div>
               <div class="meta-item">
-                <mat-icon>calendar_today</mat-icon>
+                <mat-icon aria-hidden="true">calendar_today</mat-icon>
                 <span>{{ habilidad.fecha_publicacion | date:'dd/MM/yyyy' }}</span>
               </div>
             </div>
@@ -64,20 +64,20 @@
       <div class="sidebar-column">
         <mat-card class="user-card">
           <mat-card-header>
-            <mat-icon mat-card-avatar>account_circle</mat-icon>
+            <mat-icon mat-card-avatar aria-hidden="true">account_circle</mat-icon>
             
             <mat-card-title>
               <a [routerLink]="['/perfil', habilidad.usuario_id]">{{ habilidad.usuario_nombre }}</a>
             </mat-card-title>
             <mat-card-subtitle>
-              <mat-icon inline="true">location_on</mat-icon>
+              <mat-icon inline="true" aria-hidden="true">location_on</mat-icon>
               {{ habilidad.usuario_ubicacion }}
             </mat-card-subtitle>
           </mat-card-header>
 
           <mat-card-content>
             <p class="user-email" *ngIf="habilidad.usuario_email">
-              <mat-icon>email</mat-icon>
+              <mat-icon aria-hidden="true">email</mat-icon>
               {{ habilidad.usuario_email }}
             </p>
           </mat-card-content>
@@ -146,7 +146,7 @@
         <div *ngIf="authService.isAuthenticated() && !isOwner" class="report-section">
             <button mat-stroked-button color="warn" (click)="abrirDialogoReporte()">
                 <mat-icon>report_problem</mat-icon>
-                Reportar esta habilidade
+                Reportar esta habilidad
             </button>
         </div>
         </div>

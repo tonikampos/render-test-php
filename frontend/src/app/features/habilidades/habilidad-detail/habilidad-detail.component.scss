@@ -80,12 +80,12 @@
 
         .oferta-chip {
           background: #e3f2fd;
-          color: #1976d2;
+          color: #0d47a1; /* Azul oscuro */
         }
 
-        .demanda-chip {
+        &.demanda-chip {
           background: #fce4ec;
-          color: #c2185b;
+          color: #b71c1c; /* Rojo oscuro */
         }
 
         .pausada-chip {
@@ -115,7 +115,7 @@
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          color: #666;
+          color: #424242;
 
           mat-icon {
             font-size: 20px;
@@ -307,10 +307,16 @@
   }
 }
 .report-section {
-  margin-top: 1rem; // Engade un espazo superior
-  text-align: center; // Centra o botón
+  margin-top: 1rem;
+  text-align: center;
 
   button {
-    width: 100%; // Fai que o botón ocupe todo o ancho dispoñible
+    width: 100%;
+    color: #c62828 !important; /* Rojo */
+    border-color: #c62828 !important;
+
+    &:hover {
+      background-color: rgba(198, 40, 40, 0.04) !important;
+    }
   }
 }

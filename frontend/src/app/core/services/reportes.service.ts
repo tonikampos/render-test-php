@@ -10,7 +10,7 @@ export class ReportesService {
   constructor(private apiService: ApiService) { }
 
   /**
-   * Crear un novo reporte (para usuarios autenticados).
+   * Crear un nuevo reporte (para usuarios autenticados).
    * Corresponde a: POST /api/reportes
    */
   crearReporte(datos: { tipo_contenido: 'habilidad' | 'usuario'; contenido_id: number; motivo: string }): Observable<ApiResponse<Reporte>> {
@@ -18,7 +18,7 @@ export class ReportesService {
   }
 
   /**
-   * Obter os reportes pendentes (só para admin).
+   * Obtener los reportes pendientes (solo para admin).
    * GET /api/reportes?estado=pendiente
    */
   getReportesPendientes(): Observable<ApiResponse<Reporte[]>> {

@@ -38,7 +38,6 @@ export class HabilidadFormComponent implements OnInit {
   categorias: Categoria[] = [];
   submitting = false;
 
-  // 2. Añade propiedades para el modo edición
   isEditMode = false;
   habilidadId: number | null = null;
 
@@ -48,7 +47,7 @@ export class HabilidadFormComponent implements OnInit {
     private categoriasService: CategoriasService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute // 3. Inyéctarlo en el constructor
+    private route: ActivatedRoute
   ) {
     this.habilidadForm = this.fb.group({
       titulo: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(150)]],
@@ -62,7 +61,6 @@ export class HabilidadFormComponent implements OnInit {
   ngOnInit(): void {
     this.loadCategorias();
 
-    // 4. Comprueba si hay un ID en la URL para activar el modo edición
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEditMode = true;
@@ -71,7 +69,6 @@ export class HabilidadFormComponent implements OnInit {
     }
   }
 
-  // 5. Nuevo método para cargar los datos de la habilidad a editar
   loadHabilidadData(id: number): void {
     this.habilidadesService.getById(id).subscribe({
       next: (response) => {

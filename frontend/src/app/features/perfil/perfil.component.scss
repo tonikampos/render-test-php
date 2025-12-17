@@ -16,9 +16,29 @@
 .perfil-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 1.5rem;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid #eee;
+}
+
+.perfil-avatar {
+  flex-shrink: 0;
+
+  .avatar-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #1976d2;
+  }
+
+  .avatar-icon {
+    font-size: 100px;
+    width: 100px;
+    height: 100px;
+    color: #1976d2;
+  }
 }
 
 .perfil-info {
@@ -34,10 +54,18 @@
   .ubicacion {
     margin: 0.5rem 0 0;
     font-size: 1rem;
-    color: #777;
+    color: #666;
     display: flex;
     align-items: center;
     gap: 0.25rem;
+  }
+}
+
+.perfil-actions {
+  button {
+    mat-icon {
+      margin-right: 8px;
+    }
   }
 }
 
@@ -52,7 +80,7 @@
     font-size: 1.5rem;
     font-weight: 600;
     color: #444;
-    border-bottom: 2px solid #3f51b5;
+    border-bottom: 2px solid var(--primary-color);
     padding-bottom: 0.5rem;
     display: inline-block;
   }
@@ -78,14 +106,14 @@
     font-size: 1.5rem;
     font-weight: 600;
     color: #444;
-    border-bottom: 2px solid #3f51b5;
+    border-bottom: 2px solid var(--primary-color);
     padding-bottom: 0.5rem;
 
     mat-icon {
       font-size: 28px;
       width: 28px;
       height: 28px;
-      color: #3f51b5;
+      color: var(--primary-color);
     }
   }
 }
@@ -169,7 +197,7 @@
         font-size: 16px;
         width: 16px;
         height: 16px;
-        color: #ff9800;
+        color: var(--accent-color);
       }
     }
   }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -7,7 +8,6 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatChipsModule } from '@angular/material/chips';
 
 import { AdminService } from '../../../core/services/admin.service';
-import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 
 interface Estadisticas {
   total_usuarios: number;
@@ -36,12 +36,12 @@ interface Estadisticas {
   standalone: true,
   imports: [
     CommonModule,
+    RouterLink,
     MatCardModule,
     MatIconModule,
     MatProgressSpinnerModule,
     MatGridListModule,
-    MatChipsModule,
-    SkeletonLoaderComponent
+    MatChipsModule
   ],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss'

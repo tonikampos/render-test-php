@@ -67,7 +67,7 @@
   .ubicacion {
     margin: 0.75rem 0 0;
     font-size: 1rem;
-    color: #777;
+    color: #424242;
     display: flex;
     align-items: center;
     gap: 0.35rem;
@@ -76,7 +76,7 @@
       font-size: 20px;
       width: 20px;
       height: 20px;
-      color: #3f51b5;
+      color: var(--primary-color);
     }
   }
 }
@@ -92,7 +92,7 @@
     font-size: 1.5rem;
     font-weight: 600;
     color: #444;
-    border-bottom: 2px solid #3f51b5;
+    border-bottom: 2px solid var(--primary-color);
     padding-bottom: 0.5rem;
     display: inline-block;
   }

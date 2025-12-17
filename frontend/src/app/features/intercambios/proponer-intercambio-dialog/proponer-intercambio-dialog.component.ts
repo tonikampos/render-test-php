@@ -62,8 +62,10 @@ export class ProponerIntercambioDialogComponent implements OnInit {
     if (currentUser) {
       this.habilidadesService.getByUser(currentUser.id).subscribe(response => {
         if (response.success) {
-          // Filtramos para mostrar solo las habilidades que el usuario OFRECE
-          this.userSkills = response.data.filter(skill => skill.tipo === 'oferta');
+          // Filtramos para mostrar solo las habilidades de tipo OFERTA que estén ACTIVAS
+          this.userSkills = response.data.filter(skill => 
+            skill.tipo === 'oferta' && skill.estado === 'activa'
+          );
         }
       });
     }

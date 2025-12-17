@@ -173,12 +173,12 @@
 
     &.oferta {
       background: #e3f2fd;
-      color: #1976d2;
+      color: #0d47a1; /* Azul oscuro */
     }
 
     &.demanda {
       background: #fce4ec;
-      color: #c2185b;
+      color: #b71c1c; /* Rojo oscuro */
     }
   }
 
@@ -256,7 +256,7 @@
         align-items: center;
         gap: 0.3rem;
         font-size: 0.9rem;
-        color: #777;
+        color: #424242; /* Gris oscuro */
 
         mat-icon {
           font-size: 18px;
@@ -272,6 +272,13 @@
     margin: 0;
 
     button {
+      color: var(--primary-dark) !important;
+      font-weight: 500;
+
+      &:hover {
+        background-color: rgba(27, 94, 32, 0.04) !important;
+      }
+
       mat-icon {
         margin-left: 0.25rem;
       }

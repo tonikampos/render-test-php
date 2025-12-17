@@ -22,7 +22,7 @@
         </ng-template>
 
         <div class="intercambios-grid" *ngIf="intercambiosRecibidos.length > 0; else noRecibidos">
-          <mat-card *ngFor="let i of intercambiosRecibidos" class="intercambio-card">
+          <mat-card *ngFor="let i of intercambiosRecibidos" class="intercambio-card" [id]="'intercambio-' + i.id">
             <mat-card-header>
               <mat-card-title>
                 Propuesta de: <strong>{{ i.proponente_nombre }}</strong>
@@ -33,11 +33,17 @@
             </mat-card-header>
             <mat-card-content>
               <p>
-                ➡️ Te ofrece: <strong>{{ i.habilidad_ofrecida_titulo }}</strong>
+                <mat-icon aria-label="Te ofrece" inline="true">arrow_forward</mat-icon> Te ofrece: <strong>{{ i.habilidad_ofrecida_titulo }}</strong>
               </p>
               <p>
-                ⬅️ A cambio de: <strong>{{ i.habilidad_solicitada_titulo }}</strong>
+                <mat-icon aria-label="A cambio de" inline="true">arrow_back</mat-icon> A cambio de: <strong>{{ i.habilidad_solicitada_titulo }}</strong>
               </p>
+              
+              <div *ngIf="i.mensaje_propuesta" class="mensaje-propuesta">
+                <mat-divider></mat-divider>
+                <p class="mensaje-header"><mat-icon aria-hidden="true">message</mat-icon> <strong>Mensaje:</strong></p>
+                <p class="mensaje-texto">{{ i.mensaje_propuesta }}</p>
+              </div>
             </mat-card-content>
             <mat-card-actions>
               <mat-chip-listbox>
@@ -45,17 +51,20 @@
               </mat-chip-listbox>
               <div *ngIf="i.estado === 'propuesto'" class="actions-buttons">
                 <button mat-flat-button color="primary" (click)="responderPropuesta(i.id, 'aceptado')">
-                  <mat-icon>check_circle</mat-icon> Aceptar
+                  <mat-icon aria-hidden="true">check_circle</mat-icon> Aceptar
                 </button>
                 <button mat-stroked-button color="warn" (click)="responderPropuesta(i.id, 'rechazado')">
-                  <mat-icon>cancel</mat-icon> Rechazar
+                  <mat-icon aria-hidden="true">cancel</mat-icon> Rechazar
                 </button>
               </div>
 
               <div *ngIf="i.estado === 'completado'" class="actions-buttons">
-                <button mat-flat-button color="primary" (click)="abrirDialogoValoracion(i)">
+                <button *ngIf="!i.ya_valorado" mat-flat-button color="primary" (click)="abrirDialogoValoracion(i)">
                   <mat-icon>star_rate</mat-icon> Valorar
                 </button>
+                <mat-chip *ngIf="i.ya_valorado" class="valorado-chip">
+                  <mat-icon>check_circle</mat-icon> Ya valorado
+                </mat-chip>
               </div>
               </mat-card-actions>
           </mat-card>
@@ -76,7 +85,7 @@
         </ng-template>
 
         <div class="intercambios-grid" *ngIf="intercambiosEnviados.length > 0; else noEnviados">
-          <mat-card *ngFor="let i of intercambiosEnviados" class="intercambio-card">
+          <mat-card *ngFor="let i of intercambiosEnviados" class="intercambio-card" [id]="'intercambio-' + i.id">
             <mat-card-header>
               <mat-card-title>
                 Propuesta para: <strong>{{ i.receptor_nombre }}</strong>
@@ -87,11 +96,17 @@
             </mat-card-header>
             <mat-card-content>
               <p>
-                ⬅️ Ofreces: <strong>{{ i.habilidad_ofrecida_titulo }}</strong>
+                <mat-icon aria-label="Tú ofreces" inline="true">arrow_back</mat-icon> Ofreces: <strong>{{ i.habilidad_ofrecida_titulo }}</strong>
               </p>
               <p>
-                ➡️ Pides: <strong>{{ i.habilidad_solicitada_titulo }}</strong>
+                <mat-icon aria-label="Tú pides" inline="true">arrow_forward</mat-icon> Pides: <strong>{{ i.habilidad_solicitada_titulo }}</strong>
               </p>
+              
+              <div *ngIf="i.mensaje_propuesta" class="mensaje-propuesta">
+                <mat-divider></mat-divider>
+                <p class="mensaje-header"><mat-icon aria-hidden="true">message</mat-icon> <strong>Tu mensaje:</strong></p>
+                <p class="mensaje-texto">{{ i.mensaje_propuesta }}</p>
+              </div>
             </mat-card-content>
             <mat-card-actions>
               <mat-chip-listbox>
@@ -100,14 +115,17 @@
 
               <div *ngIf="i.estado === 'aceptado'" class="actions-buttons">
                 <button mat-flat-button color="accent" (click)="completarIntercambio(i.id)">
-                  <mat-icon>task_alt</mat-icon> Marcar Completado
+                  <mat-icon aria-hidden="true">task_alt</mat-icon> Marcar Completado
                 </button>
               </div>
 
               <div *ngIf="i.estado === 'completado'" class="actions-buttons">
-                <button mat-flat-button color="primary" (click)="abrirDialogoValoracion(i)">
-                  <mat-icon>star_rate</mat-icon> Valorar
+                <button *ngIf="!i.ya_valorado" mat-flat-button color="primary" (click)="abrirDialogoValoracion(i)">
+                  <mat-icon aria-hidden="true">star_rate</mat-icon> Valorar
                 </button>
+                <mat-chip *ngIf="i.ya_valorado" class="valorado-chip">
+                  <mat-icon aria-hidden="true">check_circle</mat-icon> Ya valorado
+                </mat-chip>
               </div>
               </mat-card-actions>
           </mat-card>

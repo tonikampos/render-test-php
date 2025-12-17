@@ -12,7 +12,7 @@ export class ValoracionesService {
   constructor(private apiService: ApiService) { }
 
   /**
-   * Obter as valoracións recibidas por un usuario específico.
+   * Obtener las valoraciones recibidas por un usuario específico.
    * Corresponde a GET /api/usuarios/:id/valoraciones
    */
   getValoracionesDeUsuario(usuarioId: number): Observable<ApiResponse<Valoracion[]>> {
@@ -20,7 +20,7 @@ export class ValoracionesService {
   }
 
   /**
-   * Crear unha nova valoración para un intercambio.
+   * Crear una nueva valoración para un intercambio.
    * Corresponde a POST /api/valoraciones
    */
   crearValoracion(datos: { intercambio_id: number; puntuacion: number; comentario?: string }): Observable<ApiResponse<Valoracion>> {

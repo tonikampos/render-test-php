@@ -28,82 +28,88 @@
   <div *ngIf="estadisticas && !loading" class="stats-grid">
     
     <!-- USUARIOS -->
-    <mat-card class="stat-card usuarios-card">
-      <mat-card-header>
-        <div class="card-header-content">
-          <mat-icon class="card-icon">people</mat-icon>
-          <div>
-            <h2>Usuarios</h2>
-            <p class="card-subtitle">Usuarios registrados</p>
+    <a routerLink="/admin/usuarios" class="card-link">
+      <mat-card class="stat-card usuarios-card">
+        <mat-card-header>
+          <div class="card-header-content">
+            <mat-icon class="card-icon" aria-hidden="true">people</mat-icon>
+            <div>
+              <h2>Usuarios</h2>
+              <p class="card-subtitle">Usuarios registrados</p>
+            </div>
           </div>
-        </div>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="stat-number">{{ estadisticas.total_usuarios }}</div>
-        <div class="stat-detail">
-          <mat-chip class="chip-info">
-            <mat-icon>person_add</mat-icon>
-            {{ estadisticas.usuarios_mes }} este mes
-          </mat-chip>
-        </div>
-      </mat-card-content>
-    </mat-card>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="stat-number">{{ estadisticas.total_usuarios }}</div>
+          <div class="stat-detail">
+            <mat-chip class="chip-info">
+              <mat-icon aria-hidden="true">person_add</mat-icon>
+              {{ estadisticas.usuarios_mes }} este mes
+            </mat-chip>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </a>
 
     <!-- HABILIDADES -->
-    <mat-card class="stat-card habilidades-card">
-      <mat-card-header>
-        <div class="card-header-content">
-          <mat-icon class="card-icon">lightbulb</mat-icon>
-          <div>
-            <h2>Habilidades</h2>
-            <p class="card-subtitle">Habilidades publicadas</p>
+    <a routerLink="/habilidades" class="card-link">
+      <mat-card class="stat-card habilidades-card">
+        <mat-card-header>
+          <div class="card-header-content">
+            <mat-icon class="card-icon" aria-hidden="true">lightbulb</mat-icon>
+            <div>
+              <h2>Habilidades</h2>
+              <p class="card-subtitle">Habilidades publicadas</p>
+            </div>
           </div>
-        </div>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="stat-number">{{ estadisticas.total_habilidades }}</div>
-        <div class="stat-detail">
-          <mat-chip class="chip-success">
-            <mat-icon>add_circle</mat-icon>
-            {{ estadisticas.habilidades_oferta }} ofertas
-          </mat-chip>
-          <mat-chip class="chip-warning">
-            <mat-icon>search</mat-icon>
-            {{ estadisticas.habilidades_demanda }} demandas
-          </mat-chip>
-        </div>
-      </mat-card-content>
-    </mat-card>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="stat-number">{{ estadisticas.total_habilidades }}</div>
+          <div class="stat-detail">
+            <mat-chip class="chip-success">
+              <mat-icon aria-hidden="true">add_circle</mat-icon>
+              {{ estadisticas.habilidades_oferta }} ofertas
+            </mat-chip>
+            <mat-chip class="chip-warning">
+              <mat-icon aria-hidden="true">search</mat-icon>
+              {{ estadisticas.habilidades_demanda }} demandas
+            </mat-chip>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </a>
 
     <!-- INTERCAMBIOS -->
-    <mat-card class="stat-card intercambios-card">
-      <mat-card-header>
-        <div class="card-header-content">
-          <mat-icon class="card-icon">swap_horiz</mat-icon>
-          <div>
-            <h2>Intercambios</h2>
-            <p class="card-subtitle">Total de intercambios</p>
+    <a routerLink="/intercambios" class="card-link">
+      <mat-card class="stat-card intercambios-card">
+        <mat-card-header>
+          <div class="card-header-content">
+            <mat-icon class="card-icon" aria-hidden="true">swap_horiz</mat-icon>
+            <div>
+              <h2>Intercambios</h2>
+              <p class="card-subtitle">Total de intercambios</p>
+            </div>
           </div>
-        </div>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="stat-number">{{ estadisticas.total_intercambios }}</div>
-        <div class="stat-detail">
-          <mat-chip class="chip-primary">{{ estadisticas.intercambios_propuestos }} propuestos</mat-chip>
-          <mat-chip class="chip-accent">{{ estadisticas.intercambios_aceptados }} aceptados</mat-chip>
-          <mat-chip class="chip-success">{{ estadisticas.intercambios_completados }} completados</mat-chip>
-        </div>
-        <div class="progress-info" *ngIf="estadisticas.total_intercambios > 0">
-          <small>{{ getIntercambiosActivosPorcentaje() }}% activos</small>
-        </div>
-      </mat-card-content>
-    </mat-card>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="stat-number">{{ estadisticas.total_intercambios }}</div>
+          <div class="stat-detail">
+            <mat-chip class="chip-primary">{{ estadisticas.intercambios_propuestos }} propuestos</mat-chip>
+            <mat-chip class="chip-accent">{{ estadisticas.intercambios_aceptados }} aceptados</mat-chip>
+            <mat-chip class="chip-success">{{ estadisticas.intercambios_completados }} completados</mat-chip>
+          </div>
+          <div class="progress-info" *ngIf="estadisticas.total_intercambios > 0">
+            <small>{{ getIntercambiosActivosPorcentaje() }}% activos</small>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </a>
 
     <!-- VALORACIONES -->
     <mat-card class="stat-card valoraciones-card">
       <mat-card-header>
         <div class="card-header-content">
-          <mat-icon class="card-icon">star</mat-icon>
+          <mat-icon class="card-icon" aria-hidden="true">star</mat-icon>
           <div>
             <h2>Valoraciones</h2>
             <p class="card-subtitle">Sistema de reputación</p>
@@ -116,7 +122,8 @@
           <div class="rating-stars">
             <mat-icon *ngFor="let star of getEstrellas(estadisticas.valoracion_promedio)" 
                       [class.filled]="star === 'star'"
-                      [class.half]="star === 'star_half'">
+                      [class.half]="star === 'star_half'"
+                      aria-hidden="true">
               {{ star }}
             </mat-icon>
             <span class="rating-number">{{ estadisticas.valoracion_promedio }}</span>
@@ -126,39 +133,41 @@
     </mat-card>
 
     <!-- REPORTES -->
-    <mat-card class="stat-card reportes-card">
-      <mat-card-header>
-        <div class="card-header-content">
-          <mat-icon class="card-icon">flag</mat-icon>
-          <div>
-            <h2>Reportes</h2>
-            <p class="card-subtitle">Moderación de contenido</p>
+    <a routerLink="/admin/reportes" class="card-link">
+      <mat-card class="stat-card reportes-card">
+        <mat-card-header>
+          <div class="card-header-content">
+            <mat-icon class="card-icon" aria-hidden="true">flag</mat-icon>
+            <div>
+              <h2>Reportes</h2>
+              <p class="card-subtitle">Moderación de contenido</p>
+            </div>
           </div>
-        </div>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="stat-number">{{ estadisticas.total_reportes }}</div>
-        <div class="stat-detail">
-          <mat-chip class="chip-warn" *ngIf="estadisticas.reportes_pendientes > 0">
-            <mat-icon>warning</mat-icon>
-            {{ estadisticas.reportes_pendientes }} pendientes
-          </mat-chip>
-          <mat-chip class="chip-success">
-            <mat-icon>check_circle</mat-icon>
-            {{ estadisticas.reportes_resueltos }} resueltos
-          </mat-chip>
-        </div>
-        <div class="progress-info" *ngIf="estadisticas.reportes_pendientes > 0">
-          <small>{{ getReportesPendientesPorcentaje() }}% pendientes de revisión</small>
-        </div>
-      </mat-card-content>
-    </mat-card>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="stat-number">{{ estadisticas.total_reportes }}</div>
+          <div class="stat-detail">
+            <mat-chip class="chip-warn" *ngIf="estadisticas.reportes_pendientes > 0">
+              <mat-icon aria-hidden="true">warning</mat-icon>
+              {{ estadisticas.reportes_pendientes }} pendientes
+            </mat-chip>
+            <mat-chip class="chip-success">
+              <mat-icon aria-hidden="true">check_circle</mat-icon>
+              {{ estadisticas.reportes_resueltos }} resueltos
+            </mat-chip>
+          </div>
+          <div class="progress-info" *ngIf="estadisticas.reportes_pendientes > 0">
+            <small>{{ getReportesPendientesPorcentaje() }}% pendientes de revisión</small>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </a>
 
     <!-- CONVERSACIONES -->
     <mat-card class="stat-card conversaciones-card">
       <mat-card-header>
         <div class="card-header-content">
-          <mat-icon class="card-icon">chat</mat-icon>
+          <mat-icon class="card-icon" aria-hidden="true">chat</mat-icon>
           <div>
             <h2>Comunicación</h2>
             <p class="card-subtitle">Mensajería</p>
@@ -169,7 +178,7 @@
         <div class="stat-number">{{ estadisticas.total_conversaciones }}</div>
         <div class="stat-detail">
           <mat-chip class="chip-info">
-            <mat-icon>message</mat-icon>
+            <mat-icon aria-hidden="true">message</mat-icon>
             {{ estadisticas.total_mensajes }} mensajes
           </mat-chip>
         </div>
@@ -183,7 +192,7 @@
     <mat-card class="stat-card categoria-card">
       <mat-card-header>
         <div class="card-header-content">
-          <mat-icon class="card-icon">local_fire_department</mat-icon>
+          <mat-icon class="card-icon" aria-hidden="true">local_fire_department</mat-icon>
           <div>
             <h2>Categoría Popular</h2>
             <p class="card-subtitle">Más demandada</p>
@@ -194,7 +203,7 @@
         <div class="stat-category">{{ estadisticas.categoria_mas_popular }}</div>
         <div class="stat-detail">
           <mat-chip class="chip-accent">
-            <mat-icon>trending_up</mat-icon>
+            <mat-icon aria-hidden="true">trending_up</mat-icon>
             {{ estadisticas.categoria_mas_popular_count }} habilidades
           </mat-chip>
         </div>
@@ -205,7 +214,7 @@
     <mat-card class="stat-card resumen-card full-width">
       <mat-card-header>
         <div class="card-header-content">
-          <mat-icon class="card-icon">assessment</mat-icon>
+          <mat-icon class="card-icon" aria-hidden="true">assessment</mat-icon>
           <div>
             <h2>Resumen de Actividad</h2>
             <p class="card-subtitle">Métricas clave del sistema</p>

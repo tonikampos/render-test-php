@@ -1,32 +1,32 @@
 <h1 mat-dialog-title>
   <mat-icon color="warn">report_problem</mat-icon>
-  Reportar Contido
+  Reportar Contenido
 </h1>
 
 <div mat-dialog-content>
   <p>
-    Estás a reportar {{ data.tipoContenido === 'habilidad' ? 'a habilidade' : 'o usuario' }}:
+    Estás reportando {{ data.tipoContenido === 'habilidad' ? 'la habilidad' : 'el usuario' }}:
     <strong>"{{ data.tituloContenido }}"</strong>.
   </p>
-  <p>Por favor, describe o motivo do teu reporte:</p>
+  <p>Por favor, describe el motivo de tu reporte:</p>
 
   <form [formGroup]="reportForm" id="report-form" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Motivo do reporte</mat-label>
+      <mat-label>Motivo del reporte</mat-label>
       <textarea
         matInput
         formControlName="motivo"
         rows="5"
-        placeholder="Describe por que cres que este contido é inapropiado (spam, ofensivo, etc.). Mínimo 10 caracteres."
+        placeholder="Describe por qué crees que este contenido es inapropiado (spam, ofensivo, etc.). Mínimo 10 caracteres."
       ></textarea>
       <mat-error *ngIf="reportForm.get('motivo')?.hasError('required')">
-        O motivo é obrigatorio.
+        El motivo es obligatorio.
       </mat-error>
       <mat-error *ngIf="reportForm.get('motivo')?.hasError('minlength')">
-        Describe un pouco máis o motivo (mín. 10 caracteres).
+        Describe un poco más el motivo (mín. 10 caracteres).
       </mat-error>
       <mat-error *ngIf="reportForm.get('motivo')?.hasError('maxlength')">
-        O motivo non pode superar os 500 caracteres.
+        El motivo no puede superar los 500 caracteres.
       </mat-error>
     </mat-form-field>
   </form>

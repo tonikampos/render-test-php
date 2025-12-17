@@ -55,9 +55,13 @@
           <app-notification-badge></app-notification-badge>
         </a>
 
-        <a mat-list-item routerLink="/conversaciones" (click)="closeSidenav()">
+        <a mat-list-item 
+           routerLink="/conversaciones" 
+           (click)="closeSidenav()"
+           class="messages-menu-item">
           <mat-icon matListItemIcon>chat</mat-icon>
           <span matListItemTitle>Mensajes</span>
+          <span class="messages-badge" *ngIf="mensajesNoLeidos > 0">✉</span>
         </a>
 
         <mat-divider *ngIf="authService.isAdmin()"></mat-divider>

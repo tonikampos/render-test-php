@@ -1,13 +1,14 @@
 export interface Notificacion {
   id: number;
   usuario_id: number;
-  tipo: 'intercambio_propuesto' | 'intercambio_aceptado' | 'intercambio_rechazado' | 
-        'intercambio_completado' | 'valoracion_recibida' | 'mensaje_nuevo';
+  tipo: 'nuevo_intercambio' | 'intercambio_aceptado' | 'intercambio_rechazado' | 
+        'intercambio_completado' | 'nueva_valoracion' | 'nuevo_mensaje';
   titulo: string;
   mensaje: string;
-  entidad_tipo: 'intercambio' | 'valoracion' | 'conversacion';
-  entidad_id: number;
+  enlace: string | null;
+  referencia_id: number | null;
   leida: boolean;
+  enviada_email: boolean;
   fecha_creacion: string;
   fecha_lectura?: string;
 }

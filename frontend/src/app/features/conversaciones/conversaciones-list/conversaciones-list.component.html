@@ -30,6 +30,7 @@
       <mat-list-item 
         *ngFor="let conv of conversaciones; let last = last" 
         [routerLink]="['/conversaciones', conv.id]"
+        [state]="{ usuario: conv.otro_usuario_nombre }"
         class="conversacion-item">
         
         <mat-icon matListItemIcon>account_circle</mat-icon>

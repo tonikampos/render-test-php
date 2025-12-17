@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AuthService } from '../../core/services/auth.service';
 import { ValoracionesService } from '../../core/services/valoraciones.service';
 import { HabilidadesService } from '../../core/services/habilidades.service';
@@ -10,7 +12,8 @@ import { IntercambiosService } from '../../core/services/intercambios.service';
 import { User } from '../../shared/models';
 import { Valoracion } from '../../shared/models/valoracion.model';
 import { ValoracionesListComponent } from '../../shared/components/valoraciones-list/valoraciones-list.component';
-import { SkeletonLoaderComponent } from '../../shared/components/skeleton-loader/skeleton-loader.component'; 
+import { SkeletonLoaderComponent } from '../../shared/components/skeleton-loader/skeleton-loader.component';
+import { EditarPerfilDialogComponent } from './editar-perfil-dialog/editar-perfil-dialog.component'; 
 
 @Component({
   selector: 'app-perfil',
@@ -20,6 +23,8 @@ import { SkeletonLoaderComponent } from '../../shared/components/skeleton-loader
     MatCardModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatButtonModule,
+    MatDialogModule,
     ValoracionesListComponent,
     SkeletonLoaderComponent
   ],
@@ -44,7 +49,8 @@ export class PerfilComponent implements OnInit {
     private authService: AuthService,
     private valoracionesService: ValoracionesService,
     private habilidadesService: HabilidadesService,
-    private intercambiosService: IntercambiosService
+    private intercambiosService: IntercambiosService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -130,5 +136,21 @@ export class PerfilComponent implements OnInit {
     }
     
     return estrellas;
+  }
+
+  openEditarPerfilDialog(): void {
+    const dialogRef = this.dialog.open(EditarPerfilDialogComponent, {
+      width: '500px',
+      data: { usuario: this.usuario }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Actualizar el usuario en el componente
+        this.usuario = result;
+        // Actualizar también en AuthService para que se refleje en toda la app
+        this.authService.updateCurrentUser(result);
+      }
+    });
   }
 }

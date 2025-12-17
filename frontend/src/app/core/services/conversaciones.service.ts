@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, interval } from 'rxjs';
+import { map, switchMap, startWith } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { ApiResponse, Conversacion, Mensaje, MensajeCreateRequest } from '../../shared/models';
 
@@ -60,5 +61,40 @@ export class ConversacionesService {
    */
   marcarLeido(conversacionId: number): Observable<ApiResponse<any>> {
     return this.apiService.put<ApiResponse<any>>(`conversaciones/${conversacionId}/marcar-leido`, {});
+  }
+
+  /**
+   * Contar total de mensajes no leídos en todas las conversaciones
+   * Usa el endpoint existente que ya devuelve mensajes_no_leidos por conversación
+   */
+  countMensajesNoLeidos(): Observable<ApiResponse<{ count: number }>> {
+    return this.list().pipe(
+      map(response => {
+        if (response.success && response.data) {
+          // Agrupar por ID para evitar duplicados (el backend puede devolver conversaciones repetidas)
+          const conversacionesUnicas = new Map<number, number>();
+          response.data.forEach(conv => {
+            if (!conversacionesUnicas.has(conv.id)) {
+              conversacionesUnicas.set(conv.id, conv.mensajes_no_leidos || 0);
+            }
+          });
+          
+          // Sumar solo conversaciones únicas
+          const total = Array.from(conversacionesUnicas.values()).reduce((sum, count) => sum + count, 0);
+          return { success: true, data: { count: total }, message: '' };
+        }
+        return { success: false, data: { count: 0 }, message: '' };
+      })
+    );
+  }
+
+  /**
+   * Polling para actualizar contador de mensajes no leídos cada 30 segundos
+   */
+  pollMensajesNoLeidos(): Observable<ApiResponse<{ count: number }>> {
+    return interval(30000).pipe(
+      startWith(0),
+      switchMap(() => this.countMensajesNoLeidos())
+    );
   }
 }

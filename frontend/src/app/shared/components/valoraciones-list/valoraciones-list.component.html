@@ -1,9 +1,9 @@
 <div class="valoraciones-container">
-  <h3>Valoracións Recibidas</h3>
+  <h3>Valoraciones Recibidas</h3>
   <hr>
 
   <div *ngIf="!valoraciones || valoraciones.length === 0" class="no-valoraciones">
-    <p>Este usuario aínda non recibiu ningunha valoración.</p>
+    <p>Este usuario aún no ha recibido ninguna valoración.</p>
   </div>
 
   <div *ngFor="let valoracion of valoraciones" class="valoracion-card">

@@ -24,4 +24,7 @@ export interface Intercambio {
   mensaje_propuesta?: string; // Opcional por si hay mensajes adicionales
   fecha_propuesta: string; // Formato 'YYYY-MM-DD HH:MM:SS'
   fecha_actualizacion: string;
+  
+  // Indica si el usuario actual ya valoró este intercambio
+  ya_valorado?: boolean;
 }

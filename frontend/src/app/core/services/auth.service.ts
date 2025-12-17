@@ -128,4 +128,12 @@ export class AuthService {
       confirm_password: confirmPassword
     });
   }
+
+  /**
+   * Actualizar usuario actual (por ejemplo, después de editar perfil)
+   */
+  updateCurrentUser(user: User): void {
+    this.storageService.setUser(user);
+    this.currentUserSubject.next(user);
+  }
 }

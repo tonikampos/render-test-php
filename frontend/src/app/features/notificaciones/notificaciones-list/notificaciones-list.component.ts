@@ -108,37 +108,40 @@ export class NotificacionesListComponent implements OnInit, OnDestroy {
   }
 
   navegarAEntidad(notificacion: Notificacion): void {
-    // Navegación según tipo de entidad
-    if (notificacion.entidad_tipo === 'intercambio' && notificacion.entidad_id) {
-      window.location.href = `/intercambios/${notificacion.entidad_id}`;
-    } else if (notificacion.entidad_tipo === 'conversacion' && notificacion.entidad_id) {
-      window.location.href = `/conversaciones/${notificacion.entidad_id}`;
-    } else if (notificacion.entidad_tipo === 'valoracion' && notificacion.entidad_id) {
-      // Navegar al perfil del usuario o a la valoración
+    // Navegación según tipo de notificación
+    const tiposIntercambio = ['nuevo_intercambio', 'intercambio_aceptado', 'intercambio_rechazado', 'intercambio_completado'];
+    
+    if (tiposIntercambio.includes(notificacion.tipo) && notificacion.referencia_id) {
+      // Navegar a la lista con queryParam para destacar el intercambio específico
+      window.location.href = `/intercambios?destacar=${notificacion.referencia_id}`;
+    } else if (notificacion.tipo === 'nuevo_mensaje' && notificacion.referencia_id) {
+      window.location.href = `/conversaciones/${notificacion.referencia_id}`;
+    } else if (notificacion.tipo === 'nueva_valoracion') {
+      // Navegar al perfil del usuario
       window.location.href = `/perfil`;
     }
   }
 
   getIconoNotificacion(tipo: string): string {
     const iconos: { [key: string]: string } = {
-      'intercambio_propuesto': 'swap_horiz',
+      'nuevo_intercambio': 'swap_horiz',
       'intercambio_aceptado': 'check_circle',
       'intercambio_rechazado': 'cancel',
       'intercambio_completado': 'done_all',
-      'valoracion_recibida': 'star',
-      'mensaje_nuevo': 'chat'
+      'nueva_valoracion': 'star',
+      'nuevo_mensaje': 'chat'
     };
     return iconos[tipo] || 'notifications';
   }
 
   getColorNotificacion(tipo: string): string {
     const colores: { [key: string]: string } = {
-      'intercambio_propuesto': 'primary',
+      'nuevo_intercambio': 'primary',
       'intercambio_aceptado': 'accent',
       'intercambio_rechazado': 'warn',
       'intercambio_completado': 'accent',
-      'valoracion_recibida': 'accent',
-      'mensaje_nuevo': 'primary'
+      'nueva_valoracion': 'accent',
+      'nuevo_mensaje': 'primary'
     };
     return colores[tipo] || 'primary';
   }

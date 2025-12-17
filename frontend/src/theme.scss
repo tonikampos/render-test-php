@@ -1,0 +1,46 @@
+// Custom theming for Angular Material
+@use '@angular/material' as mat;
+
+// Include the common styles for Angular Material
+@include mat.core();
+
+// Paleta Material Design con tonos oscuros para mejor contraste
+$primary: mat.m2-define-palette(mat.$m2-green-palette, 800);
+$accent: mat.m2-define-palette(mat.$m2-cyan-palette, 800);
+$warn: mat.m2-define-palette(mat.$m2-orange-palette, 800);
+
+// Create the theme using the custom palettes
+$theme: mat.m2-define-light-theme((
+  color: (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
+  ),
+  typography: mat.m2-define-typography-config(),
+  density: 0,
+));
+
+// Include theme styles for core and each component
+@include mat.all-component-themes($theme);
+
+// Variables de color personalizadas
+:root {
+  --primary-color: #2e7d32;
+  --primary-light: #60ad5e;
+  --primary-dark: #1b5e20;
+  
+  --accent-color: #00838f;
+  --accent-light: #4fb3bf;
+  --accent-dark: #005662;
+  
+  --warn-color: #e65100;
+  --warn-light: #ff9800;
+  --warn-dark: #bf360c;
+  
+  --success-color: #66bb6a;
+  --info-color: #29b6f6;
+  --background-color: #f5f9f4;
+  --surface-color: #ffffff;
+  --text-primary: rgba(0, 0, 0, 0.87);
+  --text-secondary: rgba(0, 0, 0, 0.6);
+}
