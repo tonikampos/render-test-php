@@ -17,7 +17,7 @@
       <div class="perfil-actions" *ngIf="!isOwnProfile">
         <!-- Botón para usuarios autenticados -->
         <button 
-          *ngIf="authService.isAuthenticated()"
+          *ngIf="isLoggedIn"
           mat-raised-button 
           color="primary"
           (click)="iniciarConversacion()"
@@ -29,7 +29,7 @@
 
         <!-- Botón para usuarios NO autenticados -->
         <button 
-          *ngIf="!authService.isAuthenticated()"
+          *ngIf="!isLoggedIn"
           mat-stroked-button 
           color="primary"
           routerLink="/login">
