@@ -59,6 +59,13 @@ export class NotificationBadgeComponent implements OnInit, OnDestroy {
         if (response.success && response.data?.count !== undefined) {
           this.noLeidas = response.data.count;
         }
+      },
+      error: (error) => {
+        // Si error 401 (no autenticado), detener polling para evitar spam
+        if (error.status === 401) {
+          this.noLeidas = 0;
+          this.pollingSubscription?.unsubscribe();
+        }
       }
     });
   }

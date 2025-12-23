@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, interval } from 'rxjs';
+import { Observable, interval, catchError, of } from 'rxjs';
 import { map, switchMap, startWith } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { ApiResponse, Conversacion, Mensaje, MensajeCreateRequest } from '../../shared/models';
@@ -77,7 +77,9 @@ export class ConversacionesService {
   pollMensajesNoLeidos(): Observable<ApiResponse<{ count: number }>> {
     return interval(60000).pipe(
       startWith(0),
-      switchMap(() => this.countMensajesNoLeidos())
+      switchMap(() => this.countMensajesNoLeidos().pipe(
+        catchError(() => of({ success: false, data: { count: 0 }, message: '' }))
+      ))
     );
   }
 }

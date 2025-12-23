@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, interval, switchMap, startWith } from 'rxjs';
+import { Observable, interval, switchMap, startWith, catchError, of } from 'rxjs';
 import { ApiService } from './api.service';
 import { ApiResponse, Notificacion } from '../../shared/models';
 
@@ -48,7 +48,9 @@ export class NotificacionesService {
   pollNoLeidas(): Observable<ApiResponse<{ count: number }>> {
     return interval(60000).pipe(
       startWith(0),
-      switchMap(() => this.countNoLeidas())
+      switchMap(() => this.countNoLeidas().pipe(
+        catchError(() => of({ success: false, data: { count: 0 }, message: '' }))
+      ))
     );
   }
 }

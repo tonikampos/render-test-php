@@ -2,6 +2,7 @@
 /**
  * Endpoints de Conversaciones y Mensajes
  * GET /api/conversaciones - Listar mis conversaciones
+ * GET /api/conversaciones/mensajes-no-leidos - Contar mensajes no leídos (optimizado para badges)
  * GET /api/conversaciones/:id/mensajes - Obtener mensajes de una conversación
  * POST /api/conversaciones - Crear nueva conversación
  * POST /api/conversaciones/:id/mensaje - Enviar mensaje
