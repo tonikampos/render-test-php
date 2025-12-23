@@ -39,4 +39,5 @@ export interface HabilidadesListParams {
   categoria?: string;
   ubicacion?: string;
   search?: string;
+  usuario_id?: number;
 }

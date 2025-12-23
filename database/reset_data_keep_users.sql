@@ -23,29 +23,6 @@ ALTER SEQUENCE password_resets_id_seq RESTART WITH 1;
 commit;
 
 
--- =========================================================================
--- SCRIPT DE LIMPIEZA DE DATOS - Mantiene Usuarios, Elimina Todo lo Demás
--- =========================================================================
--- Fecha: 12 de diciembre de 2025
--- Propósito: Limpiar datos de prueba para crear datos reales coherentes
---           para la defensa del TFM
--- 
--- MANTIENE:
---   - Tabla usuarios (todos los usuarios existentes)
---   - Tabla categorias_habilidades (las 8 categorías)
---
--- ELIMINA:
---   - Todas las habilidades
---   - Todos los intercambios
---   - Todas las conversaciones y mensajes
---   - Todas las notificaciones
---   - Todas las valoraciones
---   - Todos los reportes
---   - Todas las sesiones activas
---   - Tokens de password_resets
--- =========================================================================
-
--- IMPORTANTE: Ejecutar este script en orden debido a las foreign keys
 
 BEGIN;
 
@@ -129,18 +106,3 @@ UNION ALL
 SELECT 'password_resets', COUNT(*) FROM password_resets
 ORDER BY tabla;
 
--- =========================================================================
--- RESULTADO ESPERADO:
--- =========================================================================
--- usuarios               : 3-10 (los usuarios existentes: admin, demo, test, etc.)
--- categorias_habilidades : 8 (las 8 categorías originales)
--- habilidades            : 0 ✅
--- intercambios           : 0 ✅
--- conversaciones         : 0 ✅
--- mensajes               : 0 ✅
--- notificaciones         : 0 ✅
--- valoraciones           : 0 ✅
--- reportes               : 0 ✅
--- sesiones               : 0 ✅
--- password_resets        : 0 ✅
--- =========================================================================

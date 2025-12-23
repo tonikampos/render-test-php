@@ -86,7 +86,6 @@ export class NotificacionesListComponent implements OnInit, OnDestroy {
   trackByNotificacionId(index: number, notificacion: Notificacion): number {
     return notificacion.id;
   }
-  }
 
   marcarLeida(notificacion: Notificacion): void {
     if (notificacion.leida) return;
