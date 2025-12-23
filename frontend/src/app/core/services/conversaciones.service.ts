@@ -1,19 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Observable, timer, catchError, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable, interval, catchError, of } from 'rxjs';
+import { map, switchMap, startWith } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { ApiResponse, Conversacion, Mensaje, MensajeCreateRequest } from '../../shared/models';
-import { UserActivityService } from './user-activity.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConversacionesService {
 
-  constructor(
-    private apiService: ApiService,
-    private userActivityService: UserActivityService
-  ) {}
+  constructor(private apiService: ApiService) {}
 
   /**
    * Listar mis conversaciones
@@ -76,20 +72,15 @@ export class ConversacionesService {
   }
 
   /**
-   * Polling adaptativo para contador de mensajes no leídos
-   * - 15s cuando usuario activo (interactuando)
-   * - 120s cuando inactivo (>5 min sin interacción)
+   * Polling cada 15 segundos para contador de mensajes no leídos
+   * Optimizado para demostración TFM (tiempo casi real)
    */
   pollMensajesNoLeidos(): Observable<ApiResponse<{ count: number }>> {
-    return timer(0, 1000).pipe(
-      switchMap(() => {
-        const interval = this.userActivityService.getPollingInterval();
-        return timer(0, interval).pipe(
-          switchMap(() => this.countMensajesNoLeidos().pipe(
-            catchError(() => of({ success: false, data: { count: 0 }, message: '' }))
-          ))
-        );
-      })
+    return interval(15000).pipe(
+      startWith(0),
+      switchMap(() => this.countMensajesNoLeidos().pipe(
+        catchError(() => of({ success: false, data: { count: 0 }, message: '' }))
+      ))
     );
   }
 }
