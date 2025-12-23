@@ -154,8 +154,8 @@ export class ConversacionDetailComponent implements OnInit, OnDestroy, AfterView
   }
 
   startPolling(conversacionId: number): void {
-    // Polling cada 5 segundos para actualizar mensajes
-    this.pollingSubscription = interval(5000).subscribe(() => {
+    // Polling cada 10 segundos para actualizar mensajes (optimizado para reducir carga)
+    this.pollingSubscription = interval(10000).subscribe(() => {
       this.conversacionesService.getMensajes(conversacionId).subscribe({
         next: (response) => {
           if (response.success && response.data.length > this.mensajes.length) {

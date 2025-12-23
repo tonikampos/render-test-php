@@ -55,55 +55,58 @@ function listarConversaciones() {
         $usuario_id = $_SESSION['user_id'];
         
         $sql = "
+            WITH mis_conversaciones AS (
+                SELECT DISTINCT c.id, c.intercambio_id, c.fecha_creacion, c.ultima_actualizacion
+                FROM conversaciones c
+                INNER JOIN participantes_conversacion pc ON c.id = pc.conversacion_id
+                WHERE pc.usuario_id = :usuario_id
+            ),
+            otro_participante AS (
+                SELECT 
+                    mc.id as conversacion_id,
+                    u.id as otro_usuario_id,
+                    u.nombre_usuario as otro_usuario_nombre,
+                    u.foto_url as otro_usuario_foto
+                FROM mis_conversaciones mc
+                INNER JOIN participantes_conversacion pc ON mc.id = pc.conversacion_id
+                INNER JOIN usuarios u ON pc.usuario_id = u.id
+                WHERE pc.usuario_id != :usuario_id
+            ),
+            ultimo_mensaje AS (
+                SELECT DISTINCT ON (m.conversacion_id)
+                    m.conversacion_id,
+                    m.contenido as ultimo_mensaje,
+                    m.fecha_envio as fecha_ultimo_mensaje
+                FROM mensajes m
+                INNER JOIN mis_conversaciones mc ON m.conversacion_id = mc.id
+                ORDER BY m.conversacion_id, m.fecha_envio DESC
+            ),
+            mensajes_sin_leer AS (
+                SELECT 
+                    m.conversacion_id,
+                    COUNT(*) as mensajes_no_leidos
+                FROM mensajes m
+                INNER JOIN mis_conversaciones mc ON m.conversacion_id = mc.id
+                WHERE m.emisor_id != :usuario_id AND m.leido = false
+                GROUP BY m.conversacion_id
+            )
             SELECT 
-                c.id,
-                c.intercambio_id,
-                c.fecha_creacion,
-                c.ultima_actualizacion,
-                -- Datos del otro usuario (el que NO soy yo)
-                CASE 
-                    WHEN pc1.usuario_id = :usuario_id THEN pc2.usuario_id
-                    ELSE pc1.usuario_id
-                END as otro_usuario_id,
-                CASE 
-                    WHEN pc1.usuario_id = :usuario_id THEN u2.nombre_usuario
-                    ELSE u1.nombre_usuario
-                END as otro_usuario_nombre,
-                CASE 
-                    WHEN pc1.usuario_id = :usuario_id THEN u2.foto_url
-                    ELSE u1.foto_url
-                END as otro_usuario_foto,
-                -- Último mensaje
-                (
-                    SELECT contenido 
-                    FROM mensajes 
-                    WHERE conversacion_id = c.id 
-                    ORDER BY fecha_envio DESC 
-                    LIMIT 1
-                ) as ultimo_mensaje,
-                (
-                    SELECT fecha_envio 
-                    FROM mensajes 
-                    WHERE conversacion_id = c.id 
-                    ORDER BY fecha_envio DESC 
-                    LIMIT 1
-                ) as fecha_ultimo_mensaje,
-                -- Mensajes no leídos
-                (
-                    SELECT COUNT(*) 
-                    FROM mensajes 
-                    WHERE conversacion_id = c.id 
-                    AND emisor_id != :usuario_id 
-                    AND leido = false
-                ) as mensajes_no_leidos
-            FROM conversaciones c
-            INNER JOIN participantes_conversacion pc1 ON c.id = pc1.conversacion_id
-            INNER JOIN participantes_conversacion pc2 ON c.id = pc2.conversacion_id AND pc2.usuario_id != pc1.usuario_id
-            INNER JOIN usuarios u1 ON pc1.usuario_id = u1.id
-            INNER JOIN usuarios u2 ON pc2.usuario_id = u2.id
-            WHERE pc1.usuario_id = :usuario_id OR pc2.usuario_id = :usuario_id
-            GROUP BY c.id, pc1.usuario_id, pc2.usuario_id, u1.nombre_usuario, u2.nombre_usuario, u1.foto_url, u2.foto_url
-            ORDER BY c.ultima_actualizacion DESC
+                mc.id,
+                mc.intercambio_id,
+                mc.fecha_creacion,
+                mc.ultima_actualizacion,
+                op.otro_usuario_id,
+                op.otro_usuario_nombre,
+                op.otro_usuario_foto,
+                um.ultimo_mensaje,
+                um.fecha_ultimo_mensaje,
+                COALESCE(msl.mensajes_no_leidos, 0) as mensajes_no_leidos
+            FROM mis_conversaciones mc
+            INNER JOIN otro_participante op ON mc.id = op.conversacion_id
+            LEFT JOIN ultimo_mensaje um ON mc.id = um.conversacion_id
+            LEFT JOIN mensajes_sin_leer msl ON mc.id = msl.conversacion_id
+            ORDER BY mc.ultima_actualizacion DESC
+            LIMIT 100
         ";
         
         $stmt = $db->prepare($sql);

@@ -189,6 +189,8 @@ CREATE INDEX idx_intercambios_receptor ON public.intercambios USING btree (recep
 CREATE INDEX idx_mensajes_conversacion ON public.mensajes USING btree (conversacion_id, fecha_envio DESC);
 CREATE INDEX idx_mensajes_emisor ON public.mensajes USING btree (emisor_id);
 CREATE INDEX idx_mensajes_no_leidos ON public.mensajes USING btree (conversacion_id) WHERE (leido = false);
+CREATE INDEX idx_participantes_usuario ON public.participantes_conversacion USING btree (usuario_id);
+CREATE INDEX idx_conversaciones_actualizacion ON public.conversaciones USING btree (ultima_actualizacion DESC);
 CREATE INDEX idx_notificaciones_fecha ON public.notificaciones USING btree (fecha_creacion DESC);
 CREATE INDEX idx_notificaciones_usuario_no_leidas ON public.notificaciones USING btree (usuario_id, leida) WHERE (leida = false);
 CREATE INDEX idx_password_resets_email ON public.password_resets USING btree (email);
