@@ -79,6 +79,10 @@ export class UsuariosListComponent implements OnInit, AfterViewInit {
     });
   }
 
+  trackByUserId(index: number, user: User): number {
+    return user.id;
+  }
+
   ngOnInit(): void {
     this.checkViewport();
     this.loadUsuarios();

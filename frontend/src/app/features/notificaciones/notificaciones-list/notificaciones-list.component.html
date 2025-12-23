@@ -29,7 +29,7 @@
 
   <div *ngIf="!loading && !error" class="notificaciones-list">
     <div 
-      *ngFor="let notificacion of notificaciones"
+      *ngFor="let notificacion of notificaciones; trackBy: trackByNotificacionId"
       class="notificacion-card"
       [class.no-leida]="!notificacion.leida"
       (click)="marcarLeida(notificacion)">

@@ -31,7 +31,7 @@ import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loa
 })
 export class NotificacionesListComponent implements OnInit, OnDestroy {
   notificaciones: Notificacion[] = [];
-  loading = false;
+  loading = true;
   error: string | null = null;
   pollingSubscription?: Subscription;
 
@@ -73,11 +73,19 @@ export class NotificacionesListComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.notificaciones = response.data;
+          this.loading = false;
         },
         error: (error) => {
           console.error('Error en polling:', error);
+          this.error = 'Error al cargar las notificaciones';
+          this.loading = false;
         }
       });
+  }
+
+  trackByNotificacionId(index: number, notificacion: Notificacion): number {
+    return notificacion.id;
+  }
   }
 
   marcarLeida(notificacion: Notificacion): void {

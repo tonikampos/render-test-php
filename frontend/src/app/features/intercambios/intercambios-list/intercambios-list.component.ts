@@ -98,6 +98,10 @@ export class IntercambiosListComponent implements OnInit {
     });
   }
 
+  trackByIntercambioId(index: number, intercambio: Intercambio): number {
+    return intercambio.id;
+  }
+
   completarIntercambio(id: number): void {
     this.intercambiosService.marcarComoCompletado(id).subscribe({
       next: () => {

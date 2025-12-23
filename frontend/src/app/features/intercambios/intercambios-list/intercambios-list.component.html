@@ -22,7 +22,7 @@
         </ng-template>
 
         <div class="intercambios-grid" *ngIf="intercambiosRecibidos.length > 0; else noRecibidos">
-          <mat-card *ngFor="let i of intercambiosRecibidos" class="intercambio-card" [id]="'intercambio-' + i.id">
+          <mat-card *ngFor="let i of intercambiosRecibidos; trackBy: trackByIntercambioId" class="intercambio-card" [id]="'intercambio-' + i.id">
             <mat-card-header>
               <mat-card-title>
                 Propuesta de: <strong>{{ i.proponente_nombre }}</strong>
@@ -85,7 +85,7 @@
         </ng-template>
 
         <div class="intercambios-grid" *ngIf="intercambiosEnviados.length > 0; else noEnviados">
-          <mat-card *ngFor="let i of intercambiosEnviados" class="intercambio-card" [id]="'intercambio-' + i.id">
+          <mat-card *ngFor="let i of intercambiosEnviados; trackBy: trackByIntercambioId" class="intercambio-card" [id]="'intercambio-' + i.id">
             <mat-card-header>
               <mat-card-title>
                 Propuesta para: <strong>{{ i.receptor_nombre }}</strong>

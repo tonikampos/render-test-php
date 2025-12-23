@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { forkJoin } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { ValoracionesService } from '../../core/services/valoraciones.service';
 import { HabilidadesService } from '../../core/services/habilidades.service';
@@ -58,7 +59,6 @@ export class PerfilComponent implements OnInit {
 
     if (this.usuario) {
       this.loadEstadisticas();
-      this.loadValoraciones();
     }
   }
 
@@ -67,53 +67,38 @@ export class PerfilComponent implements OnInit {
 
     this.loadingStats = true;
 
-    // Cargar total de habilidades (del usuario actual)
-    this.habilidadesService.list({ per_page: 1000 }).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          // Filtrar habilidades del usuario actual
-          const misHabilidades = response.data.items.filter(h => h.usuario_id === this.usuario!.id);
-          this.stats.totalHabilidades = misHabilidades.length;
+    // Paralelizar las 3 peticiones independientes con forkJoin
+    forkJoin({
+      habilidades: this.habilidadesService.list({ usuario_id: this.usuario.id, per_page: 100 }),
+      intercambios: this.intercambiosService.getMisIntercambios('completado'),
+      valoraciones: this.valoracionesService.getValoracionesDeUsuario(this.usuario.id)
+    }).subscribe({
+      next: (results) => {
+        // Procesar habilidades
+        if (results.habilidades.success && results.habilidades.data) {
+          this.stats.totalHabilidades = results.habilidades.data.pagination.total;
         }
-      }
-    });
 
-    // Cargar intercambios completados
-    this.intercambiosService.getMisIntercambios('completado').subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.stats.intercambiosCompletados = response.data.length;
+        // Procesar intercambios
+        if (results.intercambios.success && results.intercambios.data) {
+          this.stats.intercambiosCompletados = results.intercambios.data.length;
         }
-      }
-    });
 
-    // Cargar valoraciones para calcular promedio
-    this.valoracionesService.getValoracionesDeUsuario(this.usuario.id).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.stats.totalValoraciones = response.data.length;
+        // Procesar valoraciones (para stats Y para lista)
+        if (results.valoraciones.success && results.valoraciones.data) {
+          this.valoraciones = results.valoraciones.data;
+          this.stats.totalValoraciones = results.valoraciones.data.length;
           
-          if (response.data.length > 0) {
-            const suma = response.data.reduce((acc, val) => acc + val.puntuacion, 0);
-            this.stats.valoracionPromedio = suma / response.data.length;
+          if (results.valoraciones.data.length > 0) {
+            const suma = results.valoraciones.data.reduce((acc, val) => acc + val.puntuacion, 0);
+            this.stats.valoracionPromedio = suma / results.valoraciones.data.length;
           }
         }
+
         this.loadingStats = false;
       },
       error: () => {
         this.loadingStats = false;
-      }
-    });
-  }
-
-  loadValoraciones(): void {
-    if (!this.usuario) return;
-
-    this.valoracionesService.getValoracionesDeUsuario(this.usuario.id).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.valoraciones = response.data;
-        }
       }
     });
   }

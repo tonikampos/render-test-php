@@ -110,7 +110,7 @@
         <p>No se encontraron usuarios que coincidan con los filtros.</p>
       </div>
 
-      <div *ngFor="let user of dataSource.data" class="user-card mat-elevation-z2">
+      <div *ngFor="let user of dataSource.data; trackBy: trackByUserId" class="user-card mat-elevation-z2">
         <div class="card-header">
           <div class="user-name">{{ user.nombre_usuario }}</div>
           <div class="user-id">#{{ user.id }}</div>

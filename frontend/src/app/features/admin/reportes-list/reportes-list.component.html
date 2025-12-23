@@ -63,7 +63,7 @@
 
     <!-- VISTA CARDS MÓVIL -->
     <div *ngIf="isMobile" class="mobile-cards-container">
-      <div *ngFor="let reporte of reportes" class="reporte-card mat-elevation-z2">
+      <div *ngFor="let reporte of reportes; trackBy: trackByReporteId" class="reporte-card mat-elevation-z2">
         <div class="card-header">
           <div class="reporte-tipo">{{ reporte.tipo_contenido | titlecase }}</div>
           <div class="reporte-id">#{{ reporte.id }}</div>

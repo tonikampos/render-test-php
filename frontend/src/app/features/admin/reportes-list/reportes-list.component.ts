@@ -76,6 +76,10 @@ export class ReportesListComponent implements OnInit {
     });
   }
 
+  trackByReporteId(index: number, reporte: Reporte): number {
+    return reporte.id;
+  }
+
   abrirDialogoResolver(reporte: Reporte): void {
     const dialogRef = this.dialog.open(ResolverReporteDialogComponent, {
       width: '500px',
