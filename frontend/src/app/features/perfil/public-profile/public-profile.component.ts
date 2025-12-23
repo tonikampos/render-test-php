@@ -41,7 +41,7 @@ export class PublicProfileComponent implements OnInit {
     private usuariosService: UsuariosService,
     private valoracionesService: ValoracionesService,
     private conversacionesService: ConversacionesService,
-    private authService: AuthService,
+    public authService: AuthService,
     private snackBar: MatSnackBar
   ) { }
 
@@ -78,12 +78,12 @@ export class PublicProfileComponent implements OnInit {
   }
 
   get isOwnProfile(): boolean {
-    const currentUser = this.authService.getCurrentUser();
-    return currentUser ? (currentUser as any).id === this.usuario?.id : false;
+    const currentUser = this.authService.currentUserValue;
+    return currentUser ? currentUser.id === this.usuario?.id : false;
   }
 
   get isLoggedIn(): boolean {
-    return !!this.authService.getCurrentUser();
+    return this.authService.isAuthenticated();
   }
 
   iniciarConversacion(): void {

@@ -13,8 +13,11 @@
         </p>
       </div>
       
-      <div class="perfil-actions" *ngIf="isLoggedIn && !isOwnProfile">
+      <!-- Acciones solo si no es tu propio perfil -->
+      <div class="perfil-actions" *ngIf="!isOwnProfile">
+        <!-- Botón para usuarios autenticados -->
         <button 
+          *ngIf="authService.isAuthenticated()"
           mat-raised-button 
           color="primary"
           (click)="iniciarConversacion()"
@@ -22,6 +25,16 @@
           <mat-icon>chat</mat-icon>
           <span *ngIf="!sendingMessage">Enviar mensaje</span>
           <span *ngIf="sendingMessage">Enviando...</span>
+        </button>
+
+        <!-- Botón para usuarios NO autenticados -->
+        <button 
+          *ngIf="!authService.isAuthenticated()"
+          mat-stroked-button 
+          color="primary"
+          routerLink="/login">
+          <mat-icon>login</mat-icon>
+          Inicia sesión para contactar
         </button>
       </div>
     </header>
