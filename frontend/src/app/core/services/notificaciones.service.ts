@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Observable, interval, switchMap, startWith, catchError, of } from 'rxjs';
+import { Observable, timer, switchMap, startWith, catchError, of } from 'rxjs';
 import { ApiService } from './api.service';
 import { ApiResponse, Notificacion } from '../../shared/models';
+import { UserActivityService } from './user-activity.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificacionesService {
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private userActivityService: UserActivityService
+  ) {}
 
   /**
    * Listar mis notificaciones
@@ -43,14 +47,20 @@ export class NotificacionesService {
   }
 
   /**
-   * Polling para actualizar contador de no leídas cada 60 segundos
+   * Polling adaptativo para contador de no leídas
+   * - 15s cuando usuario activo (interactuando)
+   * - 120s cuando inactivo (>5 min sin interacción)
    */
   pollNoLeidas(): Observable<ApiResponse<{ count: number }>> {
-    return interval(60000).pipe(
-      startWith(0),
-      switchMap(() => this.countNoLeidas().pipe(
-        catchError(() => of({ success: false, data: { count: 0 }, message: '' }))
-      ))
+    return timer(0, 1000).pipe(
+      switchMap(() => {
+        const interval = this.userActivityService.getPollingInterval();
+        return timer(0, interval).pipe(
+          switchMap(() => this.countNoLeidas().pipe(
+            catchError(() => of({ success: false, data: { count: 0 }, message: '' }))
+          ))
+        );
+      })
     );
   }
 }

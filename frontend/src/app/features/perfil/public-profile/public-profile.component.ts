@@ -91,35 +91,26 @@ export class PublicProfileComponent implements OnInit {
     
     this.sendingMessage = true;
     
-    console.log('Iniciando conversación con usuario:', this.usuario.id);
-    
     this.conversacionesService.create({
       usuario2_id: this.usuario.id,
       mensaje_inicial: `Hola ${this.usuario.nombre_usuario}. Estoy interesado en contactar contigo.`
     }).subscribe({
       next: (res) => {
-        console.log('Respuesta del backend:', JSON.stringify(res, null, 2));
-        console.log('res.data:', res.data);
         if (res.success) {
           this.snackBar.open('Conversación iniciada', 'Ok', { duration: 2000 });
           // El backend devuelve conversacion_id en data
           const conversacionId = (res.data as any)?.conversacion_id || res.data?.id;
-          console.log('ID extraído:', conversacionId);
           if (conversacionId) {
-            console.log('Navegando a:', '/conversaciones/' + conversacionId);
             this.router.navigate(['/conversaciones', conversacionId]);
           } else {
-            console.error('No se recibió ID de conversación:', res);
             this.router.navigate(['/conversaciones']);
           }
         } else {
-          console.error('Error en respuesta:', res);
           this.snackBar.open(res.message || 'Error al iniciar conversación', 'Cerrar', { duration: 3000 });
         }
         this.sendingMessage = false;
       },
       error: (err) => {
-        console.error('Error completo:', err);
         this.snackBar.open(err.error?.message || 'Error al iniciar conversación', 'Cerrar', { duration: 3000 });
         this.sendingMessage = false;
       }
