@@ -89,10 +89,10 @@ export class ConversacionesService {
   }
 
   /**
-   * Polling para actualizar contador de mensajes no leídos cada 30 segundos
+   * Polling para actualizar contador de mensajes no leídos cada 60 segundos
    */
   pollMensajesNoLeidos(): Observable<ApiResponse<{ count: number }>> {
-    return interval(30000).pipe(
+    return interval(60000).pipe(
       startWith(0),
       switchMap(() => this.countMensajesNoLeidos())
     );

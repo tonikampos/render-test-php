@@ -55,7 +55,7 @@ export class NotificationBadgeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadCount();
     
-    // Polling cada 30 segundos
+    // Polling cada 60 segundos
     this.pollingSubscription = this.notificacionesService.pollNoLeidas().subscribe({
       next: (response) => {
         if (response.success && response.data?.count !== undefined) {

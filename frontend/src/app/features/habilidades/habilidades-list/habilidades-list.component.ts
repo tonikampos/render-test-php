@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -106,8 +107,11 @@ export class HabilidadesListComponent implements OnInit {
     this.loadCategorias();
     this.loadHabilidades();
 
-    // Recargar cuando cambien los filtros
-    this.filterForm.valueChanges.subscribe(() => {
+    // Recargar cuando cambien los filtros (con debounce para optimizar búsqueda)
+    this.filterForm.valueChanges.pipe(
+      debounceTime(400),
+      distinctUntilChanged()
+    ).subscribe(() => {
       this.currentPage = 1;
       this.saveFiltersToStorage();
       this.loadHabilidades();

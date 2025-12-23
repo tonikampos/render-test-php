@@ -65,7 +65,7 @@ export class NotificacionesListComponent implements OnInit, OnDestroy {
   }
 
   startPolling(): void {
-    this.pollingSubscription = interval(30000)
+    this.pollingSubscription = interval(60000)
       .pipe(
         startWith(0),
         switchMap(() => this.notificacionesService.list())

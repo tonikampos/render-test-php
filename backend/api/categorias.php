@@ -32,6 +32,10 @@ function listarCategorias() {
         $stmt = $db->query($sql);
         $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
+        // Caché HTTP de 24 horas (categorías raramente cambian)
+        header('Cache-Control: public, max-age=86400');
+        header('Vary: Accept-Encoding');
+        
         Response::success($categorias);
         
     } catch (Exception $e) {

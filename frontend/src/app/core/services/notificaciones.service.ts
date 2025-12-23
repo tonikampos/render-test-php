@@ -43,10 +43,10 @@ export class NotificacionesService {
   }
 
   /**
-   * Polling para actualizar contador de no leídas cada 30 segundos
+   * Polling para actualizar contador de no leídas cada 60 segundos
    */
   pollNoLeidas(): Observable<ApiResponse<{ count: number }>> {
-    return interval(30000).pipe(
+    return interval(60000).pipe(
       startWith(0),
       switchMap(() => this.countNoLeidas())
     );
