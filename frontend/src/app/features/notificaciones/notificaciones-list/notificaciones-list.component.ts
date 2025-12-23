@@ -38,7 +38,6 @@ export class NotificacionesListComponent implements OnInit, OnDestroy {
   constructor(private notificacionesService: NotificacionesService) {}
 
   ngOnInit(): void {
-    this.loadNotificaciones();
     this.startPolling();
   }
 

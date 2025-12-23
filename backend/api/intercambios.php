@@ -110,6 +110,7 @@ function listarIntercambios() {
             INNER JOIN usuarios u2 ON i.receptor_id = u2.id
             WHERE $whereClause
             ORDER BY i.fecha_propuesta DESC
+            LIMIT 50
         ";
         
         $stmt = $db->prepare($sql);

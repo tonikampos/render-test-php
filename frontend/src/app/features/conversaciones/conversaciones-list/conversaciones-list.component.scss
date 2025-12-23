@@ -2,9 +2,13 @@
 // CONTAINER PRINCIPAL
 // ========================================
 .conversaciones-container {
-  max-width: 900px;
+  max-width: 700px; // Reducido de 900px para mejor aprovechamiento del espacio
   margin: 0 auto;
   padding: 2rem;
+  
+  @media (max-width: 768px) {
+    max-width: 100%; // Full width en móvil
+  }
 }
 
 // ========================================

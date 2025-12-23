@@ -25,7 +25,7 @@
         <p>No hay mensajes todavía.<br>¡Envía el primero!</p>
       </div>
 
-      <ng-container *ngFor="let mensaje of mensajes; let i = index">
+      <ng-container *ngFor="let mensaje of mensajes; trackBy: trackByMensajeId; let i = index">
         <!-- Separador de fecha -->
         <div *ngIf="shouldShowDateSeparator(i)" class="date-separator">
           <span>{{ formatDate(mensaje.fecha_envio) }}</span>

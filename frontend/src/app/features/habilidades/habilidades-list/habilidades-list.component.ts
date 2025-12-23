@@ -269,4 +269,8 @@ export class HabilidadesListComponent implements OnInit {
   getTipoColor(tipo: string): string {
     return tipo === 'oferta' ? 'primary' : 'accent';
   }
+
+  trackByHabilidadId(index: number, habilidad: Habilidad): number {
+    return habilidad.id;
+  }
 }

@@ -81,4 +81,8 @@ export class ConversacionesListComponent implements OnInit {
     
     return messageDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
   }
+
+  trackByConversacionId(index: number, conversacion: Conversacion): number {
+    return conversacion.id;
+  }
 }

@@ -124,7 +124,7 @@
 
   <!-- Grid de Habilidades -->
   <div *ngIf="!loading && habilidades.length > 0" class="habilidades-grid">
-    <mat-card *ngFor="let habilidad of habilidades" class="habilidad-card">
+    <mat-card *ngFor="let habilidad of habilidades; trackBy: trackByHabilidadId" class="habilidad-card">
       <!-- Badge Tipo -->
       <div class="tipo-badge" [class.oferta]="habilidad.tipo === 'oferta'" [class.demanda]="habilidad.tipo === 'demanda'">
         <mat-icon aria-hidden="true">{{ getTipoIcon(habilidad.tipo) }}</mat-icon>

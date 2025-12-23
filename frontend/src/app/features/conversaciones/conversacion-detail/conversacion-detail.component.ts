@@ -246,4 +246,8 @@ export class ConversacionDetailComponent implements OnInit, OnDestroy, AfterView
       this.onSubmit();
     }
   }
+
+  trackByMensajeId(index: number, mensaje: Mensaje): number {
+    return mensaje.id;
+  }
 }

@@ -22,124 +22,89 @@ function handleAdminRoutes($method, $id, $action, $input) {
 /**
  * Obtener estadísticas globales del sistema
  * Solo accesible para administradores
+ * Optimizado con CTEs para reducir 14 queries a 1
  */
 function getEstadisticas() {
     try {
         $db = Database::getConnection();
         
-        $stats = [];
+        // Query optimizada con CTEs - una sola ejecución
+        $query = "
+            WITH stats_base AS (
+                SELECT 
+                    -- Usuarios
+                    (SELECT COUNT(*) FROM usuarios WHERE activo = true) as total_usuarios,
+                    (SELECT COUNT(*) FROM usuarios 
+                     WHERE activo = true 
+                     AND DATE_TRUNC('month', fecha_registro) = DATE_TRUNC('month', CURRENT_DATE)
+                    ) as usuarios_mes,
+                    
+                    -- Habilidades
+                    (SELECT COUNT(*) FROM habilidades WHERE estado = 'activa') as total_habilidades,
+                    (SELECT COUNT(*) FROM habilidades WHERE estado = 'activa' AND tipo = 'oferta') as habilidades_oferta,
+                    (SELECT COUNT(*) FROM habilidades WHERE estado = 'activa' AND tipo = 'demanda') as habilidades_demanda,
+                    
+                    -- Intercambios
+                    (SELECT COUNT(*) FROM intercambios) as total_intercambios,
+                    (SELECT COUNT(*) FROM intercambios WHERE estado = 'propuesto') as intercambios_propuestos,
+                    (SELECT COUNT(*) FROM intercambios WHERE estado = 'aceptado') as intercambios_aceptados,
+                    (SELECT COUNT(*) FROM intercambios WHERE estado = 'completado') as intercambios_completados,
+                    (SELECT COUNT(*) FROM intercambios WHERE estado = 'rechazado') as intercambios_rechazados,
+                    
+                    -- Reportes
+                    (SELECT COUNT(*) FROM reportes) as total_reportes,
+                    (SELECT COUNT(*) FROM reportes WHERE estado = 'pendiente') as reportes_pendientes,
+                    (SELECT COUNT(*) FROM reportes WHERE estado != 'pendiente') as reportes_resueltos,
+                    
+                    -- Valoraciones
+                    (SELECT COUNT(*) FROM valoraciones) as total_valoraciones,
+                    (SELECT COALESCE(ROUND(AVG(puntuacion)::numeric, 2), 0) FROM valoraciones) as valoracion_promedio,
+                    
+                    -- Conversaciones y mensajes
+                    (SELECT COUNT(*) FROM conversaciones) as total_conversaciones,
+                    (SELECT COUNT(*) FROM mensajes) as total_mensajes
+            ),
+            categoria_popular AS (
+                SELECT c.nombre, COUNT(h.id) as total
+                FROM categorias_habilidades c
+                LEFT JOIN habilidades h ON c.id = h.categoria_id AND h.estado = 'activa'
+                GROUP BY c.id, c.nombre
+                ORDER BY total DESC
+                LIMIT 1
+            )
+            SELECT 
+                sb.*,
+                COALESCE(cp.nombre, 'N/A') as categoria_mas_popular,
+                COALESCE(cp.total, 0) as categoria_mas_popular_count
+            FROM stats_base sb
+            CROSS JOIN categoria_popular cp
+        ";
         
-        // Total usuarios activos
-        $stmt = $db->query("SELECT COUNT(*) as total FROM usuarios WHERE activo = true");
-        $stats['total_usuarios'] = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-        
-        // Total usuarios registrados este mes
-        $stmt = $db->query("
-            SELECT COUNT(*) as total 
-            FROM usuarios 
-            WHERE DATE_TRUNC('month', fecha_registro) = DATE_TRUNC('month', CURRENT_DATE)
-        ");
-        $stats['usuarios_mes'] = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-        
-        // Total habilidades activas
-        $stmt = $db->query("SELECT COUNT(*) as total FROM habilidades WHERE estado = 'activa'");
-        $stats['total_habilidades'] = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-        
-        // Habilidades por tipo
-        $stmt = $db->query("
-            SELECT tipo, COUNT(*) as total 
-            FROM habilidades 
-            WHERE estado = 'activa'
-            GROUP BY tipo
-        ");
-        $habilidades_tipo = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stats['habilidades_oferta'] = 0;
-        $stats['habilidades_demanda'] = 0;
-        foreach ($habilidades_tipo as $row) {
-            if ($row['tipo'] === 'oferta') {
-                $stats['habilidades_oferta'] = (int) $row['total'];
-            } elseif ($row['tipo'] === 'demanda') {
-                $stats['habilidades_demanda'] = (int) $row['total'];
-            }
-        }
-        
-        // Total intercambios
-        $stmt = $db->query("SELECT COUNT(*) as total FROM intercambios");
-        $stats['total_intercambios'] = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-        
-        // Intercambios por estado
-        $stmt = $db->query("
-            SELECT estado, COUNT(*) as total 
-            FROM intercambios 
-            GROUP BY estado
-        ");
-        $intercambios_estado = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stats['intercambios_propuestos'] = 0;
-        $stats['intercambios_aceptados'] = 0;
-        $stats['intercambios_completados'] = 0;
-        $stats['intercambios_rechazados'] = 0;
-        
-        foreach ($intercambios_estado as $row) {
-            $estado = $row['estado'];
-            $total = (int) $row['total'];
-            
-            switch ($estado) {
-                case 'propuesto':
-                    $stats['intercambios_propuestos'] = $total;
-                    break;
-                case 'aceptado':
-                    $stats['intercambios_aceptados'] = $total;
-                    break;
-                case 'completado':
-                    $stats['intercambios_completados'] = $total;
-                    break;
-                case 'rechazado':
-                    $stats['intercambios_rechazados'] = $total;
-                    break;
-            }
-        }
-        
-        // Total reportes
-        $stmt = $db->query("SELECT COUNT(*) as total FROM reportes");
-        $stats['total_reportes'] = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-        
-        // Reportes pendientes
-        $stmt = $db->query("SELECT COUNT(*) as total FROM reportes WHERE estado = 'pendiente'");
-        $stats['reportes_pendientes'] = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-        
-        // Reportes resueltos
-        $stmt = $db->query("SELECT COUNT(*) as total FROM reportes WHERE estado != 'pendiente'");
-        $stats['reportes_resueltos'] = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-        
-        // Total valoraciones
-        $stmt = $db->query("SELECT COUNT(*) as total FROM valoraciones");
-        $stats['total_valoraciones'] = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-        
-        // Valoración promedio global
-        $stmt = $db->query("SELECT AVG(puntuacion) as promedio FROM valoraciones");
+        $stmt = $db->query($query);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $stats['valoracion_promedio'] = $result['promedio'] ? round((float) $result['promedio'], 2) : 0;
         
-        // Total conversaciones
-        $stmt = $db->query("SELECT COUNT(*) as total FROM conversaciones");
-        $stats['total_conversaciones'] = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-        
-        // Total mensajes
-        $stmt = $db->query("SELECT COUNT(*) as total FROM mensajes");
-        $stats['total_mensajes'] = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-        
-        // Categoría más popular
-        $stmt = $db->query("
-            SELECT c.nombre, COUNT(h.id) as total
-            FROM categorias_habilidades c
-            LEFT JOIN habilidades h ON c.id = h.categoria_id AND h.estado = 'activa'
-            GROUP BY c.id, c.nombre
-            ORDER BY total DESC
-            LIMIT 1
-        ");
-        $categoria_popular = $stmt->fetch(PDO::FETCH_ASSOC);
-        $stats['categoria_mas_popular'] = $categoria_popular['nombre'] ?? 'N/A';
-        $stats['categoria_mas_popular_count'] = (int) ($categoria_popular['total'] ?? 0);
+        // Convertir a enteros los valores numéricos
+        $stats = [
+            'total_usuarios' => (int) $result['total_usuarios'],
+            'usuarios_mes' => (int) $result['usuarios_mes'],
+            'total_habilidades' => (int) $result['total_habilidades'],
+            'habilidades_oferta' => (int) $result['habilidades_oferta'],
+            'habilidades_demanda' => (int) $result['habilidades_demanda'],
+            'total_intercambios' => (int) $result['total_intercambios'],
+            'intercambios_propuestos' => (int) $result['intercambios_propuestos'],
+            'intercambios_aceptados' => (int) $result['intercambios_aceptados'],
+            'intercambios_completados' => (int) $result['intercambios_completados'],
+            'intercambios_rechazados' => (int) $result['intercambios_rechazados'],
+            'total_reportes' => (int) $result['total_reportes'],
+            'reportes_pendientes' => (int) $result['reportes_pendientes'],
+            'reportes_resueltos' => (int) $result['reportes_resueltos'],
+            'total_valoraciones' => (int) $result['total_valoraciones'],
+            'valoracion_promedio' => (float) $result['valoracion_promedio'],
+            'total_conversaciones' => (int) $result['total_conversaciones'],
+            'total_mensajes' => (int) $result['total_mensajes'],
+            'categoria_mas_popular' => $result['categoria_mas_popular'],
+            'categoria_mas_popular_count' => (int) $result['categoria_mas_popular_count']
+        ];
         
         Response::success($stats, 'Estadísticas obtenidas correctamente');
         

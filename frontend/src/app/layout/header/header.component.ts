@@ -44,15 +44,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Solo cargar si hay usuario autenticado
     if (this.authService.currentUserValue) {
-      this.loadMensajesCount();
-      this.startPolling();
+      this.startPolling(); // Ya incluye carga inicial con startWith(0)
     }
 
     // Suscribirse a cambios de autenticación
     this.authService.currentUser$.subscribe(user => {
       if (user) {
-        this.loadMensajesCount();
-        this.startPolling();
+        this.startPolling(); // Ya incluye carga inicial
       } else {
         this.mensajesNoLeidos = 0;
         this.stopPolling();

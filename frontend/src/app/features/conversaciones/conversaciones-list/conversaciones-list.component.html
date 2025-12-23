@@ -28,7 +28,7 @@
   <mat-card *ngIf="!loading && conversaciones.length > 0" class="conversaciones-card">
     <mat-list>
       <mat-list-item 
-        *ngFor="let conv of conversaciones; let last = last" 
+        *ngFor="let conv of conversaciones; trackBy: trackByConversacionId; let last = last" 
         [routerLink]="['/conversaciones', conv.id]"
         [state]="{ usuario: conv.otro_usuario_nombre }"
         class="conversacion-item">
