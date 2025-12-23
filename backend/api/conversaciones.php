@@ -18,6 +18,12 @@ function handleConversacionesRoutes($method, $id, $action, $input) {
         listarConversaciones();
     }
     
+    // GET /api/conversaciones/mensajes-no-leidos (contar mensajes no leídos - optimizado)
+    if ($method === 'GET' && $id === 'mensajes-no-leidos') {
+        Auth::requireAuth();
+        contarMensajesNoLeidos();
+    }
+    
     // GET /api/conversaciones/:id/mensajes (obtener mensajes)
     if ($method === 'GET' && $id && $action === 'mensajes') {
         Auth::requireAuth();
@@ -353,6 +359,36 @@ function enviarMensajeInterno($db, $conversacion_id, $emisor_id, $contenido) {
     ";
     $stmtUpdate = $db->prepare($sqlUpdate);
     $stmtUpdate->execute(['conversacion_id' => $conversacion_id]);
+}
+
+/**
+ * Contar total de mensajes no leídos del usuario (optimizado)
+ * GET /api/conversaciones/mensajes-no-leidos
+ */
+function contarMensajesNoLeidos() {
+    try {
+        $db = Database::getConnection();
+        $usuario_id = $_SESSION['user_id'];
+        
+        // Query optimizada - solo cuenta, sin traer datos completos de conversaciones
+        $stmt = $db->prepare("
+            SELECT COALESCE(COUNT(*), 0) as total
+            FROM mensajes m
+            INNER JOIN participantes_conversacion pc 
+                ON m.conversacion_id = pc.conversacion_id
+            WHERE pc.usuario_id = :usuario_id
+              AND m.emisor_id != :usuario_id
+              AND m.leido = false
+        ");
+        $stmt->execute(['usuario_id' => $usuario_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        Response::success(['count' => (int)$result['total']]);
+        
+    } catch (Exception $e) {
+        error_log('Error en contarMensajesNoLeidos: ' . $e->getMessage());
+        Response::error('Error al contar mensajes no leídos', 500);
+    }
 }
 
 /**

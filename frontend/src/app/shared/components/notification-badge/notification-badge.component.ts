@@ -53,9 +53,7 @@ export class NotificationBadgeComponent implements OnInit, OnDestroy {
   constructor(private notificacionesService: NotificacionesService) {}
 
   ngOnInit(): void {
-    this.loadCount();
-    
-    // Polling cada 60 segundos
+    // Polling ya incluye carga inicial con startWith(0), no necesita loadCount() adicional
     this.pollingSubscription = this.notificacionesService.pollNoLeidas().subscribe({
       next: (response) => {
         if (response.success && response.data?.count !== undefined) {
@@ -69,15 +67,5 @@ export class NotificationBadgeComponent implements OnInit, OnDestroy {
     if (this.pollingSubscription) {
       this.pollingSubscription.unsubscribe();
     }
-  }
-
-  private loadCount(): void {
-    this.notificacionesService.countNoLeidas().subscribe({
-      next: (response) => {
-        if (response.success && response.data?.count !== undefined) {
-          this.noLeidas = response.data.count;
-        }
-      }
-    });
   }
 }

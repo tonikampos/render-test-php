@@ -65,27 +65,10 @@ export class ConversacionesService {
 
   /**
    * Contar total de mensajes no leídos en todas las conversaciones
-   * Usa el endpoint existente que ya devuelve mensajes_no_leidos por conversación
+   * Usa endpoint optimizado que solo cuenta sin traer datos completos
    */
   countMensajesNoLeidos(): Observable<ApiResponse<{ count: number }>> {
-    return this.list().pipe(
-      map(response => {
-        if (response.success && response.data) {
-          // Agrupar por ID para evitar duplicados (el backend puede devolver conversaciones repetidas)
-          const conversacionesUnicas = new Map<number, number>();
-          response.data.forEach(conv => {
-            if (!conversacionesUnicas.has(conv.id)) {
-              conversacionesUnicas.set(conv.id, conv.mensajes_no_leidos || 0);
-            }
-          });
-          
-          // Sumar solo conversaciones únicas
-          const total = Array.from(conversacionesUnicas.values()).reduce((sum, count) => sum + count, 0);
-          return { success: true, data: { count: total }, message: '' };
-        }
-        return { success: false, data: { count: 0 }, message: '' };
-      })
-    );
+    return this.apiService.get<ApiResponse<{ count: number }>>('conversaciones/mensajes-no-leidos');
   }
 
   /**
