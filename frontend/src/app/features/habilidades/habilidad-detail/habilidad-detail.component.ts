@@ -16,10 +16,8 @@ import { Habilidad } from '../../../shared/models';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ProponerIntercambioDialogComponent } from '../../intercambios/proponer-intercambio-dialog/proponer-intercambio-dialog.component';
 
-// CAMBIO REPORTE: Añadir import para el diálogo de reporte
 import { ReportarDialogComponent } from '../../reportes/reportar-dialog/reportar-dialog.component';
 
-// CAMBIO ELIMINAR: Import del diálogo de confirmación
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';

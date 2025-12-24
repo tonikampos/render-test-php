@@ -6,7 +6,7 @@ import { throttleTime, map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class UserActivityService {
-  private readonly INACTIVE_THRESHOLD = 5 * 60 * 1000; // 5 minutos
+  private readonly INACTIVE_THRESHOLD = 5 * 60 * 1000; 
   private lastActivityTime: number = Date.now();
   private isActiveSubject = new BehaviorSubject<boolean>(true);
   public isActive$: Observable<boolean> = this.isActiveSubject.asObservable();
@@ -20,7 +20,6 @@ export class UserActivityService {
    * Configurar listeners de eventos del usuario
    */
   private setupActivityListeners(): void {
-    // Ejecutar fuera de Angular zone para mejor performance
     this.ngZone.runOutsideAngular(() => {
       // Eventos que indican actividad del usuario
       const events = [
@@ -30,7 +29,6 @@ export class UserActivityService {
         fromEvent(document, 'touchstart')
       ];
 
-      // Unir todos los eventos y aplicar throttle para no saturar
       merge(...events).pipe(
         throttleTime(1000), // Solo procesar 1 evento por segundo
         map(() => Date.now())

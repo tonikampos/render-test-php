@@ -28,15 +28,15 @@
 **Resultado**: Arquitectura moderna, escalable y eficiente en recursos.
 
 **Estado actual (PEC4 - Diciembre 2025):**
-- ✅ **37 endpoints** backend operativos en producción
+- ✅ **38 endpoints** backend operativos en producción (+1 optimizado mensajes-no-leidos)
 - ✅ **11 módulos** completamente funcionales
 - ✅ **30 tests frontend** (23 funcionales + 7 accesibilidad WCAG 2.1 AA)
 - ✅ **Accesibilidad 100% WCAG 2.1 AA:** 34+ mejoras contraste, 50+ ARIA, navegación teclado
 - ✅ **Sistema de theming:** theme.scss centralizado con Material Design
-- ✅ **Backend optimizaciones:** DELETE real, ya_valorado, notificaciones automáticas
-- ✅ **96 archivos modificados** en diciembre (63 frontend + 9 backend + 24 docs)
-- ✅ **4 commits organizados** localmente (docs, backend, frontend, data)
-- ✅ **0 bugs críticos** en producción o local
+- ✅ **Backend optimizaciones:** DELETE real, ya_valorado, notificaciones automáticas, query badges -95%
+- ✅ **104 archivos modificados** en diciembre (70 frontend + 10 backend + 24 docs)
+- ✅ **8 commits organizados** (4 PEC4 + 4 optimizaciones badges)
+- ✅ **0 bugs críticos** en producción, 1 memory leak crítico detectado y corregido
 
 ---
 

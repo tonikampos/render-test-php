@@ -100,23 +100,6 @@ export class ConversacionDetailComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
-  // Método comentado - el endpoint GET /conversaciones/:id no existe en el backend
-  // loadConversacion(id: number): void {
-  //   this.conversacionesService.getById(id).subscribe({
-  //     next: (response) => {
-  //       if (response.success) {
-  //         this.conversacion = response.data;
-  //       }
-  //       this.loading = false;
-  //     },
-  //     error: () => {
-  //       this.loading = false;
-  //       this.snackBar.open('Error al cargar conversación', 'Cerrar', { duration: 3000 });
-  //       this.router.navigate(['/conversaciones']);
-  //     }
-  //   });
-  // }
-
   loadMensajes(conversacionId: number): void {
     this.conversacionesService.getMensajes(conversacionId).subscribe({
       next: (response) => {

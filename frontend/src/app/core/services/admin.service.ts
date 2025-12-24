@@ -15,7 +15,7 @@ export class AdminService {
    * Corresponde a: GET /api/usuarios
    */
   getUsuarios(params?: { page?: number, per_page?: number, search?: string, ubicacion?: string, activo?: boolean }): Observable<ApiResponse<PaginatedResponse<User>>> {
-    // Añadir aquí cualquier parámetro adicional que el backend admita
+
     return this.apiService.get<ApiResponse<PaginatedResponse<User>>>('usuarios', params);
   }
 

@@ -207,8 +207,6 @@ CREATE UNIQUE INDEX usuarios_email_key ON public.usuarios USING btree (email);
 CREATE UNIQUE INDEX usuarios_nombre_usuario_key ON public.usuarios USING btree (nombre_usuario);
 CREATE UNIQUE INDEX idx_valoracion_unica ON public.valoraciones USING btree (evaluador_id, evaluado_id, intercambio_id);
 CREATE INDEX idx_valoraciones_evaluado ON public.valoraciones USING btree (evaluado_id);
-
--- Índice GIN con extensión pg_trgm para búsqueda rápida ILIKE en habilidades
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE INDEX idx_habilidades_titulo_trgm ON public.habilidades USING gin (titulo gin_trgm_ops);
 

@@ -3,8 +3,8 @@
 **Proyecto:** GaliTroco - Sistema de Intercambio de Habilidades  
 **Autor:** Antonio Campos  
 **Universidad:** UOC - Trabajo Final de Máster  
-**Fecha:** Diciembre 2025 (PEC4 - Entrega Final)  
-**Versión:** 2.0
+**Fecha:** Diciembre 2025 (PEC4 - Entrega Final + Optimizaciones)  
+**Versión:** 2.2
 
 ---
 

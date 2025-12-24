@@ -1,7 +1,5 @@
-// Custom theming for Angular Material
 @use '@angular/material' as mat;
 
-// Include the common styles for Angular Material
 @include mat.core();
 
 // Paleta Material Design con tonos oscuros para mejor contraste
@@ -9,7 +7,6 @@ $primary: mat.m2-define-palette(mat.$m2-green-palette, 800);
 $accent: mat.m2-define-palette(mat.$m2-cyan-palette, 800);
 $warn: mat.m2-define-palette(mat.$m2-orange-palette, 800);
 
-// Create the theme using the custom palettes
 $theme: mat.m2-define-light-theme((
   color: (
     primary: $primary,
@@ -20,7 +17,6 @@ $theme: mat.m2-define-light-theme((
   density: 0,
 ));
 
-// Include theme styles for core and each component
 @include mat.all-component-themes($theme);
 
 // Variables de color personalizadas

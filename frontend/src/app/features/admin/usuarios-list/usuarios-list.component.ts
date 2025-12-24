@@ -160,9 +160,6 @@ export class UsuariosListComponent implements OnInit, AfterViewInit {
 
   toggleActivo(usuario: User): void {
     this.snackBar.open(`Funcionalidad Activar/Desactivar Usuario #${usuario.id} pendiente.`, 'OK', { duration: 2000 });
-     // Reverter o estado visual ata que a API confirme
-     // ou implementar estado de 'cargando' no toggle.
-     // Por agora, simplemente recargamos para ver o estado real da API:
      setTimeout(() => this.loadUsuarios(), 500); // Recargar despois dun pequeno retardo
   }
 }

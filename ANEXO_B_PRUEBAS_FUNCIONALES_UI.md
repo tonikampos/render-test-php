@@ -1,12 +1,12 @@
 # 🧪 TESTING MANUAL FRONTEND - GALITROCO
 
-**Versión:** 2.0 - Entrega Final PEC4  
+**Versión:** 2.2 - Entrega Final PEC4 + Optimizaciones Badges  
 **Fecha inicial:** 20-27 de noviembre de 2025  
-**Última actualización:** 22 de diciembre de 2025 (PEC4)  
-**Entorno de Testing:** Producción (Render.com) + Local (mejoras diciembre)  
+**Última actualización:** 23 de diciembre de 2025 (PEC4 + Optimizaciones Performance)  
+**Entorno de Testing:** Producción (Render.com) + Local (mejoras diciembre + badges)  
 **URL Frontend:** https://galitroco-frontend.onrender.com  
-**URL Backend:** https://render-test-php-1.onrender.com (endpoint ejemplo: `/api.php?resource=habilidades`)  
-**Estado:** ✅ Plan de Pruebas ejecutado en producción (**100% COMPLETADO + MEJORAS ACCESIBILIDAD WCAG 2.1 AA** - PEC4)
+**URL Backend:** https://render-test-php-1.onrender.com (38 endpoints, +1 optimizado mensajes-no-leidos)  
+**Estado:** ✅ Plan de Pruebas ejecutado en producción (**100% COMPLETADO + WCAG 2.1 AA + BADGES OPTIMIZADOS** - PEC4)
 
 > **Nota Importante (PEC4 - Diciembre 2025):** Este documento refleja las pruebas realizadas en el entorno de **PRODUCCIÓN** (Render.com - noviembre) y las **mejoras de accesibilidad WCAG 2.1 AA** implementadas en diciembre 2025.  
 > **100% de los tests funcionales (23/23) han sido verificados como funcionales en producción.**  
@@ -27,8 +27,11 @@
 - ✅ **Refactorización código backend** (limpieza comentarios técnicos)
 - ✅ **Frontend accesibilidad WCAG 2.1 AA** (contraste, navegación teclado, ARIA)
 - ✅ **Sistema de theming centralizado** (variables CSS, Material Design)
-- ✅ **96 archivos totales modificados** (63 frontend + 9 backend + 24 docs)
-- ✅ **4 commits organizados localmente** (testing completado, pendiente deploy)
+- ✅ **Endpoint optimizado /mensajes-no-leidos** - Query -95% tiempo (5-15ms)
+- ✅ **Fix memory leak crítico** - Timer anidado eliminado (performance restaurada)
+- ✅ **Polling 15s badges** - Tiempo casi real para demostración TFM
+- ✅ **104 archivos totales modificados** (70 frontend + 10 backend + 24 docs)
+- ✅ **8 commits organizados** (4 diciembre PEC4 + 4 optimizaciones badges)
 
 ---
 

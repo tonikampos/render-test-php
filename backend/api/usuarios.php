@@ -1,7 +1,7 @@
 <?php
 /**
  * Endpoints de Usuarios
- * GET /api/usuarios - Listar usuarios (ADMINISTRADOR ONLY)
+ * GET /api/usuarios - Listar usuarios (ADMINISTRADOR)
  * GET /api/usuarios/:id - Ver perfil de usuario
  * GET /api/usuarios/:id/estadisticas - Estadísticas del usuario
  * PUT /api/usuarios/:id - Actualizar perfil
@@ -44,12 +44,12 @@ function handleUsuariosRoutes($method, $id, $action, $input) {
         actualizarUsuario($id, $input);
     }
 
-    // Si no coincide ninguna ruta, método no permitido
+    // Si non coincide ningunha ruta, método no permitido
     Response::methodNotAllowed(['GET', 'PUT']);
 }
 
 /**
- * Listar usuarios (Sólo administradores)
+ * Listar usuarios (Só administradores)
  */
 function listarUsuarios() {
     
@@ -162,7 +162,6 @@ function obtenerUsuario($id) {
         $is_admin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'administrador';
     
 
-        // Si el usuario está inactivo y NO es admin, devolvemos 404
         if ($usuario['activo'] == false && !$is_admin) {
              Response::notFound('Usuario no encontrado');
         }
@@ -300,7 +299,6 @@ function actualizarUsuario($id, $data) {
                      elseif ($field === 'rol' && !in_array($data[$field], ['usuario', 'admin'])) {
                          Response::badRequest('Rol inválido. Debe ser "usuario" o "admin".');
                      }
-                     // ===========================================
                      else {
                          $params[$field] = $data[$field];
                      }
@@ -308,7 +306,7 @@ function actualizarUsuario($id, $data) {
                  }
             }
         }
-        // =======================
+    
 
         if (empty($fields)) {
             Response::badRequest('No hay campos válidos para actualizar.');

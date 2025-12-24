@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-// 1. Importa el nuevo MainLayoutComponent
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 
 @Component({
@@ -9,7 +8,6 @@ import { MainLayoutComponent } from './layout/main-layout/main-layout.component'
   standalone: true, 
   imports: [
     CommonModule,
-    // 2. Añade MainLayoutComponent a los imports. Se eliminan los demás.
     MainLayoutComponent
   ],
   templateUrl: './app.component.html',
@@ -18,6 +16,5 @@ import { MainLayoutComponent } from './layout/main-layout/main-layout.component'
 export class AppComponent {
   title = 'GaliTroco';
 
-  // 3. El constructor ahora está vacío y se ha eliminado el método logout.
   constructor() {}
 }

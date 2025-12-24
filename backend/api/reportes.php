@@ -159,12 +159,12 @@ function actualizarReporte($id, $input) {
         
         $mensaje = $mensajes[$novo_estado] ?? 'Tu reporte ha sido revisado.';
         
-        // Si hay notas del revisor, añadirlas al mensaje
+
         if (!empty($notas_revision)) {
             $mensaje .= ' Nota: ' . $notas_revision;
         }
         
-        // Insertar notificación (igual que en intercambios.php)
+
         try {
             $sqlNotificacion = "
                 INSERT INTO notificaciones (
@@ -190,7 +190,7 @@ function actualizarReporte($id, $input) {
                 'mensaje' => $mensaje
             ]);
         } catch (Exception $eNotif) {
-            // Log del error pero no detener el proceso
+
             error_log("Error al crear notificación de reporte: " . $eNotif->getMessage());
         }
         

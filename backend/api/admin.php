@@ -22,13 +22,12 @@ function handleAdminRoutes($method, $id, $action, $input) {
 /**
  * Obtener estadísticas globales del sistema
  * Solo accesible para administradores
- * Optimizado con CTEs para reducir 14 queries a 1
  */
 function getEstadisticas() {
     try {
         $db = Database::getConnection();
         
-        // Query optimizada con CTEs - una sola ejecución
+   
         $query = "
             WITH stats_base AS (
                 SELECT 

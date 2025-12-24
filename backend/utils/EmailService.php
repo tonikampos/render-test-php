@@ -5,14 +5,7 @@
  * CONFIGURACIÓN REQUERIDA:
  * - Variable de entorno: BREVO_API_KEY
  * - Variable de entorno: FRONTEND_URL
- * 
- * Para Brevo:
- * 1. Crear cuenta en https://www.brevo.com
- * 2. Ir a Settings → SMTP & API → API Keys
- * 3. Crear API Key (Create a new API Key)
- * 4. Copiar la key y añadirla como variable de entorno en Render
- *  * Plan gratuito: 300 emails/día (9,000/mes)
- * 
+ *  *  * 
  */
 
 class EmailService {

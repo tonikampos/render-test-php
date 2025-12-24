@@ -4,8 +4,8 @@
 **Universidad:** Universitat Oberta de Catalunya (UOC)  
 **Asignatura:** Trabajo Final de Máster  
 **Fecha:** Diciembre 2025  
-**Versión:** 3.0 (PEC4 - Entrega Final Completa)  
-**Estado:** ✅ 100% Funcional + 100% WCAG 2.1 AA
+**Versión:** 3.2 (PEC4 - Entrega Final + Optimizaciones Badges)  
+**Estado:** ✅ 100% Funcional + 100% WCAG 2.1 AA + Badges Optimizados
 
 ---
 
@@ -36,11 +36,12 @@
 - **Lenguaje:** PHP 8.2
 - **Servidor Web:** Apache 2.4 (integrado en Docker php:8.2-apache)
 - **Base de Datos:** PostgreSQL 15 (Supabase)
-- **Endpoints API:** 37 endpoints REST (11 módulos)
+- **Endpoints API:** 38 endpoints REST (11 módulos + 1 optimizado)
 - **Autenticación:** Sesiones PHP con tokens hexadecimales SHA-256
 - **Email:** Brevo API (ex-Sendinblue) - 300 emails/día gratuitos
 - **Deploy:** Render.com (Docker container)
 - **Nuevos módulos (Nov 2025):** Conversaciones, Notificaciones, Usuarios, Admin
+- **Optimizaciones (Dic 2025):** Endpoint /mensajes-no-leidos (query -95% tiempo)
 
 ### Frontend
 - **Framework:** Angular 19.0.0
@@ -49,9 +50,10 @@
 - **HTTP Client:** HttpClient con RxJS
 - **Componentes:** ~27 componentes (10 nov + 2 dic)
 - **Guards:** AuthGuard, AdminGuard, RoleGuard
-- **Polling:** RxJS intervals (30s notificaciones, 10s chat optimizado)
+- **Polling:** RxJS intervals (15s badges optimizado, 10s chat)
 - **Accesibilidad:** WCAG 2.1 AA (100% compliance)
 - **Theming:** theme.scss centralizado con Material Design
+- **Optimizaciones (Dic 2025):** Fix memory leak crítico, endpoint badges -95%
 - **Deploy:** Render.com (Static Site)
 
 ### Infraestructura
@@ -64,7 +66,8 @@
 ## 🌐 URLS DEL PROYECTO DESPLEGADO
 
 ### Producción (Render.com) ✅ OPERATIVO
-- **Backend API:** https://render-test-php-1.onrender.com/api.php
+- **Backend API:** https://render-test-php-1.onrender.com/api.php (38 endpoints)
+- **Backend Optimizado:** /conversaciones/mensajes-no-leidos (nuevo, 5-15ms)
 - **Frontend Angular:** https://galitroco-frontend.onrender.com
 - **Base de Datos:** Supabase PostgreSQL 15 (cloud)
 
@@ -415,14 +418,15 @@ Utiliza estos usuarios para probar la aplicación completa:
 
 ### Testing del Backend (API REST)
 
-Se ha realizado testing exhaustivo de **37 endpoints** en producción (Render.com). 
+Se ha realizado testing exhaustivo de **38 endpoints** en producción (Render.com). 
 
-**Estado:** ✅ **100% FUNCIONAL** (37/37 tests completados)
-- 37 endpoints implementados y operativos en 11 módulos
-- 37/37 tests completados exitosamente (100% cobertura)
+**Estado:** ✅ **100% FUNCIONAL** (38/38 tests completados)
+- 38 endpoints implementados y operativos en 11 módulos (+1 optimizado)
+- 38/38 tests completados exitosamente (100% cobertura)
 - 10 bugs críticos detectados y corregidos durante noviembre
+- 1 memory leak crítico detectado y corregido durante diciembre
 - 0 bugs pendientes críticos
-- 48 commits desplegados en noviembre 2025
+- 56 commits totales (48 noviembre + 8 diciembre)
 
 **Módulos testeados (PEC3):**
 1. Autenticación (5 endpoints)

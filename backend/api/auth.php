@@ -24,7 +24,7 @@ function handleAuthRoutes($method, $action, $input) {
     
     // POST /api/auth/login
     if ($method === 'POST' && $action === 'login') {
-        // Validar campos requeridos
+ 
         if (empty($input['email']) || empty($input['password'])) {
             Response::validationError([
                 'email' => 'Email es requerido',
@@ -86,7 +86,7 @@ function handleAuthRoutes($method, $action, $input) {
     
     // POST /api/auth/reset-password
     if ($method === 'POST' && $action === 'reset-password') {
-        // Validar campos requeridos
+
         if (empty($input['token']) || empty($input['new_password']) || empty($input['confirm_password'])) {
             Response::validationError([
                 'token' => 'Token es requerido',
@@ -108,6 +108,6 @@ function handleAuthRoutes($method, $action, $input) {
         }
     }
     
-    // Método no permitido
+
     Response::methodNotAllowed(['GET', 'POST']);
 }
